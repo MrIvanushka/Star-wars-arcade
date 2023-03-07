@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/ivan/CLionProjects/Star-wars-arcade/src/Engine/GameObject.cpp" "CMakeFiles/SWTOR.dir/src/Engine/GameObject.cpp.o" "gcc" "CMakeFiles/SWTOR.dir/src/Engine/GameObject.cpp.o.d"
   "/home/ivan/CLionProjects/Star-wars-arcade/src/Engine/Input.cpp" "CMakeFiles/SWTOR.dir/src/Engine/Input.cpp.o" "gcc" "CMakeFiles/SWTOR.dir/src/Engine/Input.cpp.o.d"
   "/home/ivan/CLionProjects/Star-wars-arcade/src/Engine/Scene.cpp" "CMakeFiles/SWTOR.dir/src/Engine/Scene.cpp.o" "gcc" "CMakeFiles/SWTOR.dir/src/Engine/Scene.cpp.o.d"
+  "/home/ivan/CLionProjects/Star-wars-arcade/src/FieldScene.cpp" "CMakeFiles/SWTOR.dir/src/FieldScene.cpp.o" "gcc" "CMakeFiles/SWTOR.dir/src/FieldScene.cpp.o.d"
   )
 
 # Targets to which this target links.

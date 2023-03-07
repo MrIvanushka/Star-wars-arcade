@@ -9,10 +9,10 @@
 #include"Texture.h"
 #include"Shader.h"
 #include"Material.h"
-#include "../Components/Camera.h"
+#include "../BaseComponents/Camera.h"
 #include "GameObject.h"
-#include "../Components/Light.h"
-#include "../Components/Model.h"
+#include "../BaseComponents/Light.h"
+#include "../BaseComponents/Model.h"
 #include "CollisionDetector.h"
 
 class Scene

@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/SWTOR.dir/src/Engine/Input.cpp.o.d"
   "CMakeFiles/SWTOR.dir/src/Engine/Scene.cpp.o"
   "CMakeFiles/SWTOR.dir/src/Engine/Scene.cpp.o.d"
+  "CMakeFiles/SWTOR.dir/src/FieldScene.cpp.o"
+  "CMakeFiles/SWTOR.dir/src/FieldScene.cpp.o.d"
   "SWTOR"
   "SWTOR.pdb"
 )

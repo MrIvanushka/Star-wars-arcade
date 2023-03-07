@@ -357,6 +357,30 @@ src/Engine/Scene.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWTOR.dir/build.make CMakeFiles/SWTOR.dir/src/Engine/Scene.cpp.s
 .PHONY : src/Engine/Scene.cpp.s
 
+src/FieldScene.o: src/FieldScene.cpp.o
+.PHONY : src/FieldScene.o
+
+# target to build an object file
+src/FieldScene.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWTOR.dir/build.make CMakeFiles/SWTOR.dir/src/FieldScene.cpp.o
+.PHONY : src/FieldScene.cpp.o
+
+src/FieldScene.i: src/FieldScene.cpp.i
+.PHONY : src/FieldScene.i
+
+# target to preprocess a source file
+src/FieldScene.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWTOR.dir/build.make CMakeFiles/SWTOR.dir/src/FieldScene.cpp.i
+.PHONY : src/FieldScene.cpp.i
+
+src/FieldScene.s: src/FieldScene.cpp.s
+.PHONY : src/FieldScene.s
+
+# target to generate assembly for a file
+src/FieldScene.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWTOR.dir/build.make CMakeFiles/SWTOR.dir/src/FieldScene.cpp.s
+.PHONY : src/FieldScene.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -391,6 +415,9 @@ help:
 	@echo "... src/Engine/Scene.o"
 	@echo "... src/Engine/Scene.i"
 	@echo "... src/Engine/Scene.s"
+	@echo "... src/FieldScene.o"
+	@echo "... src/FieldScene.i"
+	@echo "... src/FieldScene.s"
 .PHONY : help
 
 

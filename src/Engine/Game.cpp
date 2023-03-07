@@ -68,7 +68,7 @@ void Game::initOpenGLOptions()
 
 void Game::initScenes()
 {
-    //this->scenes.push_back(new SpaceScene(GL_VERSION_MAJOR, GL_VERSION_MINOR, framebufferWidth, framebufferHeight));
+    this->scenes.push_back(new FieldScene(GL_VERSION_MAJOR, GL_VERSION_MINOR, framebufferWidth, framebufferHeight));
     this->currentSceneIndex = 0;
 }
 

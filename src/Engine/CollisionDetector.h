@@ -8,8 +8,8 @@
 #include <utility>
 
 #include "vector"
-#include "../Components/Collider.h"
-#include "../Components/SphereCollider.h"
+#include "../BaseComponents/Collider.h"
+#include "../BaseComponents/SphereCollider.h"
 
 class CollisionDetector {
 public:

@@ -30,6 +30,11 @@
   "file": "/home/ivan/CLionProjects/Star-wars-arcade/src/Engine/CollisionDetector.cpp"
 },
 {
+  "directory": "/home/ivan/CLionProjects/Star-wars-arcade/build",
+  "command": "/usr/bin/g++  -I/home/ivan/CLionProjects/Star-wars-arcade/glfw/include -g -std=gnu++14 -o CMakeFiles/SWTOR.dir/src/FieldScene.cpp.o -c /home/ivan/CLionProjects/Star-wars-arcade/src/FieldScene.cpp",
+  "file": "/home/ivan/CLionProjects/Star-wars-arcade/src/FieldScene.cpp"
+},
+{
   "directory": "/home/ivan/CLionProjects/Star-wars-arcade/build/glfw/src",
   "command": "/usr/bin/gcc -D_DEFAULT_SOURCE -D_GLFW_X11 -I/home/ivan/CLionProjects/Star-wars-arcade/glfw/include -I/home/ivan/CLionProjects/Star-wars-arcade/glfw/src -I/home/ivan/CLionProjects/Star-wars-arcade/build/glfw/src -g -fPIC -Wall -std=c99 -Wdeclaration-after-statement -o CMakeFiles/glfw.dir/context.c.o -c /home/ivan/CLionProjects/Star-wars-arcade/glfw/src/context.c",
   "file": "/home/ivan/CLionProjects/Star-wars-arcade/glfw/src/context.c"

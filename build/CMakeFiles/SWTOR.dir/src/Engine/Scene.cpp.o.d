@@ -374,38 +374,40 @@ CMakeFiles/SWTOR.dir/src/Engine/Scene.cpp.o: \
  /usr/include/c++/11/cstring /usr/include/string.h /usr/include/strings.h \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtc/type_ptr.inl \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/Material.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Camera.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Camera.h \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtx/euler_angles.hpp \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtx/euler_angles.inl \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtx/compatibility.hpp \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtx/compatibility.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/GameObject.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/GameObject.h \
  /usr/include/c++/11/set /usr/include/c++/11/bits/stl_tree.h \
  /usr/include/c++/11/ext/aligned_buffer.h \
  /usr/include/c++/11/bits/stl_set.h \
  /usr/include/c++/11/bits/stl_multiset.h \
  /usr/include/c++/11/bits/erase_if.h \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/GameObject.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Light.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Shader.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Model.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Mesh.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Vertex.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Primitives.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Shader.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Texture.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Material.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/GameObject.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Texture.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Material.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/MeshRenderer.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Mesh.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Light.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Shader.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Model.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Mesh.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Vertex.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Primitives.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Shader.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Texture.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Material.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/GameObject.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Texture.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Material.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/MeshRenderer.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Mesh.h \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/CollisionDetector.h \
  /usr/include/c++/11/utility /usr/include/c++/11/bits/stl_relops.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Collider.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/SphereCollider.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Collider.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Collider.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/SphereCollider.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Collider.h \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/Game.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../FieldScene.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Engine/Scene.h \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/Input.h \
  /usr/include/c++/11/map /usr/include/c++/11/bits/stl_map.h \
  /usr/include/c++/11/tuple /usr/include/c++/11/array \

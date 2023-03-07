@@ -19,7 +19,7 @@ CMakeFiles/SWTOR.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h /usr/include/GL/glu.h \
  /usr/include/GL/gl.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Camera.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Camera.h \
  /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -147,8 +147,8 @@ CMakeFiles/SWTOR.dir/main.cpp.o: \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/GLFW/glfw3.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/glm.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/_fixes.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/glm.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/_fixes.hpp \
  /usr/include/c++/11/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -159,10 +159,10 @@ CMakeFiles/SWTOR.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/setup.hpp \
  /usr/include/c++/11/cassert /usr/include/assert.h \
  /usr/include/c++/11/cstddef \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/../simd/platform.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/../simd/platform.h \
  /usr/include/c++/11/climits \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h \
@@ -174,143 +174,143 @@ CMakeFiles/SWTOR.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/11/cfloat \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/float.h \
  /usr/include/c++/11/limits \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/fwd.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/qualifier.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/setup.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/vec2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_bool2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_vec2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_vec2.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/./compute_vector_relational.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/./setup.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_bool2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_float2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_float2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_double2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_double2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_int2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_int2_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../ext/scalar_int_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../ext/../detail/setup.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_uint2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_uint2_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../ext/scalar_uint_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/vec3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_bool3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_vec3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_vec3.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_bool3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_float3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_float3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_double3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_double3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_int3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_int3_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_uint3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_uint3_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/vec4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_bool4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_vec4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_vec4.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_bool4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_float4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_float4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_double4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_double4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/setup.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_int4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_int4_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_uint4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/vector_uint4_sized.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/mat2x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/matrix_double2x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_mat2x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/type_mat2x2.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../matrix.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/setup.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat2x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double2x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x3.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double2x3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float2x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float2x3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat2x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double2x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x4.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double2x4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float2x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float2x4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat3x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double3x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x2.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double3x2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float3x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float3x2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat3x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double3x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x3.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double3x3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float3x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float3x3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat3x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double3x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x4.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double3x4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float3x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float3x4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat4x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double4x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x2.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double4x2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float4x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float4x2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat4x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double4x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x3.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double4x3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float4x3.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float4x3_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../mat4x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double4x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x4.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_double4x4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float4x4.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/.././ext/matrix_float4x4_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/func_matrix.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../geometric.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/func_geometric.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../exponential.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/type_vec1.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/type_vec1.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/func_exponential.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/../vector_relational.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/../detail/setup.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/../detail/func_vector_relational.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/_vectorize.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../common.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/_fixes.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/func_common.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/compute_common.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/../detail/../detail/../detail/../detail/setup.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/matrix_double2x2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/matrix_float2x2.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/./ext/matrix_float2x2_precision.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/trigonometric.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/func_trigonometric.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/packing.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/func_packing.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/type_half.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/type_half.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/integer.hpp \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../../glm/glm/detail/func_integer.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/fwd.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/qualifier.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/vec2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_bool2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_vec2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_vec2.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/./compute_vector_relational.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/./setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_bool2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_float2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_float2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_double2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_double2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_int2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_int2_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../ext/scalar_int_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../ext/../detail/setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_uint2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_uint2_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../ext/scalar_uint_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/vec3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_bool3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_vec3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_vec3.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_bool3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_float3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_float3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_double3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_double3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_int3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_int3_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_uint3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_uint3_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/vec4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_bool4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_vec4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_vec4.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_bool4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_float4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_float4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_double4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_double4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_int4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_int4_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_uint4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/vector_uint4_sized.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/mat2x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/matrix_double2x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_mat2x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/type_mat2x2.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../matrix.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat2x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double2x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x3.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double2x3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float2x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float2x3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat2x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double2x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat2x4.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double2x4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float2x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float2x4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat3x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double3x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x2.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double3x2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float3x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float3x2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat3x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double3x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x3.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double3x3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float3x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float3x3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat3x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double3x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat3x4.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double3x4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float3x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float3x4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat4x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double4x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x2.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double4x2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float4x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float4x2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat4x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double4x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x3.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double4x3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float4x3.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float4x3_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../mat4x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double4x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/../detail/type_mat4x4.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_double4x4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float4x4.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/.././ext/matrix_float4x4_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/func_matrix.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../geometric.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/func_geometric.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../exponential.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/type_vec1.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/type_vec1.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/func_exponential.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/../vector_relational.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/../detail/setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/../detail/func_vector_relational.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/_vectorize.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../common.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/_fixes.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/func_common.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/compute_common.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/../detail/../detail/../detail/../detail/setup.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/matrix_double2x2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/matrix_float2x2.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/./ext/matrix_float2x2_precision.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/trigonometric.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/func_trigonometric.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/packing.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/func_packing.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/type_half.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/type_half.inl \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/integer.hpp \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../../glm/glm/detail/func_integer.inl \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtc/matrix_transform.hpp \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtc/../ext/matrix_projection.hpp \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtc/../ext/../gtc/constants.hpp \
@@ -353,7 +353,7 @@ CMakeFiles/SWTOR.dir/main.cpp.o: \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtx/../gtc/../detail/setup.hpp \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtx/../gtc/epsilon.inl \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtx/compatibility.inl \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/GameObject.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/GameObject.h \
  /usr/include/c++/11/set /usr/include/c++/11/bits/stl_tree.h \
  /usr/include/c++/11/ext/aligned_buffer.h \
  /usr/include/c++/11/bits/stl_set.h \
@@ -387,25 +387,27 @@ CMakeFiles/SWTOR.dir/main.cpp.o: \
  /home/ivan/CLionProjects/Star-wars-arcade/glfw/include/../../glm/glm/gtc/type_ptr.inl \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/Material.h \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/GameObject.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Light.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Shader.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Model.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Mesh.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Vertex.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Primitives.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Shader.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Texture.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Material.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/GameObject.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Texture.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Material.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/MeshRenderer.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/../Engine/Mesh.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Light.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Shader.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Model.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Mesh.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Vertex.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Primitives.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Shader.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Texture.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Material.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/GameObject.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Texture.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Material.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/MeshRenderer.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/../Engine/Mesh.h \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/CollisionDetector.h \
  /usr/include/c++/11/utility /usr/include/c++/11/bits/stl_relops.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Collider.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/SphereCollider.h \
- /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Components/Collider.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Collider.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/SphereCollider.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../BaseComponents/Collider.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../FieldScene.h \
+ /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/../Engine/Scene.h \
  /home/ivan/CLionProjects/Star-wars-arcade/src/Engine/Input.h \
  /usr/include/c++/11/map /usr/include/c++/11/bits/stl_map.h \
  /usr/include/c++/11/tuple /usr/include/c++/11/array \

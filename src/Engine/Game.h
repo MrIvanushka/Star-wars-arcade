@@ -6,9 +6,10 @@
 #define SWTOR_GAME_H
 
 #include <GL/glew.h>
-#include "../Components/Camera.h"
+#include "../BaseComponents/Camera.h"
 #include <vector>
 #include "Scene.h"
+#include "../FieldScene.h"
 #include "Input.h"
 
 class Game
