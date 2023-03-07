@@ -1,0 +1,27 @@
+# ninja log v5
+1	269	1649522004115439410	src/CMakeFiles/glfw.dir/vulkan.c.o	1caf42f54c5602ad
+0	615	1649522004331432087	src/CMakeFiles/glfw.dir/monitor.c.o	44bc7689bee5a5f2
+966	1128	1649522004971410385	examples/boing	fbff34b2bd87bdea
+2	245	1649522004087440359	src/CMakeFiles/glfw.dir/null_init.c.o	9fc87622007a57d5
+312	436	1649522004271434121	src/CMakeFiles/glfw.dir/posix_poll.c.o	86be6c72622d8de9
+195	312	1649522004143438461	src/CMakeFiles/glfw.dir/posix_time.c.o	7d85955178f885c8
+269	691	1649522004491426662	src/CMakeFiles/glfw.dir/x11_window.c.o	9e12567202269815
+1	310	1649522004155438054	src/CMakeFiles/glfw.dir/egl_context.c.o	6c38df1098990c29
+245	691	1649522004483426933	src/CMakeFiles/glfw.dir/x11_init.c.o	4c987c4f95ab60c6
+285	444	1649522004287433578	src/CMakeFiles/glfw.dir/glx_context.c.o	c74388b572bcd22
+691	952	1649522004795416353	src/libglfw3.a	53ab7f986994baf4
+0	407	1649522004251434800	src/CMakeFiles/glfw.dir/init.c.o	818e0d8b31f6b50f
+255	617	1649522004335431950	src/CMakeFiles/glfw.dir/x11_monitor.c.o	3e82479030123ad8
+2	614	1649522004319432494	src/CMakeFiles/glfw.dir/null_monitor.c.o	7a10b15eb9cfec8f
+0	285	1649522004131438868	src/CMakeFiles/glfw.dir/context.c.o	61c0889a3584e956
+11	194	1649522004035442123	src/CMakeFiles/glfw.dir/posix_module.c.o	91211bf092c9ff11
+310	690	1649522004343431680	src/CMakeFiles/glfw.dir/linux_joystick.c.o	b7ea0293c31ad2de
+2	279	1649522004123439140	src/CMakeFiles/glfw.dir/osmesa_context.c.o	4ad36779eedc0486
+3	420	1649522004263434393	src/CMakeFiles/glfw.dir/null_window.c.o	5c239240193dc8d9
+212	316	1649522004159437919	src/CMakeFiles/glfw.dir/posix_thread.c.o	c24498ba1b9aa076
+0	616	1649522004339431816	src/CMakeFiles/glfw.dir/input.c.o	ed6a85da8d457bad
+280	379	1649522004215436019	src/CMakeFiles/glfw.dir/xkb_unicode.c.o	1b90679ff2f9adb9
+316	965	1649522004811415811	examples/CMakeFiles/boing.dir/boing.c.o	9a05e1b827dd1a18
+4	212	1649522004055441445	src/CMakeFiles/glfw.dir/null_joystick.c.o	5474736db4e27796
+1	255	1649522004099439954	src/CMakeFiles/glfw.dir/platform.c.o	6c641bd1f58f79b6
+1	422	1649522004267434256	src/CMakeFiles/glfw.dir/window.c.o	19dbba8db84b5a16

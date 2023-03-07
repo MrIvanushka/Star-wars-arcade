@@ -1,0 +1,6 @@
+/snap/clion/184/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/184/bin/ninja/linux/ninja -G Ninja /home/ivan/CLionProjects/glfw
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Including X11 support
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ivan/CLionProjects/glfw/cmake-build-debug

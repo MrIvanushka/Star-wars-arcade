@@ -1,0 +1,12 @@
+/snap/clion/184/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/184/bin/ninja/linux/ninja -G Ninja /home/ivan/CLionProjects/glm
+-- The CXX compiler identification is GNU 11.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- GLM: Version 0.9.9.9
+GLM: GCC - GNU compiler
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ivan/CLionProjects/glm/cmake-build-debug
