@@ -13,17 +13,17 @@
 #include "GameObject.h"
 #include "../BaseComponents/Light.h"
 #include "../BaseComponents/Model.h"
-#include "CollisionDetector.h"
+#include "../Physics/octree.h"
 
 class Scene
 {
 protected:
-    CollisionDetector Collision_Detector;
     std::vector<Shader*> shaders;
     std::vector<Texture*> textures;
     std::vector<Material*> materials;
     std::vector<GameObject*> gameObjects;
     std::vector<PointLight*> pointLights;
+    Octree::node* collisionProcessor;
     Camera* renderCamera;
     void initialize(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int frameBufferWidth, int frameBufferHeight);
 private:

@@ -143,7 +143,6 @@ static std::vector<Vertex> loadOBJ(const char* file_name)
         vertices[i].position = vertex_positions[vertex_position_indicies[i] - 1];
         vertices[i].texcoord = vertex_texcoords[vertex_texcoord_indicies[i] - 1];
         vertices[i].normal = vertex_normals[vertex_normal_indicies[i] - 1];
-        vertices[i].color = glm::vec3(1.f, 1.f, 1.f);
     }
     return vertices;
 }
@@ -266,7 +265,6 @@ static std::vector<std::vector<Vertex>> loadOBJwithManyMeshes(const char* file_n
             vertices[i][j].position = vertex_positions[vertex_position_indicies[i][j] - 1];
             vertices[i][j].texcoord = vertex_texcoords[vertex_texcoord_indicies[i][j] - 1];
             vertices[i][j].normal = vertex_normals[vertex_normal_indicies[i][j] - 1];
-            vertices[i][j].color = glm::vec3(1.f, 1.f, 1.f);
         }
     }
 
