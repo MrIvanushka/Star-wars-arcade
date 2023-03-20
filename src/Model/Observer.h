@@ -13,7 +13,7 @@ class Observer
 {
 public:
     virtual ~Observer() = default;
-    virtual void handle(Observable&) = 0;
+    virtual void handle() = 0;
 };
 
 class Observable
@@ -25,10 +25,11 @@ public:
     {
         observers.erase(&o);
     }
+protected:
     void invoke()
     {
         for (auto* o : observers) {
-            o->handle(*this);
+            o->handle();
         }
     }
 private:
@@ -43,7 +44,7 @@ class ArgObserver
 {
 public:
     virtual ~ArgObserver() = default;
-    virtual void handle(ArgObservable<T>&, T arg) = 0;
+    virtual void handle(T arg) = 0;
 };
 
 template<typename T>
@@ -56,10 +57,11 @@ public:
     {
         observers.erase(o);
     }
+protected:
     void invoke(T arg)
     {
         for (auto* o : observers) {
-            o->handle(*this, arg);
+            o->handle(arg);
         }
     }
 private:

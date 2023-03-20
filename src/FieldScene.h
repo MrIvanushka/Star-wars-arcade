@@ -6,8 +6,6 @@
 class FieldScene : public Scene
 {
 private:
-    CollisionDetector _collisionDetector;
-
     void initShaders(int GL_VERSION_MAJOR, int GL_VERSION_MINOR) override;
     void initTextures() override;
     void initMaterials() override;

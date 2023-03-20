@@ -8,6 +8,7 @@
 #include<../../glm/glm/glm.hpp>
 #include<../../glm/glm/vec3.hpp>
 #include<../../glm/glm/gtc/quaternion.hpp>
+#include <../../glm/glm/gtc/matrix_transform.hpp>
 #include <set>
 #include <stdexcept>
 
@@ -15,24 +16,33 @@ class Component;
 
 class OrientedPoint
 {
+private:
+    glm::mat4 model;
+    glm::mat3 normalModel;
 protected:
     glm::vec3 position;
     glm::quat rotation;
+    glm::vec3 scale;
 public:
-    OrientedPoint(glm::vec3 position, glm::vec3 rotation);
+    OrientedPoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale = glm::vec3(1.0f));
     glm::vec3 getPosition();
     glm::quat getRotation();
+    glm::vec3 getScale();
+    glm::mat4 getModelMatrix();
+    glm::mat3 getNormalModelMatrix();
+    virtual void update(float deltaTime);
 };
 
 class GameObject : public OrientedPoint
 {
 private:
     bool isActive = true;
+    bool moved;
     std::set<Component*> components;
 public:
-    GameObject(glm::vec3 position, glm::vec3 rotation);
+    GameObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale = glm::vec3(1.0f));
     ~GameObject();
-    void update(float deltaTime);
+    void update(float deltaTime) override;
     void render();
     void move(glm::vec3 delta);
     void rotate(glm::quat delta);
@@ -42,6 +52,7 @@ public:
     void rotateAt(glm::vec3 delta);
     void setActive(bool value);
     bool activeSelf();
+    bool isMoved();
 
     template<typename T>
     void addComponent()
@@ -69,9 +80,8 @@ class Component
 {
 protected:
     GameObject* gameObject;
-public:
     bool enabled;
-
+public:
     Component(GameObject* object, bool enabledOnStart = true)
     {
         enabled = enabledOnStart;
@@ -83,6 +93,11 @@ public:
     }
     virtual void update(float deltaTime) {}
     virtual void render() {}
+    
+    bool isEnabled()
+    {
+        return enabled && gameObject->activeSelf();
+    }
 };
 
 #endif //SWTOR_GAMEOBJECT_H

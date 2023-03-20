@@ -22,14 +22,26 @@ public:
 
     void addMesh(
             std::vector<Vertex> mesh,
-            float scale,
             Material* material,
             Shader* shader,
             Texture* orTexDif,
             Texture* orTexSpec
     ) {
             this->meshes.push_back(
-                    new MeshRenderer(new Mesh(mesh.data(), mesh.size(), NULL, 0, gameObject, glm::vec3(scale)),
+                    new MeshRenderer(new Mesh(mesh.data(), mesh.size(), NULL, 0, gameObject),
+                                     material, shader, orTexDif, orTexSpec));
+    }
+
+    void addMesh(
+            Mesh* mesh,
+            Material* material,
+            Shader* shader,
+            Texture* orTexDif,
+            Texture* orTexSpec
+    ) {
+            //Need to set center point to mesh
+            this->meshes.push_back(
+                    new MeshRenderer(mesh,
                                      material, shader, orTexDif, orTexSpec));
     }
 

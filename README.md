@@ -16,4 +16,4 @@ sudo apt install libxenerma dev
 sudo apt install libxi-dev
 sudo apt install libglew-dev libglfw3-dev 
 sudo apt install xorg
- 5.	Check if any more additional packages are required
+ 5.	Install ASSIMP https://www.youtube.com/watch?v=RhoSXS9sA5o&t=761s

@@ -7,12 +7,13 @@
 
 void Scene::initialize(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int frameBufferWidth, int frameBufferHeight)
 {
+    collisionProcessor = new Octree::node(BoundingRegion(glm::vec3(-64.0f), glm::vec3(64.0f)));
+
     this->initShaders(GL_VERSION_MAJOR, GL_VERSION_MINOR);
     this->initTextures();
     this->initMaterials();
     this->initObjects();
     this->initUniforms(frameBufferWidth, frameBufferHeight);
-    this->Collision_Detector.initialize(this->gameObjects);
 }
 
 Scene::~Scene()
@@ -69,11 +70,12 @@ void Scene::updateUniforms(int framebufferWidth, int framebufferHeight)
 
 void Scene::update(float deltaTime)
 {
+    collisionProcessor->update();
+
     for (GameObject* object : this->gameObjects)
     {
         object->update(deltaTime);
     }
-    Collision_Detector.update();
 }
 
 void Scene::render()
