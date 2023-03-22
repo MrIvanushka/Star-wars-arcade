@@ -36,7 +36,7 @@ void FieldScene::initObjects()
     skybox->getComponent<Model>()->addMesh(mesh, this->materials[0], this->shaders[1], this->textures[0], this->textures[0]);
     this->gameObjects.push_back(skybox);
 
-    auto holocroneData = AssimpLoader::load("/home/ivan/CLionProjects/Star-wars-arcade/OBJFiles/Cube.fbx");  
+    auto holocroneData = AssimpLoader::load("OBJFiles/Cube.fbx");  
     GameObject* holocrone1 = new GameObject(glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f,0.f), glm::vec3(7.f, 0.5f, 7.f));
     holocrone1->addComponent<Model>();
     Mesh* holoMesh = new Mesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), holocrone1);
