@@ -86,7 +86,7 @@ public:
 
     }
 
-    void render()
+    virtual void render()
     {
         this->material->sendToShader(*shader);
         shader->use();

@@ -1,6 +1,6 @@
 #include "AssimpLoader.h"
 
-std::vector<MeshPack> AssimpLoader::load(std::string path) {
+std::vector<MeshPack> AssimpLoader::load(std::string path, bool allowArmature) {
     Assimp::Importer importer;
     
     const aiScene* scene = importer.ReadFile(path, 
@@ -9,20 +9,25 @@ std::vector<MeshPack> AssimpLoader::load(std::string path) {
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         throw std::exception();
     }
-    return processNode(scene->mRootNode, scene);
+    auto ret = processNode(scene->mRootNode, scene, allowArmature);
+
+    for (auto& element : ret)
+        element.rootNode = scene->mRootNode;
+    
+    return ret;
 }
 
-std::vector<MeshPack> AssimpLoader::processNode(aiNode* node, const aiScene* scene) {
+std::vector<MeshPack> AssimpLoader::processNode(aiNode* node, const aiScene* scene, bool allowArmature) {
     std::vector<MeshPack> meshes;
     
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        MeshPack newMesh = processMesh(mesh, scene);
+        MeshPack newMesh = processMesh(mesh, scene, allowArmature);
         meshes.push_back(newMesh);
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        std::vector<MeshPack> childrenMeshes = processNode(node->mChildren[i], scene);
+        std::vector<MeshPack> childrenMeshes = processNode(node->mChildren[i], scene, allowArmature);
         meshes.insert(meshes.end(), childrenMeshes.begin(), childrenMeshes.end());
     }
 
@@ -30,7 +35,7 @@ std::vector<MeshPack> AssimpLoader::processNode(aiNode* node, const aiScene* sce
 }
 
 // process mesh in object file
-MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene) {
+MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene, bool allowArmature) {
     std::vector<Vertex> vertices(mesh->mNumVertices);
     std::vector<unsigned int> indices(3 * mesh->mNumFaces);
     // setup bounding region
@@ -98,10 +103,42 @@ MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene) {
             indices.push_back(face.mIndices[j]);
         }
     }
-
+    
     MeshPack ret;
+
+    if(allowArmature)
+    {
+        loadMeshBones(mesh, vertices, ret.boneNameToIndexMap);
+    }
+    
     ret.vertices = vertices;
     ret.indices = indices;
     ret.br = br;
     return ret;
+}
+
+void AssimpLoader::loadMeshBones(aiMesh* mesh, std::vector<Vertex> &vertices, std::map<std::string, uint> &boneNameToIndexMap)
+{
+    for (uint i = 0 ; i < mesh->mNumBones ; i++) 
+    {
+        loadSingleBone(mesh, mesh->mBones[i], i, vertices);
+        boneNameToIndexMap[mesh->mBones[i]->mName.C_Str()] = i;
+    }
+}
+
+void AssimpLoader::loadSingleBone(aiMesh* mesh, aiBone* bone, uint boneId, std::vector<Vertex> &vertices)
+{
+    for (uint i = 0 ; i < bone->mNumWeights ; i++) {
+        const aiVertexWeight& vw = bone->mWeights[i];
+        //might cause errors with vertex id
+        for(uint j = 0; j < MAX_NUM_BONES_PER_VERTEX; j++)
+        {
+            if(vertices[bone->mWeights[i].mVertexId].bones.Weights[j] < 0.001)
+            {
+                vertices[bone->mWeights[i].mVertexId].bones.Weights[i] = vw.mWeight;
+                vertices[bone->mWeights[i].mVertexId].bones.Ids[i] = boneId;
+                break;
+            }
+        }
+    }
 }

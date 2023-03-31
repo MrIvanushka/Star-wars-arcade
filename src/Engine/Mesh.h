@@ -25,14 +25,14 @@ private:
 
     OrientedPoint* centerPoint;
     glm::vec3 scale;
-
     glm::mat4 ModelMatrix;
-
-    friend class MeshRenderer;
 
     void updateModelMatrix();
 
 public:
+    friend class MeshRenderer;
+    friend class SkinnedMeshRenderer;
+
     Mesh(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices, OrientedPoint* orientedPoint);
 
     Mesh(const Mesh& obj);

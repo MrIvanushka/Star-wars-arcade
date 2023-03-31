@@ -3,7 +3,7 @@
 
 #include <../../glm/glm/glm.hpp>
 #include <string>
-#include"../Model/Observer.h"
+#include"../Utilities/Observer.h"
 #include"../Engine/GameObject.h"
 #include"Collider.h"
 
