@@ -70,6 +70,7 @@ void Game::initScenes()
 {
     this->scenes.push_back(new FieldScene(GL_VERSION_MAJOR, GL_VERSION_MINOR, framebufferWidth, framebufferHeight));
     this->currentSceneIndex = 0;
+    scenes[currentSceneIndex]->start();
 }
 
 void Game::updateUniforms()
