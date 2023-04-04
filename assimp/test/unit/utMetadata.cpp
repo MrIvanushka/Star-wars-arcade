@@ -3,7 +3,9 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
+
+
 
 All rights reserved.
 
@@ -49,11 +51,11 @@ class utMetadata: public ::testing::Test {
 protected:
     aiMetadata *m_data;
 
-    void SetUp() override {
+    virtual void SetUp() {
         m_data = nullptr;
     }
 
-    void TearDown() override {
+    virtual void TearDown() {
         aiMetadata::Dealloc( m_data );
     }
 
@@ -82,7 +84,7 @@ TEST_F( utMetadata, allocTest ) {
 }
 
 TEST_F( utMetadata, get_set_pod_Test ) {
-    m_data = aiMetadata::Alloc( 7 );
+    m_data = aiMetadata::Alloc( 5 );
 
     // int, 32 bit
     unsigned int index( 0 );
@@ -135,28 +137,6 @@ TEST_F( utMetadata, get_set_pod_Test ) {
     EXPECT_TRUE( success );
     EXPECT_DOUBLE_EQ( 3.0, result_double );
 
-    // int64_t
-    index++;
-    const std::string key_int64 = "test_int64";
-    int64_t val_int64 = 64;
-    success = m_data->Set(index, key_int64, val_int64);
-    EXPECT_TRUE(success);
-    int64_t result_int64(0);
-    success = m_data->Get(key_int64, result_int64);
-    EXPECT_TRUE(success);
-    EXPECT_EQ(result_int64, val_int64);
-
-    // uint32
-    index++;
-    const std::string key_uint32 = "test_uint32";
-    int64_t val_uint32 = 32;
-    success = m_data->Set(index, key_uint32, val_uint32);
-    EXPECT_TRUE(success);
-    int64_t result_uint32(0);
-    success = m_data->Get(key_uint32, result_uint32);
-    EXPECT_TRUE(success);
-    EXPECT_EQ(result_uint32, val_uint32);
-
     // error
     int result;
     success = m_data->Get( "bla", result );
@@ -201,7 +181,6 @@ TEST_F( utMetadata, get_set_aiVector3D_Test ) {
     EXPECT_TRUE( success );
 }
 
-
 TEST_F( utMetadata, copy_test ) {
     m_data = aiMetadata::Alloc( AI_META_MAX );
     bool bv = true;
@@ -218,14 +197,9 @@ TEST_F( utMetadata, copy_test ) {
     m_data->Set( 5, "aiString", strVal );
     aiVector3D vecVal( 1, 2, 3 );
     m_data->Set( 6, "aiVector3D", vecVal );
-    aiMetadata metaVal;
-    m_data->Set( 7, "aiMetadata", metaVal );
-    int64_t i64 = 64;
-    m_data->Set(8, "int64_t", i64);
-    uint32_t ui32 = 32;
-    m_data->Set(9, "uint32_t", ui32);
-    aiMetadata copy(*m_data);
-    EXPECT_EQ( 10u, copy.mNumProperties );
+
+    aiMetadata copy( *m_data );
+    EXPECT_EQ( 7u, copy.mNumProperties );
 
     // bool test
     {
@@ -236,7 +210,7 @@ TEST_F( utMetadata, copy_test ) {
 
     // int32_t test
     {
-        int32_t v = 127;
+		int32_t v = 0;
         bool ok = copy.Get( "int32", v );
         EXPECT_TRUE( ok );
         EXPECT_EQ( i32v, v );
@@ -244,7 +218,7 @@ TEST_F( utMetadata, copy_test ) {
 
     // uint64_t test
     {
-        uint64_t v = 255;
+        uint64_t v;
         bool ok = copy.Get( "uint64", v );
         EXPECT_TRUE( ok );
         EXPECT_EQ( ui64v, v );
@@ -252,14 +226,14 @@ TEST_F( utMetadata, copy_test ) {
 
     // float test
     {
-        float v = -9.9999f;
+        float v;
         EXPECT_TRUE( copy.Get( "float", v ) );
         EXPECT_EQ( fv, v );
     }
 
     // double test
     {
-        double v = -99.99;
+        double v;
         EXPECT_TRUE( copy.Get( "double", v ) );
         EXPECT_EQ( dv, v );
     }
@@ -277,20 +251,4 @@ TEST_F( utMetadata, copy_test ) {
         EXPECT_TRUE( copy.Get( "aiVector3D", v ) );
         EXPECT_EQ( vecVal, v );
     }
-
-    // metadata test
-    {
-        aiMetadata v;
-        EXPECT_TRUE( copy.Get( "aiMetadata", v ) );
-        EXPECT_EQ( metaVal, v );
-    }
-}
-
-TEST_F( utMetadata, set_test ) {
-    aiMetadata v;
-    const std::string key_bool = "test_bool";
-    v.Set(1, key_bool, true);
-    v.Set(1, key_bool, true);
-    v.Set(1, key_bool, true);
-    v.Set(1, key_bool, true);
 }

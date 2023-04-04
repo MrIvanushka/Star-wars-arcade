@@ -70,8 +70,8 @@ IncludeCategories:
   - Regex:           '^<.*'
     Priority:        3
 # IncludeIsMainRegex: '(Test)?$'
-IndentCaseLabels: false 
-#IndentPPDirectives: AfterHash
+IndentCaseLabels: true
+# IndentPPDirectives: None
 IndentWidth:     4
 # IndentWrappedFunctionNames: false
 # JavaScriptQuotes: Leave
@@ -108,7 +108,7 @@ IndentWidth:     4
 # SpacesInParentheses: false
 # SpacesInSquareBrackets: false
 TabWidth:        4
-UseTab:          Never
+UseTab:          Always
 ---
 ### C++ specific config ###
 Language:        Cpp

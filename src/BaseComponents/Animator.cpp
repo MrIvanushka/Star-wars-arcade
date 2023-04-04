@@ -13,9 +13,6 @@ void AnimationState::update(float deltaTime)
 
     getClipTransforms(_currentTime, transforms);
     _currentTime += deltaTime;
-
-    if(_currentTime > 1)
-        _currentTime = 0;
     
     for(auto i = 0u; i < _container->attachedMeshCount(); i++)
     {
@@ -28,19 +25,6 @@ void AnimationState::update(float deltaTime)
             if(mesh.tryFindBoneID(element.first, boneId))
             {   
                 meshTransforms[boneId] = element.second;
-                
-            /*
-            std::cout << "RESULT MATRIX" << std::endl;
-            glm::mat4 matrix = meshTransforms[boneId];
-
-
-            for(int k = 0; k < 4; k++)
-            {
-                for(int j = 0; j < 4; j++)
-                    std::cout << matrix[j][k] << " ";
-
-                std::cout << std::endl;
-            }*/
             }
         }
         mesh.setBoneTransforms(meshTransforms);
