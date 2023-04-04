@@ -5,6 +5,8 @@
 
 #include "../Engine/GameObject.h"
 
+#include <cmath>
+
 
 class CameraFollower : public Component
 {
@@ -16,12 +18,15 @@ private:
     const float _rotatingSpeed = 10;
 
     OrientedPoint* _target;
-    float _offset;
+    float _offset = 5;
     glm::vec2 _currentAngles;
     glm::vec2 _targetAngles;
 public:
     CameraFollower(GameObject* object) : Component(object)
-    {}
+    {
+        _currentAngles = glm::vec2(0.f);
+        _targetAngles = glm::vec2(0.f);
+    }
 
     void setTarget(OrientedPoint* target)
     {
@@ -34,19 +39,35 @@ public:
 
         if(glm::length(delta) < glm::length(movingDelta))
             movingDelta = delta;
+        
+        _currentAngles += movingDelta;
 
         glm::quat localRotation;
         glm::quat parentRotation = _target->getRotation();
         glm::vec3 localOffset;
-        //use sin and cos to get local camera coord
-        //search function to get quatenion from forward vector
-        gameObject.moveAt(_target->getPosition() + localOffset * parentRotation);
-        gameObject.rotateAt(parentRotation * localRotation);
+
+        localOffset.x = _offset * cos(_currentAngles.y) * cos(_currentAngles.x);
+        localOffset.y = _offset * sin(_currentAngles.y);
+        localOffset.z = _offset * cos(_currentAngles.y) * sin(_currentAngles.x);
+        localRotation = glm::quatLookAt(localOffset * (-1.f), glm::vec3(0,1,0));
+        gameObject->moveAt(_target->getPosition() + parentRotation * localOffset);
+        gameObject->rotateAt(parentRotation * localRotation);
     }
     
     void rotate(glm::vec2 delta)
     {
         _targetAngles += delta;
+
+        if (std::abs(_targetAngles.x) > 360) {
+            if (_targetAngles.x < 0) {
+                _targetAngles.x = std::fmod(_targetAngles.x, 360) + 360;
+            } else {
+                _targetAngles.x = std::fmod(_targetAngles.x, 360);
+            }
+        }
+
+        if (_targetAngles.y > _maxVerticalAngle) _targetAngles.y = _maxVerticalAngle;
+        if (_targetAngles.y < _minVerticalAngle) _targetAngles.y = _minVerticalAngle;
 
         //TODO: clamp angles
     }
