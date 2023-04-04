@@ -51,13 +51,15 @@ public:
         glm::quat parentRotation = _target->getRotation();
         glm::vec3 localOffset;
 
-        localOffset.x = -1 * _offset * cos(_currentAngles.y) * cos(_currentAngles.x);
-        localOffset.y = _offset * sin(_currentAngles.y);
-        localOffset.z = -1 * _offset * cos(_currentAngles.y) * sin(_currentAngles.x);
+        localOffset.x = _offset * cos(_currentAngles.y / 180 * 3.1415) * cos(_currentAngles.x / 180 * 3.1415);
+        localOffset.y = _offset * sin(_currentAngles.y / 180 * 3.1415);
+        localOffset.z = _offset * cos(_currentAngles.y / 180 * 3.1415) * sin(_currentAngles.x / 180 * 3.1415);
 
-        glm::quat rotY = glm::angleAxis(_currentAngles.x, glm::vec3(0,1,0));
+        /* glm::quat rotY = glm::angleAxis(_currentAngles.x, glm::vec3(0,1,0));
         glm::quat rotX = glm::angleAxis(_currentAngles.y, glm::vec3(1,0,0));
-        localRotation = rotX * rotY;
+        localRotation = rotX * rotY; */
+
+        localRotation = glm::quatLookAt(glm::normalize(localOffset) * (-1.f), glm::vec3(0, 1, 0));
 
         gameObject->moveAt(_target->getPosition() + parentRotation * localOffset);
         gameObject->rotateAt(parentRotation * localRotation);
