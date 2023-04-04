@@ -6,6 +6,7 @@
 #include "../Engine/GameObject.h"
 
 #include <cmath>
+#include <iostream>
 
 
 class CameraFollower : public Component
@@ -18,7 +19,7 @@ private:
     const float _rotatingSpeed = 10;
 
     OrientedPoint* _target;
-    float _offset = 5;
+    float _offset = 15;
     glm::vec2 _currentAngles;
     glm::vec2 _targetAngles;
 public:
@@ -35,21 +36,29 @@ public:
 
     void update(float deltaTime) override{ 
         auto delta = _targetAngles - _currentAngles;
+
+        if(glm::length(delta) > 0.00001f)
+        {
         auto movingDelta = glm::normalize(delta) * _rotatingSpeed * deltaTime;
 
         if(glm::length(delta) < glm::length(movingDelta))
             movingDelta = delta;
         
         _currentAngles += movingDelta;
+        }
 
         glm::quat localRotation;
         glm::quat parentRotation = _target->getRotation();
         glm::vec3 localOffset;
 
-        localOffset.x = _offset * cos(_currentAngles.y) * cos(_currentAngles.x);
+        localOffset.x = -1 * _offset * cos(_currentAngles.y) * cos(_currentAngles.x);
         localOffset.y = _offset * sin(_currentAngles.y);
-        localOffset.z = _offset * cos(_currentAngles.y) * sin(_currentAngles.x);
-        localRotation = glm::quatLookAt(localOffset * (-1.f), glm::vec3(0,1,0));
+        localOffset.z = -1 * _offset * cos(_currentAngles.y) * sin(_currentAngles.x);
+
+        glm::quat rotY = glm::angleAxis(_currentAngles.x, glm::vec3(0,1,0));
+        glm::quat rotX = glm::angleAxis(_currentAngles.y, glm::vec3(1,0,0));
+        localRotation = rotX * rotY;
+
         gameObject->moveAt(_target->getPosition() + parentRotation * localOffset);
         gameObject->rotateAt(parentRotation * localRotation);
     }

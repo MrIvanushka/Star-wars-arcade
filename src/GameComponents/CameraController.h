@@ -19,7 +19,7 @@ public:
     void start() override
     {
         _follower = gameObject->getComponent<CameraFollower>();
-       // _previousMousePosition = Input::getInstance()->getMousePosition();
+        _previousMousePosition = Input::getInstance()->getMousePosition();
     }
 
     void update(float deltaTime) override
@@ -29,7 +29,7 @@ public:
 
         _follower->rotate(glm::vec2(delta.x * _sensitivityX, delta.y * _sensitivityY));
 
-        //_previousMousePosition = mousePosition;
+        _previousMousePosition = mousePosition;
     }
     
 };
