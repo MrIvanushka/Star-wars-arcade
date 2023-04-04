@@ -14,6 +14,7 @@ protected:
 
     virtual void update(float deltaTime) {}
 public:
+    State() {}
     State(std::vector<Transition*> transitions);
 
     void onEnable();

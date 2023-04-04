@@ -22,6 +22,9 @@ void State::updateAll(float deltaTime)
 
 bool State::needTransit(Transition* completedTransition)
 {
+    if(_transitions.size() == 0)
+        return false;
+
     for(auto& transition : _transitions)
     {
         if(transition->needTransit())

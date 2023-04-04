@@ -15,7 +15,6 @@ src/Engine/Scene.cpp
 src/Engine/Vertex.cpp
 src/Engine/Input.cpp 
 src/Engine/AssimpLoader.cpp 
-src/Engine/SkinnedMeshRenderer.cpp
 src/BaseComponents/Animator.cpp
 src/Physics/bounds.cpp 
 src/Physics/meshcollider.cpp  
@@ -24,7 +23,7 @@ src/Physics/linalg.cpp
 src/Physics/octree.cpp 
 src/Physics/ray.cpp 
 src/Physics/rigidbody.cpp 
-src/Utilities/StateMachine.h
+src/Utilities/StateMachine.cpp
 src/FieldScene.cpp)
 
 add_subdirectory(./glfw)

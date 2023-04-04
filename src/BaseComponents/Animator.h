@@ -7,34 +7,60 @@
 #include"../Engine/GameObject.h"
 #include"../Engine/SkinnedMeshRenderer.h"
 #include"../Utilities/StateMachine.h"
+#include<iostream>
 
-class Animator : public Component
+class IMeshContainer
 {
-private:
-    StateMachine* _stateMachine;
 public:
-    Animator(GameObject* obj) : Component(obj)
-    {}
+    virtual SkinnedMesh& operator[](unsigned index) = 0;
+
+    virtual uint attachedMeshCount() = 0;
+};
+
+class Animator : public Component, public IMeshContainer
+{
+protected:
+    StateMachine* _stateMachine;
+private:
+    std::vector<SkinnedMesh*> _attachedMeshes;
+public:
+    Animator(GameObject* obj) : Component(obj) { }
+
+    void attachMesh(SkinnedMesh* mesh)
+    {
+        _attachedMeshes.push_back(mesh);
+    }
+
     void update(float deltaTime)
     {
         _stateMachine->update(deltaTime);
+    }
+
+    SkinnedMesh& operator[](unsigned index) override{
+        return *_attachedMeshes[index];
+    }
+
+    uint attachedMeshCount() override{
+        return _attachedMeshes.size();
     }
 };
 
 class AnimationState : public State{
 protected:
-    SkinnedMesh* _mesh;
+    IMeshContainer* _container;
 private:
     float _transitDuration;
     float _currentTime;
 public:
-    AnimationState(SkinnedMesh* mesh, float transitDuration, std::vector<Transition*> transitions) :
-      State(transitions), _mesh(mesh), _transitDuration(transitDuration), _currentTime(0) {}
+    AnimationState(IMeshContainer* container, float transitDuration) :
+      State(), _container(container), _transitDuration(transitDuration), _currentTime(0) {}
+    AnimationState(IMeshContainer* container, float transitDuration, std::vector<Transition*> transitions) :
+      State(transitions), _container(container), _transitDuration(transitDuration), _currentTime(0) {}
     
     void start() override;
     void update(float deltaTime) override;
 private:
-    virtual void getClipTransforms(float currentTime, std::vector<glm::mat4>& transforms) = 0;
+    virtual void getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms) = 0;
 };
 
 
@@ -42,9 +68,13 @@ class AnimationClip
 {
 private:
     aiAnimation* _animation;
+    aiNode* _rootNode;
+    std::map<std::string, glm::mat4> _boneOffsets;
+    glm::mat4 _globalInverse;
 public:
-    AnimationClip(aiAnimation* animation) : _animation(animation){ }
-    void GetBoneTransforms(SkinnedMesh& mesh, float timeTicks, std::vector<glm::mat4>& Transforms);
+    AnimationClip(aiAnimation* animation, aiNode* root, std::map<std::string, glm::mat4> boneOffsets, glm::mat4 globalInverse) : 
+        _animation(animation), _rootNode(root), _boneOffsets(boneOffsets), _globalInverse(globalInverse) {}
+    void GetBoneTransforms(float timeTicks, std::map<std::string, glm::mat4>& Transforms);
     float scoreTimeInTicks(float currentTime);
 private:
     void CalcInterpolatedScaling(aiVector3D& out, float animationTime, const aiNodeAnim* pNodeAnim);
@@ -54,7 +84,7 @@ private:
     uint FindRotation(float animationTime, const aiNodeAnim* pNodeAnim);
     uint FindPosition(float animationTime, const aiNodeAnim* pNodeAnim);
     const aiNodeAnim* FindNodeAnim(const std::string& nodeName);
-    void ReadNodeHierarchy(SkinnedMesh& mesh, float AnimationTimeTicks, const aiNode* pNode, const glm::mat4& ParentTransform, std::vector<glm::mat4>& Transforms);
+    void ReadNodeHierarchy(float AnimationTimeTicks, const aiNode* pNode, const glm::mat4& ParentTransform, std::map<std::string, glm::mat4>& Transforms);
 };
 
 
@@ -62,14 +92,16 @@ class SingleAnimationState : public AnimationState{
 private:
     AnimationClip* _clip;
 public:
-    SingleAnimationState(AnimationClip* clip, SkinnedMesh* mesh, float transitDuration, std::vector<Transition*> transitions) :
-        AnimationState(mesh, transitDuration, transitions), _clip(clip) {}
+    SingleAnimationState(AnimationClip* clip, IMeshContainer* container, float transitDuration) :
+        AnimationState(container, transitDuration), _clip(clip) {}
+    SingleAnimationState(AnimationClip* clip, IMeshContainer* container, float transitDuration, std::vector<Transition*> transitions) :
+        AnimationState(container, transitDuration, transitions), _clip(clip) {}
 
 private:
-    void getClipTransforms(float currentTime, std::vector<glm::mat4>& transforms) override;
+    void getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms) override;
 };
 
-
+/*
 class BlendTree : public AnimationState{
     struct BlendingElement
     {
@@ -87,7 +119,7 @@ public:
 
 private:
     void getClipTransforms(float currentTime, std::vector<glm::mat4>& transforms) override;
-};
+};*/
 
 class ExitTimeTransition : public Transition
 {

@@ -9,13 +9,7 @@
 #include<vector>
 #include<string>
 
-#define MAX_NUM_BONES_PER_VERTEX 8
-
-struct BoneData
-{
-    unsigned int Ids[MAX_NUM_BONES_PER_VERTEX];
-    float Weights[MAX_NUM_BONES_PER_VERTEX];
-};
+#define MAX_NUM_BONES_PER_VERTEX 4
 
 struct Vertex
 {
@@ -23,12 +17,16 @@ struct Vertex
     glm::vec2 texcoord;
     glm::vec3 normal;
     glm::vec3 tangent;
-    BoneData bones;
-    
+    unsigned int boneIds[MAX_NUM_BONES_PER_VERTEX];
+    float boneWeights[MAX_NUM_BONES_PER_VERTEX];
+
     Vertex()
     {
         for (int i = 0; i < MAX_NUM_BONES_PER_VERTEX; i++)
-            bones.Weights[i] = 0;
+        {   
+            boneIds[i] = 0;
+            boneWeights[i] = 0;
+        }
     }
 
     static std::vector<Vertex> generateList(float* vertices, int numberOfVertices);

@@ -10,7 +10,14 @@
 #include"Material.h"
 #include"Mesh.h"
 
-class MeshRenderer
+class IMeshRenderer{
+private:
+    virtual void updateUniforms(Shader* shader) = 0;
+public:
+    virtual void render() = 0;
+};
+
+class MeshRenderer : public IMeshRenderer
 {
 private:
     GLuint VAO;
@@ -86,7 +93,7 @@ public:
 
     }
 
-    virtual void render()
+    void render()
     {
         this->material->sendToShader(*shader);
         shader->use();

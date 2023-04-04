@@ -1,4 +1,5 @@
 #include"Animator.h"
+#include "../Utilities/AssimpMath.h"
 #include <../../glm/glm/gtx/matrix_decompose.hpp>
 
 void AnimationState::start()
@@ -8,165 +9,182 @@ void AnimationState::start()
 
 void AnimationState::update(float deltaTime)
 {
-    auto meshTransforms = _mesh->getBoneTransforms();
-    
-    getClipTransforms(_currentTime, meshTransforms);
+    std::map<std::string, glm::mat4> transforms;
+
+    getClipTransforms(_currentTime, transforms);
     _currentTime += deltaTime;
+
+    if(_currentTime > 1)
+        _currentTime = 0;
     
-    //do something with blendings
+    for(auto i = 0u; i < _container->attachedMeshCount(); i++)
+    {
+        auto& mesh = (*_container)[i]; 
+        std::vector<glm::mat4> meshTransforms(mesh.bonesCount());
 
-    _mesh->setBoneTransforms(meshTransforms);
-}
+        for(auto& element : transforms){
+            uint boneId;
 
-void SingleAnimationState::getClipTransforms(float currentTime, std::vector<glm::mat4>& transforms)
-{
-    return _clip->GetBoneTransforms(*_mesh, _clip->scoreTimeInTicks(currentTime), transforms);
-}
+            if(mesh.tryFindBoneID(element.first, boneId))
+            {   
+                meshTransforms[boneId] = element.second;
+                
+            /*
+            std::cout << "RESULT MATRIX" << std::endl;
+            glm::mat4 matrix = meshTransforms[boneId];
 
-uint AnimationClip::FindPosition(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim)
-{
-    for (uint i = 0 ; i < pNodeAnim->mNumPositionKeys - 1 ; i++) {
-        float t = (float)pNodeAnim->mPositionKeys[i + 1].mTime;
-        if (AnimationTimeTicks < t) {
-            return i;
+
+            for(int k = 0; k < 4; k++)
+            {
+                for(int j = 0; j < 4; j++)
+                    std::cout << matrix[j][k] << " ";
+
+                std::cout << std::endl;
+            }*/
+            }
         }
+        mesh.setBoneTransforms(meshTransforms);
     }
-
-    return 0;
 }
 
-void AnimationClip::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim)
+void SingleAnimationState::getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms)
 {
-    // we need at least two values to interpolate...
-    if (pNodeAnim->mNumPositionKeys == 1) {
-        Out = pNodeAnim->mPositionKeys[0].mValue;
-        return;
-    }
-
-    uint PositionIndex = FindPosition(AnimationTimeTicks, pNodeAnim);
-    uint NextPositionIndex = PositionIndex + 1;
-    assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
-    float t1 = (float)pNodeAnim->mPositionKeys[PositionIndex].mTime;
-    float t2 = (float)pNodeAnim->mPositionKeys[NextPositionIndex].mTime;
-    float DeltaTime = t2 - t1;
-    float Factor = (AnimationTimeTicks - t1) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
-    const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
-    const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
-    aiVector3D Delta = End - Start;
-    Out = Start + Factor * Delta;
+    return _clip->GetBoneTransforms(_clip->scoreTimeInTicks(currentTime), transforms);
 }
 
-uint AnimationClip::FindRotation(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim)
-{
-    assert(pNodeAnim->mNumRotationKeys > 0);
+unsigned int AnimationClip::FindScaling(float _animationTime, const aiNodeAnim* _nodeAnim)
+		{
+			assert(_nodeAnim->mNumScalingKeys > 0);
+			for (unsigned int i = 0; i < _nodeAnim->mNumScalingKeys - 1; i++) {
+				if (_animationTime < (float)_nodeAnim->mScalingKeys[i + 1].mTime) {
+					return i;
+				}
+			}
 
-    for (uint i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++) {
-        float t = (float)pNodeAnim->mRotationKeys[i + 1].mTime;
-        if (AnimationTimeTicks < t) {
-            return i;
-        }
-    }
-
-    return 0;
-}
-
-void AnimationClip::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim)
-{
-    // we need at least two values to interpolate...
-    if (pNodeAnim->mNumRotationKeys == 1) {
-        Out = pNodeAnim->mRotationKeys[0].mValue;
-        return;
-    }
-
-    uint RotationIndex = FindRotation(AnimationTimeTicks, pNodeAnim);
-    uint NextRotationIndex = RotationIndex + 1;
-    assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
-    float t1 = (float)pNodeAnim->mRotationKeys[RotationIndex].mTime;
-    float t2 = (float)pNodeAnim->mRotationKeys[NextRotationIndex].mTime;
-    float DeltaTime = t2 - t1;
-    float Factor = (AnimationTimeTicks - t1) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
-    const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
-    const aiQuaternion& EndRotationQ   = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
-    aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
-    Out.Normalize();
-}
-
-uint AnimationClip::FindScaling(float AnimationTimeTicks, const aiNodeAnim* pNodeAnim)
-{
-    assert(pNodeAnim->mNumScalingKeys > 0);
-
-    for (uint i = 0 ; i < pNodeAnim->mNumScalingKeys - 1 ; i++) {
-        float t = (float)pNodeAnim->mScalingKeys[i + 1].mTime;
-        if (AnimationTimeTicks < t) {
-            return i;
-        }
-    }
-
-    return 0;
-}
-
-void AnimationClip::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTimeTicks, const aiNodeAnim* pNodeAnim)
-{
-    // we need at least two values to interpolate...
-    if (pNodeAnim->mNumScalingKeys == 1) {
-        Out = pNodeAnim->mScalingKeys[0].mValue;
-        return;
-    }
-
-    uint ScalingIndex = FindScaling(AnimationTimeTicks, pNodeAnim);
-    uint NextScalingIndex = ScalingIndex + 1;
-    assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
-    float t1 = (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime;
-    float t2 = (float)pNodeAnim->mScalingKeys[NextScalingIndex].mTime;
-    float DeltaTime = t2 - t1;
-    float Factor = (AnimationTimeTicks - (float)t1) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
-    const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
-    const aiVector3D& End   = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
-    aiVector3D Delta = End - Start;
-    Out = Start + Factor * Delta;
-}
-
-void convert_aimatrix_to_glm(glm::mat4& glmMat4, const aiMatrix4x4& aiMatrix) {
-	for (auto i = 0; i < 4; i++) {
-		for (auto j = 0; j < 4; j++) {
-			glmMat4[i][j] = aiMatrix[i][j];
+			// It should never reach here.
+			assert(0);
+			return 0;
 		}
-	}
-}
 
-void convert_aimatrix_to_glm(glm::mat4& glmMat4, const aiMatrix3x3& aiMatrix) {
+		unsigned int AnimationClip::FindRotation(float _animationTime, const aiNodeAnim* _nodeAnim)
+		{
+			assert(_nodeAnim->mNumRotationKeys > 0);
+			for (unsigned int i = 0; i < _nodeAnim->mNumRotationKeys - 1; i++) {
+				if (_animationTime < (float)_nodeAnim->mRotationKeys[i + 1].mTime) {
+					return i;
+				}
+			}
 
-	for (auto i = 0; i < 3; i++) {
-		for (auto j = 0; j < 3; j++) {
-			glmMat4[i][j] = aiMatrix[i][j];
+			// It should never reach here.
+			assert(0);
+			return 0;
 		}
-	}
 
-	// The rest would be zero, other than the 4,4.
-	glmMat4[0][3] = 0.0f;
-	glmMat4[1][3] = 0.0f;
-	glmMat4[2][3] = 0.0f;
+		unsigned int AnimationClip::FindPosition(float _animationTime, const aiNodeAnim* _nodeAnim)
+		{
+			assert(_nodeAnim->mNumPositionKeys > 0);
+			for (unsigned int i = 0; i < _nodeAnim->mNumPositionKeys - 1; i++) {
+				if (_animationTime < (float)_nodeAnim->mPositionKeys[i + 1].mTime) {
+					return i;
+				}
+			}
 
-	glmMat4[3][0] = 0.0f;
-	glmMat4[3][1] = 0.0f;
-	glmMat4[3][2] = 0.0f;
+			// It should never reach here.
+			assert(0);
+			return 0;
+		}
 
-	glmMat4[3][3] = 1.0f;
+		void AnimationClip::CalcInterpolatedPosition(aiVector3D& _out, float _animationTime, const aiNodeAnim* _nodeAnim)
+		{
+			if (_nodeAnim->mNumPositionKeys == 1) {
+				// There is only one Position.
+				_out = _nodeAnim->mPositionKeys[0].mValue;
+				return;
+			}
 
-}
+			unsigned int position_index = FindPosition(_animationTime, _nodeAnim);
+			unsigned int next_pos_index = position_index + 1;
+			assert(next_pos_index < _nodeAnim->mNumPositionKeys);
 
-void AnimationClip::ReadNodeHierarchy(SkinnedMesh& mesh, float AnimationTimeTicks, const aiNode* pNode, const glm::mat4& ParentTransform, std::vector<glm::mat4>& Transforms)
+			// The Difference between two key frames.
+			float delta_time = (float)(_nodeAnim->mPositionKeys[next_pos_index].mTime - _nodeAnim->mPositionKeys[position_index].mTime);
+
+			// The Factor by which the current frame has transitioned into the next frame.
+			float factor = (_animationTime - (float)_nodeAnim->mPositionKeys[position_index].mTime) / delta_time;
+
+			assert(factor >= 0.0f && factor <= 1.0f);
+
+			const auto start = _nodeAnim->mPositionKeys[position_index].mValue;
+			const auto end = _nodeAnim->mPositionKeys[next_pos_index].mValue;
+
+			_out = start + factor * (end - start);
+
+		}
+
+		void AnimationClip::CalcInterpolatedRotation(aiQuaternion& _out, float _animationTime, const aiNodeAnim* _nodeAnim)
+		{
+
+			if (_nodeAnim->mNumRotationKeys == 1) {
+				// There is only one Position.
+				_out = _nodeAnim->mRotationKeys[0].mValue;
+				return;
+			}
+
+			unsigned int rotation_index = FindRotation(_animationTime, _nodeAnim);
+			unsigned int next_rot_index = rotation_index + 1;
+			assert(next_rot_index < _nodeAnim->mNumRotationKeys);
+
+			// The Difference between two key frames.
+			float delta_time = (float)(_nodeAnim->mRotationKeys[next_rot_index].mTime - _nodeAnim->mRotationKeys[rotation_index].mTime);
+
+			// The Factor by which the current frame has transitioned into the next frame.
+			float factor = (_animationTime - (float)_nodeAnim->mRotationKeys[rotation_index].mTime) / delta_time;
+
+			assert(factor >= 0.0f && factor <= 1.0f);
+
+			const auto start = _nodeAnim->mRotationKeys[rotation_index].mValue;
+			const auto end = _nodeAnim->mRotationKeys[next_rot_index].mValue;
+
+			aiQuaternion::Interpolate(_out, start, end, factor);
+
+			_out.Normalize();
+
+		}
+
+		void AnimationClip::CalcInterpolatedScaling(aiVector3D& _out, float _animationTime, const aiNodeAnim* _nodeAnim)
+		{
+
+			if (_nodeAnim->mNumScalingKeys == 1) {
+				_out = _nodeAnim->mScalingKeys[0].mValue;
+				return;
+			}
+
+			auto scaling_index = FindScaling(_animationTime, _nodeAnim);
+			auto nex_sca_index = scaling_index + 1;
+
+			assert(nex_sca_index < _nodeAnim->mNumScalingKeys);
+
+			auto delta_time = (float)(_nodeAnim->mScalingKeys[nex_sca_index].mTime - _nodeAnim->mScalingKeys[scaling_index].mTime);
+
+			auto factor = (_animationTime - (float)_nodeAnim->mScalingKeys[scaling_index].mTime) / delta_time;
+
+			assert(factor >= 0.0f && factor <= 1.0f);
+
+			auto start = _nodeAnim->mScalingKeys[scaling_index].mValue;
+			auto end = _nodeAnim->mScalingKeys[nex_sca_index].mValue;
+
+			_out = start + factor * (end - start);
+
+		}
+
+void AnimationClip::ReadNodeHierarchy(float AnimationTimeTicks, const aiNode* pNode, const glm::mat4& ParentTransform, std::map<std::string, glm::mat4>& Transforms)
 {
     std::string NodeName(pNode->mName.data);
 
     glm::mat4 NodeTransformation;
-    convert_aimatrix_to_glm(NodeTransformation, pNode->mTransformation);
-
+    AssimpMath::convert_aimatrix_to_glm(NodeTransformation, pNode->mTransformation);
     const aiNodeAnim* pNodeAnim = FindNodeAnim(NodeName);
-
+    
     if (pNodeAnim) {
         // Interpolate scaling and generate scaling transformation matrix
         aiVector3D Scaling;
@@ -177,8 +195,8 @@ void AnimationClip::ReadNodeHierarchy(SkinnedMesh& mesh, float AnimationTimeTick
         // Interpolate rotation and generate rotation transformation matrix
         aiQuaternion RotationQ;
         CalcInterpolatedRotation(RotationQ, AnimationTimeTicks, pNodeAnim);
-        glm::mat4 RotationM(1.0f);
-        convert_aimatrix_to_glm(RotationM, RotationQ.GetMatrix());
+        glm::quat rotation = AssimpMath::getGLMQuat(RotationQ);
+        glm::mat4 RotationM = glm::mat4_cast(rotation);
 
         // Interpolate translation and generate translation transformation matrix
         aiVector3D Translation;
@@ -192,34 +210,37 @@ void AnimationClip::ReadNodeHierarchy(SkinnedMesh& mesh, float AnimationTimeTick
 
     glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
 
-    uint BoneIndex;
 
-    if (mesh.tryFindBoneID(NodeName, BoneIndex)) {
-        Transforms[BoneIndex] = /*m_GlobalInverseTransform **/ GlobalTransformation/* * m_BoneInfo[BoneIndex].OffsetMatrix*/;
-    }
+    if(_boneOffsets.find(NodeName) != _boneOffsets.end())
+        Transforms[NodeName] = _globalInverse * GlobalTransformation * _boneOffsets[NodeName];
+
+
 
     for (uint i = 0 ; i < pNode->mNumChildren ; i++) {
-        ReadNodeHierarchy(mesh, AnimationTimeTicks, pNode->mChildren[i], GlobalTransformation, Transforms);
+        ReadNodeHierarchy(AnimationTimeTicks, pNode->mChildren[i], GlobalTransformation, Transforms);
     }
 }
 
-void AnimationClip::GetBoneTransforms(SkinnedMesh& mesh, float timeTicks, std::vector<glm::mat4>& Transforms)
+void AnimationClip::GetBoneTransforms(float timeTicks, std::map<std::string, glm::mat4>& Transforms)
 {
     glm::mat4 Identity(1.0f);
 
-    ReadNodeHierarchy(mesh, timeTicks, mesh.getRoot(), Identity, Transforms);
+    ReadNodeHierarchy(timeTicks, _rootNode, Identity, Transforms);
 }
 
 const aiNodeAnim* AnimationClip::FindNodeAnim(const std::string& NodeName)
 {
-    for (uint i = 0 ; i < _animation->mNumChannels ; i++) {
-        const aiNodeAnim* pNodeAnim = _animation->mChannels[i];
+    for (uint j = 0 ; j < _animation->mNumChannels; j++) {
+    const aiNodeAnim* pNodeAnim = _animation->mChannels[j];
+    }
 
-        if (std::string(pNodeAnim->mNodeName.data) == NodeName) {
+    for (uint i = 0 ; i < _animation->mNumChannels; i++) {
+        const aiNodeAnim* pNodeAnim = _animation->mChannels[i];
+        
+        if (std::string(_animation->mChannels[i]->mNodeName.data) == NodeName) {
             return pNodeAnim;
         }
     }
-
     return NULL;
 }
 

@@ -214,7 +214,10 @@ public:
 
         this->unuse();
     }
-
+    void setMat4fvRaw(glm::mat4 value, const GLchar* name, GLboolean transpose = GL_FALSE)
+    {
+        glUniformMatrix4fv(glGetUniformLocation(this->id, name), 1, transpose, glm::value_ptr(value));
+    }
 };
 
 #endif //SWTOR_SHADER_H

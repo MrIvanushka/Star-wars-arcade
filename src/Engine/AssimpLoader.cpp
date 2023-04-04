@@ -1,7 +1,9 @@
 #include "AssimpLoader.h"
+#include"../Utilities/AssimpMath.h"
 
-std::vector<MeshPack> AssimpLoader::load(std::string path, bool allowArmature) {
-    Assimp::Importer importer;
+Assimp::Importer importer;
+std::vector<MeshPack> AssimpLoader::load(std::string path) {
+    //Assimp::Importer importer;
     
     const aiScene* scene = importer.ReadFile(path, 
         aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -9,25 +11,45 @@ std::vector<MeshPack> AssimpLoader::load(std::string path, bool allowArmature) {
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         throw std::exception();
     }
-    auto ret = processNode(scene->mRootNode, scene, allowArmature);
-
-    for (auto& element : ret)
-        element.rootNode = scene->mRootNode;
+    auto ret = processNode(scene->mRootNode, scene);
     
     return ret;
 }
 
-std::vector<MeshPack> AssimpLoader::processNode(aiNode* node, const aiScene* scene, bool allowArmature) {
+std::vector<MeshPack> AssimpLoader::loadWithArmature(std::string path, std::vector<AnimationClip> &clips)
+{
+    //Assimp::Importer importer;
+    std::map<std::string, glm::mat4> boneOffsets;
+    
+    const aiScene* scene = importer.ReadFile(path, 
+        aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        throw std::exception();
+    }
+    auto ret = processNodeWithArmature(scene->mRootNode, scene, boneOffsets);
+
+    glm::mat4 globalInverse;
+    AssimpMath::convert_aimatrix_to_glm(globalInverse, scene->mRootNode->mTransformation);
+
+    for(auto i = 0u; i<scene->mNumAnimations; i++){
+        clips.push_back(AnimationClip(scene->mAnimations[i], scene->mRootNode, boneOffsets, globalInverse));
+    }
+
+    return ret;
+}
+
+std::vector<MeshPack> AssimpLoader::processNode(aiNode* node, const aiScene* scene) {
     std::vector<MeshPack> meshes;
     
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        MeshPack newMesh = processMesh(mesh, scene, allowArmature);
+        MeshPack newMesh = processMesh(mesh, scene);
         meshes.push_back(newMesh);
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        std::vector<MeshPack> childrenMeshes = processNode(node->mChildren[i], scene, allowArmature);
+        std::vector<MeshPack> childrenMeshes = processNode(node->mChildren[i], scene);
         meshes.insert(meshes.end(), childrenMeshes.begin(), childrenMeshes.end());
     }
 
@@ -35,7 +57,7 @@ std::vector<MeshPack> AssimpLoader::processNode(aiNode* node, const aiScene* sce
 }
 
 // process mesh in object file
-MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene, bool allowArmature) {
+MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene) {
     std::vector<Vertex> vertices(mesh->mNumVertices);
     std::vector<unsigned int> indices(3 * mesh->mNumFaces);
     // setup bounding region
@@ -105,11 +127,6 @@ MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene, bool allo
     }
     
     MeshPack ret;
-
-    if(allowArmature)
-    {
-        loadMeshBones(mesh, vertices, ret.boneNameToIndexMap);
-    }
     
     ret.vertices = vertices;
     ret.indices = indices;
@@ -117,12 +134,42 @@ MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene, bool allo
     return ret;
 }
 
-void AssimpLoader::loadMeshBones(aiMesh* mesh, std::vector<Vertex> &vertices, std::map<std::string, uint> &boneNameToIndexMap)
+std::vector<MeshPack> AssimpLoader::processNodeWithArmature(aiNode* node, const aiScene* scene, std::map<std::string, glm::mat4> &boneOffsets) {
+    std::vector<MeshPack> meshes;
+    
+    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        MeshPack newMesh = processMeshWithArmature(mesh, scene, boneOffsets);
+        meshes.push_back(newMesh);
+    }
+
+    for (unsigned int i = 0; i < node->mNumChildren; i++) {
+        std::vector<MeshPack> childrenMeshes = processNodeWithArmature(node->mChildren[i], scene, boneOffsets);
+        meshes.insert(meshes.end(), childrenMeshes.begin(), childrenMeshes.end());
+    }
+    glm::mat4 globalInverse;
+     AssimpMath::convert_aimatrix_to_glm(globalInverse, node->mTransformation);
+
+    return meshes;
+}
+
+// process mesh in object file
+MeshPack AssimpLoader::processMeshWithArmature(aiMesh* mesh, const aiScene* scene, std::map<std::string, glm::mat4> &boneOffsets) {
+    MeshPack ret = processMesh(mesh, scene);
+
+    loadMeshBones(mesh, ret, boneOffsets);
+    
+    return ret;
+}
+
+void AssimpLoader::loadMeshBones(aiMesh* mesh, MeshPack &ret, std::map<std::string, glm::mat4> &boneOffsets)
 {
-    for (uint i = 0 ; i < mesh->mNumBones ; i++) 
+    for (uint i = 0 ; i < mesh->mNumBones; i++) 
     {
-        loadSingleBone(mesh, mesh->mBones[i], i, vertices);
-        boneNameToIndexMap[mesh->mBones[i]->mName.C_Str()] = i;
+        loadSingleBone(mesh, mesh->mBones[i], i, ret.vertices);
+        ret.boneNameToIndexMap[mesh->mBones[i]->mName.C_Str()] = i;
+        boneOffsets[mesh->mBones[i]->mName.C_Str()] = glm::mat4(1.0f);
+        AssimpMath::convert_aimatrix_to_glm(boneOffsets[mesh->mBones[i]->mName.C_Str()], mesh->mBones[i]->mOffsetMatrix);
     }
 }
 
@@ -131,12 +178,14 @@ void AssimpLoader::loadSingleBone(aiMesh* mesh, aiBone* bone, uint boneId, std::
     for (uint i = 0 ; i < bone->mNumWeights ; i++) {
         const aiVertexWeight& vw = bone->mWeights[i];
         //might cause errors with vertex id
+        
         for(uint j = 0; j < MAX_NUM_BONES_PER_VERTEX; j++)
         {
-            if(vertices[bone->mWeights[i].mVertexId].bones.Weights[j] < 0.001)
+
+            if(vertices[bone->mWeights[i].mVertexId].boneWeights[j] < 0.001)
             {
-                vertices[bone->mWeights[i].mVertexId].bones.Weights[i] = vw.mWeight;
-                vertices[bone->mWeights[i].mVertexId].bones.Ids[i] = boneId;
+                vertices[bone->mWeights[i].mVertexId].boneWeights[j] = vw.mWeight;
+                vertices[bone->mWeights[i].mVertexId].boneIds[j] = boneId;
                 break;
             }
         }

@@ -10,6 +10,7 @@
 
 #include "Vertex.h"
 #include "../Physics/bounds.h"
+#include "../BaseComponents/Animator.h"
 
 struct MeshPack
 {
@@ -23,11 +24,14 @@ struct MeshPack
 class AssimpLoader
 {
 public:
-    static std::vector<MeshPack> load(std::string path, bool allowArmature = false);
+    static std::vector<MeshPack> load(std::string path);
+    static std::vector<MeshPack> loadWithArmature(std::string path, std::vector<AnimationClip> &clips);
 private:
-    static std::vector<MeshPack> processNode(aiNode* node, const aiScene* scene, bool allowArmature);
-    static MeshPack processMesh(aiMesh* mesh, const aiScene* scene, bool allowArmature);
-    static void loadMeshBones(aiMesh* mesh, std::vector<Vertex> &vertices, std::map<std::string, uint> &boneNameToIndexMap);
+    static std::vector<MeshPack> processNode(aiNode* node, const aiScene* scene);
+    static MeshPack processMesh(aiMesh* mesh, const aiScene* scene);
+    static std::vector<MeshPack> processNodeWithArmature(aiNode* node, const aiScene* scene, std::map<std::string, glm::mat4> &boneOffsets);
+    static MeshPack processMeshWithArmature(aiMesh* mesh, const aiScene* scene, std::map<std::string, glm::mat4> &boneOffsets);
+    static void loadMeshBones(aiMesh* mesh, MeshPack &ret, std::map<std::string, glm::mat4> &boneOffsets);
     static void loadSingleBone(aiMesh* mesh, aiBone* bone, uint boneId, std::vector<Vertex> &vertices);
 };
 

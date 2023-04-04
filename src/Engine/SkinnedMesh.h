@@ -19,16 +19,17 @@
 class SkinnedMesh : public Mesh 
 {
 private:
-    aiNode* root;
     std::map<std::string, uint> boneNameToIndexMap;
     std::vector<glm::mat4> boneTransforms;
 public:
     friend class SkinnedMeshRenderer;
 
-    SkinnedMesh(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices, OrientedPoint* orientedPoint, aiNode* root, std::map<std::string,uint> boneNameToIndexMap, std::vector<glm::mat4> boneTransforms) :
-        Mesh(vertexArray, nrOfVertices, indexArray, nrOfIndices, orientedPoint), root(root), boneNameToIndexMap(boneNameToIndexMap) , boneTransforms(boneTransforms) {}
+    SkinnedMesh(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices, OrientedPoint* orientedPoint, std::map<std::string,uint> boneNameToIndexMap) :
+        Mesh(vertexArray, nrOfVertices, indexArray, nrOfIndices, orientedPoint), boneNameToIndexMap(boneNameToIndexMap) {
+            boneTransforms = std::vector<glm::mat4>(boneNameToIndexMap.size());
+        }
 
-    SkinnedMesh(const SkinnedMesh& obj) : Mesh(obj), root(root) {}
+    SkinnedMesh(const SkinnedMesh& obj) : Mesh(obj) {}
 
     bool tryFindBoneID(std::string name, uint& id) {
         if(boneNameToIndexMap.count(name))
@@ -39,20 +40,16 @@ public:
         return false;
     }
 
-    aiNode* getRoot() {
-        return root;
+    uint bonesCount(){
+        return boneNameToIndexMap.size();
     }
 
-    void setBoneTransforms(std::vector<glm::mat4> &transforms)
+    void setBoneTransforms(std::vector<glm::mat4> transforms)
     {
         if(transforms.size() != boneTransforms.size())
             throw std::logic_error("different bone transform matrices");
 
         boneTransforms = transforms;
-    }
-
-    std::vector<glm::mat4> getBoneTransforms(){
-        return boneTransforms;
     }
 };
 

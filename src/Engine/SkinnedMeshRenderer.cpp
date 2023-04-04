@@ -1,5 +1,15 @@
 #include "SkinnedMeshRenderer.h"
 
+SkinnedMeshRenderer::SkinnedMeshRenderer(SkinnedMesh* mesh, Material* material, Shader* shader, Texture* diffuse, Texture* specular)
+{
+    this->mesh = mesh;
+    this->material = material;
+    this->shader = shader;
+    this->overrideTextureDiffuse = diffuse;
+    this->overrideTextureSpecular = specular;
+    this->initVAO();
+}
+
 void SkinnedMeshRenderer::initVAO()
 {
     //Create VAO
@@ -31,15 +41,16 @@ void SkinnedMeshRenderer::initVAO()
     glEnableVertexAttribArray(1);
     //Normal
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2);/*
     //Bones
     //glBindBuffer(GL_ARRAY_BUFFER, BONE_BUFFER);
     //glBufferData(GL_ARRAY_BUFFER, sizeof(m_Bones[0]) * m_Bones.size(), &m_Bones[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(4);
     glVertexAttribIPointer(4, MAX_NUM_BONES_PER_VERTEX, GL_INT, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, bones));
-    glEnableVertexAttribArray(5);
+    glEnableVertexAttribArray(4);
+    
     glVertexAttribPointer(5, MAX_NUM_BONES_PER_VERTEX, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (const GLvoid*)(offsetof(Vertex, bones) + MAX_NUM_BONES_PER_VERTEX * sizeof(int32_t)));
+    glEnableVertexAttribArray(5);*/
 
     //BIND VAO 0
     glBindVertexArray(0);
@@ -48,10 +59,10 @@ void SkinnedMeshRenderer::initVAO()
 void SkinnedMeshRenderer::updateUniforms(Shader* shader)
 {
     shader->setMat4fv(this->mesh->ModelMatrix, "ModelMatrix");
-
+/*
     for (unsigned int i = 0 ; i < this->mesh->boneTransforms.size(); i++) {
         shader->setMat4fv(this->mesh->boneTransforms[i], "gBones[%d]", i);
-    }
+    }*/
 }
 
 void SkinnedMeshRenderer::render()
