@@ -68,6 +68,14 @@ void Scene::updateUniforms(int framebufferWidth, int framebufferHeight)
     }
 }
 
+void Scene::start()
+{
+    for (GameObject* object : this->gameObjects)
+    {
+        object->start();
+    }
+}
+
 void Scene::update(float deltaTime)
 {
     collisionProcessor->update();

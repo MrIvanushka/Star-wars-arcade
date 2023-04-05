@@ -59,6 +59,13 @@ GameObject::~GameObject()
     }
 }
 
+void GameObject::start()
+{
+    for (Component *component: this->components) {
+        component->start();
+    }
+}
+
 void GameObject::update(float deltaTime)
 {
     OrientedPoint::update(deltaTime);

@@ -3,6 +3,9 @@
 #include "Engine/AssimpLoader.h"
 #include "Physics/rigidbody.h"
 #include "Animations/BasicAnimator.h"
+#include"GameComponents/CameraController.h"
+#include"GameComponents/CameraFollower.h"
+#include"GameComponents/PlayerMovement.h"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
 {
@@ -54,10 +57,18 @@ void FieldScene::initObjects()
     character->getComponent<BasicAnimator>()->attachMesh(secondMesh);
     this->gameObjects.push_back(character);
 
-    GameObject* camera = new GameObject(glm::vec3(-50.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
+    character->addComponent<PlayerMovement>();
+    character->addComponent<CharacterController>();
+
+    GameObject* camera = new GameObject(glm::vec3(-15.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
+    camera->addComponent<CameraController>();
+    camera->addComponent<CameraFollower>();
+    camera->getComponent<CameraFollower>()->setTarget(character);
     camera->addComponent<Camera>();
     this->renderCamera = camera->getComponent<Camera>();
     this->gameObjects.push_back(camera);
+
+    character->getComponent<PlayerMovement>()->attachCamera(camera->getComponent<Camera>());
 
     GameObject* direcionalLight = new GameObject(glm::vec3(-50.f, 50.f, 50.f), glm::vec3(0.f, 0.f, 0.f));
     direcionalLight->addComponent<PointLight>();
