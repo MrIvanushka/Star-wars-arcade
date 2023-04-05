@@ -42,6 +42,7 @@ private:
 public:
     GameObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale = glm::vec3(1.0f));
     ~GameObject();
+    void start();
     void update(float deltaTime) override;
     void render();
     void move(glm::vec3 delta);
@@ -91,6 +92,7 @@ public:
     {
         delete gameObject;
     }
+    virtual void start() {}
     virtual void update(float deltaTime) {}
     virtual void render() {}
     

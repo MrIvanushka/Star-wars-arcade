@@ -2,6 +2,9 @@
 #include "Engine/OBJLoader.h"
 #include "Engine/AssimpLoader.h"
 #include "Physics/rigidbody.h"
+#include"GameComponents/CameraController.h"
+#include"GameComponents/CameraFollower.h"
+#include"GameComponents/PlayerMovement.h"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
 {
@@ -36,35 +39,40 @@ void FieldScene::initObjects()
     skybox->getComponent<Model>()->addMesh(mesh, this->materials[0], this->shaders[1], this->textures[0], this->textures[0]);
     this->gameObjects.push_back(skybox);
 
-    auto holocroneData = AssimpLoader::load("OBJFiles/Cube.fbx");  
+    //importing 3d model
+    auto holocroneData = AssimpLoader::load("OBJFiles/Cube.fbx");
+    //creating pure gameobject with set location, rotation and scale  
     GameObject* holocrone1 = new GameObject(glm::vec3(0.f, -0.5f, 0.f), glm::vec3(0.f, 0.f,0.f), glm::vec3(7.f, 0.5f, 7.f));
+    //initializing rendering classes
     holocrone1->addComponent<Model>();
     Mesh* holoMesh = new Mesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), holocrone1);
     holocrone1->getComponent<Model>()->addMesh(holoMesh, this->materials[0], this->shaders[0], this->textures[1], this->textures[2]);
+    //setting collision system
     holocrone1->addComponent<MeshCollider>();
     holocrone1->getComponent<MeshCollider>()->initialize(holocroneData[0].vertices, holocroneData[0].indices);
     holocroneData[0].br.collider = holocrone1->getComponent<MeshCollider>();
     collisionProcessor->addToPending(holocrone1, &holocroneData[0].br);
+    //moving gameobject to pool
     this->gameObjects.push_back(holocrone1);
     
     GameObject* holocrone2 = new GameObject(glm::vec3(0.f, 10.f, 0.f), glm::vec3(0.f));
     holocrone2->addComponent<Model>();
     holoMesh = new Mesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), holocrone2);
     holocrone2->getComponent<Model>()->addMesh(holoMesh, this->materials[0], this->shaders[0], this->textures[1], this->textures[2]);
-    holocrone2->addComponent<MeshCollider>();
-    holocrone2->getComponent<MeshCollider>()->initialize(holocroneData[0].vertices, holocroneData[0].indices);
-    holocrone2->addComponent<RigidBody>();
-    holocrone2->getComponent<MeshCollider>()->Attach(holocrone2->getComponent<RigidBody>());
-    holocrone2->getComponent<RigidBody>()->applyAcceleration(glm::vec3(0.0f, -9.81f, 0.0f));
-    auto newBr = holocroneData[0].br;
-    newBr.collider = holocrone2->getComponent<MeshCollider>();
-    collisionProcessor->addToPending(holocrone2, &newBr);
+    holocrone2->addComponent<PlayerMovement>();
+    holocrone2->addComponent<CharacterController>();
+    
     this->gameObjects.push_back(holocrone2);
 
     GameObject* camera = new GameObject(glm::vec3(-15.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
+    camera->addComponent<CameraController>();
+    camera->addComponent<CameraFollower>();
+    camera->getComponent<CameraFollower>()->setTarget(holocrone2);
     camera->addComponent<Camera>();
     this->renderCamera = camera->getComponent<Camera>();
     this->gameObjects.push_back(camera);
+
+    holocrone2->getComponent<PlayerMovement>()->attachCamera(camera->getComponent<Camera>());
 
     GameObject* direcionalLight = new GameObject(glm::vec3(-50.f, 50.f, 50.f), glm::vec3(0.f, 0.f, 0.f));
     direcionalLight->addComponent<PointLight>();

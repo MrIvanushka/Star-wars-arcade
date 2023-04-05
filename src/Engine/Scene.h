@@ -34,6 +34,7 @@ private:
     void initUniforms(int frameBufferWidth, int frameBufferHeight);
 public:
     ~Scene();
+    void start();
     void updateUniforms(int framebufferWidth, int framebufferHeight);
     void update(float deltaTime);
     void render();
