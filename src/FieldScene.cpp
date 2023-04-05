@@ -4,6 +4,7 @@
 #include "Physics/rigidbody.h"
 #include"GameComponents/CameraController.h"
 #include"GameComponents/CameraFollower.h"
+#include"GameComponents/PlayerMovement.h"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
 {
@@ -58,6 +59,8 @@ void FieldScene::initObjects()
     holocrone2->addComponent<Model>();
     holoMesh = new Mesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), holocrone2);
     holocrone2->getComponent<Model>()->addMesh(holoMesh, this->materials[0], this->shaders[0], this->textures[1], this->textures[2]);
+    holocrone2->addComponent<PlayerMovement>();
+    holocrone2->addComponent<CharacterController>();
     
     this->gameObjects.push_back(holocrone2);
 
@@ -68,6 +71,8 @@ void FieldScene::initObjects()
     camera->addComponent<Camera>();
     this->renderCamera = camera->getComponent<Camera>();
     this->gameObjects.push_back(camera);
+
+    holocrone2->getComponent<PlayerMovement>()->attachCamera(camera->getComponent<Camera>());
 
     GameObject* direcionalLight = new GameObject(glm::vec3(-50.f, 50.f, 50.f), glm::vec3(0.f, 0.f, 0.f));
     direcionalLight->addComponent<PointLight>();

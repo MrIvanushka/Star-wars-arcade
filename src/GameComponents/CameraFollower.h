@@ -8,7 +8,6 @@
 #include <cmath>
 #include <iostream>
 
-
 class CameraFollower : public Component
 {
 private:
@@ -63,10 +62,10 @@ public:
         glm::quat rotY = glm::angleAxis(_currentAngles.x, glm::vec3(0,1,0));
         glm::quat rotX = glm::angleAxis(-1 * _currentAngles.y, glm::vec3(1,0,0));
         localRotation = rotX * cameraRot * rotY; 
-        glm::vec3 globalOffset = parentRotation * localOffset;
+        glm::vec3 globalOffset = localOffset;
 
         gameObject->moveAt(_target->getPosition() + globalOffset);
-        gameObject->rotateAt(localRotation * parentRotation);
+        gameObject->rotateAt(localRotation);
     }
     
     void rotate(glm::vec2 delta)
@@ -78,19 +77,9 @@ public:
 private:
     void clampAngles(glm::vec2 &angles)
     {
-        if (std::abs(angles.x) > 360) {
-            if (angles.x < 0) {
-                angles.x = std::fmod(angles.x, 360) + 360;
-            } else {
-                angles.x = std::fmod(angles.x, 360);
-            }
-        }
-
-        if (angles.y > _maxVerticalAngle) angles.y = _maxVerticalAngle;
-        if (angles.y < _minVerticalAngle) angles.y = _minVerticalAngle;
+        if (angles.y > glm::radians(_maxVerticalAngle)) angles.y = glm::radians(_maxVerticalAngle);
+        if (angles.y < glm::radians(_minVerticalAngle)) angles.y = glm::radians(_minVerticalAngle);
     }
-
-
 };
 
 #endif //SWTOR_CAMERAFOLLOWER_H
