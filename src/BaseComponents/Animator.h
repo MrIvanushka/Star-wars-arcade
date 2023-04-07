@@ -101,25 +101,33 @@ private:
     void getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms) override;
 };
 
-/*
-class BlendTree : public AnimationState{
-    struct BlendingElement
-    {
-        const AnimationClip* Clip;
-        const float Value;
 
-        BlendingElement(AnimationClip* clip, float value) : Clip(clip), Value(value) {}
-    };
+struct BlendingElement
+{
+    AnimationClip* Clip;
+    float Value;
+};
+
+class BlendTree : public AnimationState{
+    
 private:
     std::vector<BlendingElement> _clips;
-    float* _blendFactor;
+    float _blendFactor;
 public:
-    BlendTree(std::vector<BlendingElement> clips, SkinnedMesh* mesh, float transitDuration, std::vector<Transition*> transitions) :
-        AnimationState(mesh, transitDuration, transitions), _clips(clips) {}
+    BlendTree(std::vector<BlendingElement> clips, IMeshContainer* container, float transitDuration) :
+        AnimationState(container, transitDuration), _clips(clips) {}
 
+    BlendTree(std::vector<BlendingElement> clips, IMeshContainer* container, float transitDuration, std::vector<Transition*> transitions) :
+        AnimationState(container, transitDuration, transitions), _clips(clips) {}
+
+    void update(float deltaTime) override{
+        _blendFactor = updateBlendFactor();
+        AnimationState::update(deltaTime);
+    }
 private:
-    void getClipTransforms(float currentTime, std::vector<glm::mat4>& transforms) override;
-};*/
+    void getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms) override;
+    virtual float updateBlendFactor() = 0;
+};
 
 class ExitTimeTransition : public Transition
 {

@@ -24,8 +24,8 @@ struct MeshPack
 class AssimpLoader
 {
 public:
-    static std::vector<MeshPack> load(std::string path);
-    static std::vector<MeshPack> loadWithArmature(std::string path, std::vector<AnimationClip> &clips);
+    static std::vector<MeshPack> load(Assimp::Importer &importer, std::string path);
+    static std::vector<MeshPack> loadWithArmature(Assimp::Importer &importer, std::string path, std::vector<AnimationClip> &clips);
 private:
     static std::vector<MeshPack> processNode(aiNode* node, const aiScene* scene);
     static MeshPack processMesh(aiMesh* mesh, const aiScene* scene);

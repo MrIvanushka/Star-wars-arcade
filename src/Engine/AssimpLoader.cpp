@@ -1,8 +1,7 @@
 #include "AssimpLoader.h"
 #include"../Utilities/AssimpMath.h"
 
-Assimp::Importer importer;
-std::vector<MeshPack> AssimpLoader::load(std::string path) {
+std::vector<MeshPack> AssimpLoader::load(Assimp::Importer &importer, std::string path) {
     //Assimp::Importer importer;
     
     const aiScene* scene = importer.ReadFile(path, 
@@ -16,7 +15,7 @@ std::vector<MeshPack> AssimpLoader::load(std::string path) {
     return ret;
 }
 
-std::vector<MeshPack> AssimpLoader::loadWithArmature(std::string path, std::vector<AnimationClip> &clips)
+std::vector<MeshPack> AssimpLoader::loadWithArmature(Assimp::Importer &importer, std::string path, std::vector<AnimationClip> &clips)
 {
     //Assimp::Importer importer;
     std::map<std::string, glm::mat4> boneOffsets;

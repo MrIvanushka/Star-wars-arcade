@@ -2,6 +2,7 @@
 #include "Engine/OBJLoader.h"
 #include "Engine/AssimpLoader.h"
 #include "Physics/rigidbody.h"
+#include "Animations/BasicBlendAnimator.h"
 #include "Animations/BasicAnimator.h"
 #include"GameComponents/CameraController.h"
 #include"GameComponents/CameraFollower.h"
@@ -33,6 +34,9 @@ void FieldScene::initMaterials()
 {
     this->materials.push_back(new Material(glm::vec3(0.1f), glm::vec3(1.f), glm::vec3(1.f), 0, 1));
 }
+
+Assimp::Importer importer1;
+Assimp::Importer importer2;
 std::vector<AnimationClip> clips;//<--MUST be deleted
 void FieldScene::initObjects()
 {/*
@@ -42,31 +46,30 @@ void FieldScene::initObjects()
     skybox->getComponent<Model>()->addMesh(mesh, this->materials[0], this->shaders[1], this->textures[0], this->textures[0]);
     this->gameObjects.push_back(skybox);
 */
-    //std::vector<AnimationClip> clips;
-    auto holocroneData = AssimpLoader::loadWithArmature("OBJFiles/Strut Walking.fbx", clips);  
-    GameObject* character = new GameObject(glm::vec3(3.f, -15.f, 0.f), glm::vec3(0.f, -90.f,0.f), glm::vec3(0.1f));
+    auto holocroneData = AssimpLoader::loadWithArmature(importer1, "OBJFiles/Idle.fbx", clips);  
+    auto otherData = AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);  
+    GameObject* character = new GameObject(glm::vec3(3.f, -15.f, 0.f), glm::vec3(0.f), glm::vec3(0.1f));
     character->addComponent<Model>();
     SkinnedMesh* holoMesh = new SkinnedMesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), character, holocroneData[0].boneNameToIndexMap);
     SkinnedMesh* secondMesh = new SkinnedMesh(holocroneData[1].vertices.data(), holocroneData[1].vertices.size(), holocroneData[1].indices.data(), holocroneData[1].indices.size(), character, holocroneData[1].boneNameToIndexMap);
     character->getComponent<Model>()->addSkinnedMesh(holoMesh, this->materials[0], this->shaders[2], this->textures[1], this->textures[2]);
     character->getComponent<Model>()->addSkinnedMesh(secondMesh, this->materials[0], this->shaders[2], this->textures[1], this->textures[2]);
-    
-    character->addComponent<BasicAnimator>();
-    character->getComponent<BasicAnimator>()->setupStateMachine(&clips[0]);
-    character->getComponent<BasicAnimator>()->attachMesh(holoMesh);
-    character->getComponent<BasicAnimator>()->attachMesh(secondMesh);
-    this->gameObjects.push_back(character);
-
     character->addComponent<PlayerMovement>();
     character->addComponent<CharacterController>();
 
+    character->addComponent<BasicBlendAnimator>();
+    character->getComponent<BasicBlendAnimator>()->setupStateMachine(clips, character->getComponent<CharacterController>());
+    character->getComponent<BasicBlendAnimator>()->attachMesh(holoMesh);
+    character->getComponent<BasicBlendAnimator>()->attachMesh(secondMesh);
+
     GameObject* camera = new GameObject(glm::vec3(-15.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
-    camera->addComponent<CameraController>();
-    camera->addComponent<CameraFollower>();
-    camera->getComponent<CameraFollower>()->setTarget(character);
+    //camera->addComponent<CameraController>();
+    //camera->addComponent<CameraFollower>();
+    //camera->getComponent<CameraFollower>()->setTarget(character);
     camera->addComponent<Camera>();
     this->renderCamera = camera->getComponent<Camera>();
     this->gameObjects.push_back(camera);
+    this->gameObjects.push_back(character);
 
     character->getComponent<PlayerMovement>()->attachCamera(camera->getComponent<Camera>());
 

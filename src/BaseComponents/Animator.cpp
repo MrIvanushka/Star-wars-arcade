@@ -1,6 +1,7 @@
 #include"Animator.h"
 #include "../Utilities/AssimpMath.h"
 #include <../../glm/glm/gtx/matrix_decompose.hpp>
+#include <../../glm/glm/gtx/matrix_interpolation.hpp>
 
 void AnimationState::start()
 {
@@ -34,6 +35,47 @@ void AnimationState::update(float deltaTime)
 void SingleAnimationState::getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms)
 {
     return _clip->GetBoneTransforms(_clip->scoreTimeInTicks(currentTime), transforms);
+}
+
+void BlendTree::getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms)
+{
+	_clips[0].Clip->scoreTimeInTicks(currentTime);
+
+	std::map<std::string, glm::mat4> firstTransforms;
+	std::map<std::string, glm::mat4> secondTransforms;
+	float actualFactor;
+
+	if(_blendFactor > 1)
+		_blendFactor = 1;
+		
+	for(int i = 0; i < _clips.size() - 1; i++)
+	{
+		if(_clips[i+1].Value >= _blendFactor)
+		{
+			_clips[i].Clip->GetBoneTransforms(_clips[i].Clip->scoreTimeInTicks(currentTime), firstTransforms);
+			_clips[i+1].Clip->GetBoneTransforms(_clips[i+1].Clip->scoreTimeInTicks(currentTime), secondTransforms);
+			actualFactor = (_blendFactor - _clips[i].Value) / (_clips[i+1].Value - _clips[i].Value);
+			break;
+		}
+	}
+	for(auto& firstElement : firstTransforms)
+	{
+		glm::vec3 firstScale;
+		glm::quat firstRotation;
+		glm::vec3 firstTranslation;
+		glm::vec3 secondScale;
+		glm::quat secondRotation;
+		glm::vec3 secondTranslation;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(firstElement.second, firstScale, firstRotation, firstTranslation, skew, perspective);
+		glm::decompose(secondTransforms[firstElement.first], secondScale, secondRotation, secondTranslation, skew, perspective);
+
+		glm::mat4 translationM = glm::translate(glm::mat4(1.f), firstTranslation + actualFactor*(secondTranslation - firstTranslation));
+		glm::mat4 scaleM = glm::scale(glm::mat4(1.f), firstScale + actualFactor*(secondScale - firstScale));
+		glm::mat4 rotationM = glm::interpolate(glm::mat4_cast(firstRotation), glm::mat4_cast(secondRotation), actualFactor);
+		transforms[firstElement.first] = translationM * rotationM * scaleM;
+	}
 }
 
 unsigned int AnimationClip::FindScaling(float _animationTime, const aiNodeAnim* _nodeAnim)

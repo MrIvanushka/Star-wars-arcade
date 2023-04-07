@@ -19,6 +19,7 @@ private:
 
     OrientedPoint* _target;
     float _offset = 30;
+    float _followingHeight = 10;
     glm::vec2 _currentAngles;
     glm::vec2 _targetAngles;
     
@@ -64,7 +65,7 @@ public:
         localRotation = rotX * cameraRot * rotY; 
         glm::vec3 globalOffset = localOffset;
 
-        gameObject->moveAt(_target->getPosition() + globalOffset);
+        gameObject->moveAt(_target->getPosition() + globalOffset + glm::vec3(0,_followingHeight,0));
         gameObject->rotateAt(localRotation);
     }
     
