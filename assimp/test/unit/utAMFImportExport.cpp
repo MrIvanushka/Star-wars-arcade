@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
 
 All rights reserved.
 
@@ -39,26 +39,29 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------
 */
 
-#include "AbstractImportExportBase.h"
 #include "UnitTestPCH.h"
+#include "SceneDiffer.h"
+#include "AbstractImportExportBase.h"
 
-#include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
 using namespace Assimp;
 
 class utAMFImportExport : public AbstractImportExportBase {
 public:
-    bool importerTest() override {
+    virtual bool importerTest() {
         Assimp::Importer importer;
-        const aiScene *scene = importer.ReadFile(ASSIMP_TEST_MODELS_DIR "/AMF/test1.amf", aiProcess_ValidateDataStructure);
+        const aiScene *scene = importer.ReadFile( ASSIMP_TEST_MODELS_DIR "/AMF/test1.amf", aiProcess_ValidateDataStructure );
         return nullptr != scene;
     }
 };
 
-TEST_F(utAMFImportExport, importAMFFromFileTest) {
-    EXPECT_TRUE(importerTest());
+TEST_F( utAMFImportExport, importAMFFromFileTest ) {
+    EXPECT_TRUE( importerTest() );
 }
+
+
 
 TEST_F(utAMFImportExport, importAMFWithMatFromFileTest) {
     Assimp::Importer importer;

@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
 
 All rights reserved.
 
@@ -78,7 +78,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <assimp/Profiler.h>
 #include <assimp/commonMetaData.h>
 
-#include <exception>
 #include <set>
 #include <memory>
 #include <cctype>
@@ -149,7 +148,7 @@ void AllocateFromAssimpHeap::operator delete[] ( void* data)    {
 Importer::Importer()
  : pimpl( new ImporterPimpl ) {
     pimpl->mScene = nullptr;
-    pimpl->mErrorString = std::string();
+    pimpl->mErrorString = "";
 
     // Allocate a default IO handler
     pimpl->mIOHandler = new DefaultIOSystem;
@@ -201,7 +200,7 @@ Importer::~Importer() {
 // Register a custom post-processing step
 aiReturn Importer::RegisterPPStep(BaseProcess* pImp) {
     ai_assert( nullptr != pImp );
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
 
         pimpl->mPostProcessingSteps.push_back(pImp);
@@ -215,7 +214,7 @@ aiReturn Importer::RegisterPPStep(BaseProcess* pImp) {
 // Register a custom loader plugin
 aiReturn Importer::RegisterLoader(BaseImporter* pImp) {
     ai_assert(nullptr != pImp);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
 
     // --------------------------------------------------------------------
@@ -232,7 +231,7 @@ aiReturn Importer::RegisterLoader(BaseImporter* pImp) {
 
 #ifdef ASSIMP_BUILD_DEBUG
         if (IsExtensionSupported(*it)) {
-            ASSIMP_LOG_WARN("The file extension ", *it, " is already in use");
+            ASSIMP_LOG_WARN_F("The file extension ", *it, " is already in use");
         }
 #endif
         baked += *it;
@@ -240,9 +239,9 @@ aiReturn Importer::RegisterLoader(BaseImporter* pImp) {
 
     // add the loader
     pimpl->mImporter.push_back(pImp);
-    ASSIMP_LOG_INFO("Registering custom importer for these file extensions: ", baked);
+    ASSIMP_LOG_INFO_F("Registering custom importer for these file extensions: ", baked);
     ASSIMP_END_EXCEPTION_REGION(aiReturn);
-
+    
     return AI_SUCCESS;
 }
 
@@ -250,7 +249,7 @@ aiReturn Importer::RegisterLoader(BaseImporter* pImp) {
 // Unregister a custom loader plugin
 aiReturn Importer::UnregisterLoader(BaseImporter* pImp) {
     if(!pImp) {
-        // unregistering a nullptr importer is no problem for us ... really!
+        // unregistering a NULL importer is no problem for us ... really!
         return AI_SUCCESS;
     }
 
@@ -273,7 +272,7 @@ aiReturn Importer::UnregisterLoader(BaseImporter* pImp) {
 // Unregister a custom loader plugin
 aiReturn Importer::UnregisterPPStep(BaseProcess* pImp) {
     if(!pImp) {
-        // unregistering a nullptr ppstep is no problem for us ... really!
+        // unregistering a NULL ppstep is no problem for us ... really!
         return AI_SUCCESS;
     }
 
@@ -296,7 +295,7 @@ aiReturn Importer::UnregisterPPStep(BaseProcess* pImp) {
 // Supplies a custom IO handler to the importer to open and access files.
 void Importer::SetIOHandler( IOSystem* pIOHandler) {
     ai_assert(nullptr != pimpl);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
     // If the new handler is zero, allocate a default IO implementation.
     if (!pIOHandler) {
@@ -315,7 +314,7 @@ void Importer::SetIOHandler( IOSystem* pIOHandler) {
 // Get the currently set IO handler
 IOSystem* Importer::GetIOHandler() const {
     ai_assert(nullptr != pimpl);
-
+    
     return pimpl->mIOHandler;
 }
 
@@ -323,17 +322,17 @@ IOSystem* Importer::GetIOHandler() const {
 // Check whether a custom IO handler is currently set
 bool Importer::IsDefaultIOHandler() const {
     ai_assert(nullptr != pimpl);
-
+    
     return pimpl->mIsDefaultHandler;
 }
 
 // ------------------------------------------------------------------------------------------------
 // Supplies a custom progress handler to get regular callbacks during importing
-void Importer::SetProgressHandler(ProgressHandler* pHandler) {
+void Importer::SetProgressHandler ( ProgressHandler* pHandler ) {
     ai_assert(nullptr != pimpl);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
-
+    
     // If the new handler is zero, allocate a default implementation.
     if (!pHandler) {
         // Release pointer in the possession of the caller
@@ -351,7 +350,7 @@ void Importer::SetProgressHandler(ProgressHandler* pHandler) {
 // Get the currently set progress handler
 ProgressHandler* Importer::GetProgressHandler() const {
     ai_assert(nullptr != pimpl);
-
+    
     return pimpl->mProgressHandler;
 }
 
@@ -359,7 +358,7 @@ ProgressHandler* Importer::GetProgressHandler() const {
 // Check whether a custom progress handler is currently set
 bool Importer::IsDefaultProgressHandler() const {
     ai_assert(nullptr != pimpl);
-
+    
     return pimpl->mIsDefaultProgressHandler;
 }
 
@@ -381,14 +380,13 @@ bool _ValidateFlags(unsigned int pFlags) {
 // Free the current scene
 void Importer::FreeScene( ) {
     ai_assert(nullptr != pimpl);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
 
     delete pimpl->mScene;
     pimpl->mScene = nullptr;
 
-    pimpl->mErrorString = std::string();
-    pimpl->mException = std::exception_ptr();
+    pimpl->mErrorString = "";
     ASSIMP_END_EXCEPTION_REGION(void);
 }
 
@@ -396,23 +394,16 @@ void Importer::FreeScene( ) {
 // Get the current error string, if any
 const char* Importer::GetErrorString() const {
     ai_assert(nullptr != pimpl);
-
+    
     // Must remain valid as long as ReadFile() or FreeFile() are not called
     return pimpl->mErrorString.c_str();
-}
-
-const std::exception_ptr& Importer::GetException() const {
-    ai_assert(nullptr != pimpl);
-
-    // Must remain valid as long as ReadFile() or FreeFile() are not called
-    return pimpl->mException;
 }
 
 // ------------------------------------------------------------------------------------------------
 // Enable extra-verbose mode
 void Importer::SetExtraVerbose(bool bDo) {
     ai_assert(nullptr != pimpl);
-
+    
     pimpl->bExtraVerbose = bDo;
 }
 
@@ -420,7 +411,7 @@ void Importer::SetExtraVerbose(bool bDo) {
 // Get the current scene
 const aiScene* Importer::GetScene() const {
     ai_assert(nullptr != pimpl);
-
+    
     return pimpl->mScene;
 }
 
@@ -428,16 +419,15 @@ const aiScene* Importer::GetScene() const {
 // Orphan the current scene and return it.
 aiScene* Importer::GetOrphanedScene() {
     ai_assert(nullptr != pimpl);
-
+    
     aiScene* s = pimpl->mScene;
 
     ASSIMP_BEGIN_EXCEPTION_REGION();
     pimpl->mScene = nullptr;
 
-    pimpl->mErrorString = std::string();
-    pimpl->mException = std::exception_ptr();
+    pimpl->mErrorString = ""; // reset error string
     ASSIMP_END_EXCEPTION_REGION(aiScene*);
-
+    
     return s;
 }
 
@@ -482,111 +472,96 @@ bool Importer::ValidateFlags(unsigned int pFlags) const {
 }
 
 // ------------------------------------------------------------------------------------------------
-const aiScene* Importer::ReadFileFromMemory(const void* pBuffer, size_t pLength, unsigned int pFlags, const char* pHint ) {
+const aiScene* Importer::ReadFileFromMemory( const void* pBuffer,
+    size_t pLength,
+    unsigned int pFlags,
+    const char* pHint /*= ""*/) {
     ai_assert(nullptr != pimpl);
-
-    IOSystem* io = pimpl->mIOHandler;
-    try {
-        if (pHint == nullptr) {
-            pHint = "";
-        }
-        if (!pBuffer || !pLength || strlen(pHint) > MaxLenHint ) {
-            pimpl->mErrorString = "Invalid parameters passed to ReadFileFromMemory()";
-            return nullptr;
-        }
-        // prevent deletion of the previous IOHandler
-        pimpl->mIOHandler = nullptr;
-
-        SetIOHandler(new MemoryIOSystem((const uint8_t*)pBuffer,pLength,io));
-
-        // read the file and recover the previous IOSystem
-        static const size_t BufSize(Importer::MaxLenHint + 28);
-        char fbuff[BufSize];
-        ai_snprintf(fbuff, BufSize, "%s.%s",AI_MEMORYIO_MAGIC_FILENAME,pHint);
-
-        ReadFile(fbuff,pFlags);
-        SetIOHandler(io);
-    } catch(const DeadlyImportError &e) {
-        pimpl->mErrorString = e.what();
-        pimpl->mException = std::current_exception();
-        SetIOHandler(io);
-        return ExceptionSwallower<const aiScene*>()();                                                                                                    \
-    } catch(...) {
-        pimpl->mErrorString = "Unknown exception";
-        pimpl->mException = std::current_exception();
-        SetIOHandler(io);
-        return ExceptionSwallower<const aiScene*>()();                                                                                                    \
-
+    
+    ASSIMP_BEGIN_EXCEPTION_REGION();
+    if (!pHint) {
+        pHint = "";
     }
 
+    if (!pBuffer || !pLength || strlen(pHint) > MaxLenHint ) {
+        pimpl->mErrorString = "Invalid parameters passed to ReadFileFromMemory()";
+        return nullptr;
+    }
+
+    // prevent deletion of the previous IOHandler
+    IOSystem* io = pimpl->mIOHandler;
+    pimpl->mIOHandler = nullptr;
+
+    SetIOHandler(new MemoryIOSystem((const uint8_t*)pBuffer,pLength,io));
+
+    // read the file and recover the previous IOSystem
+    static const size_t BufSize(Importer::MaxLenHint + 28);
+    char fbuff[BufSize];
+    ai_snprintf(fbuff, BufSize, "%s.%s",AI_MEMORYIO_MAGIC_FILENAME,pHint);
+
+    ReadFile(fbuff,pFlags);
+    SetIOHandler(io);
+
+    ASSIMP_END_EXCEPTION_REGION_WITH_ERROR_STRING(const aiScene*, pimpl->mErrorString);
     return pimpl->mScene;
 }
 
 // ------------------------------------------------------------------------------------------------
 void WriteLogOpening(const std::string& file) {
-
-    ASSIMP_LOG_INFO("Load ", file);
+    
+    ASSIMP_LOG_INFO_F("Load ", file);
 
     // print a full version dump. This is nice because we don't
     // need to ask the authors of incoming bug reports for
     // the library version they're using - a log dump is
     // sufficient.
-    const unsigned int flags = aiGetCompileFlags();
+    const unsigned int flags( aiGetCompileFlags() );
     std::stringstream stream;
     stream << "Assimp " << aiGetVersionMajor() << "." << aiGetVersionMinor() << "." << aiGetVersionRevision() << " "
 #if defined(ASSIMP_BUILD_ARCHITECTURE)
-           << ASSIMP_BUILD_ARCHITECTURE
+        << ASSIMP_BUILD_ARCHITECTURE
 #elif defined(_M_IX86) || defined(__x86_32__) || defined(__i386__)
-           << "x86"
+        << "x86"
 #elif defined(_M_X64) || defined(__x86_64__)
-           << "amd64"
+        << "amd64"
 #elif defined(_M_IA64) || defined(__ia64__)
-           << "itanium"
+        << "itanium"
 #elif defined(__ppc__) || defined(__powerpc__)
-           << "ppc32"
+        << "ppc32"
 #elif defined(__powerpc64__)
-           << "ppc64"
+        << "ppc64"
 #elif defined(__arm__)
-           << "arm"
+        << "arm"
 #else
-           << "<unknown architecture>"
+        << "<unknown architecture>"
 #endif
-           << " "
+        << " "
 #if defined(ASSIMP_BUILD_COMPILER)
-           << (ASSIMP_BUILD_COMPILER)
+        << ( ASSIMP_BUILD_COMPILER )
 #elif defined(_MSC_VER)
-           << "msvc"
+        << "msvc"
 #elif defined(__GNUC__)
-           << "gcc"
-#elif defined(__clang__)
-           << "clang"
-#elif defined(__EMSCRIPTEN__)
-           << "emscripten"
-#elif defined(__MINGW32__)
-           << "MinGW-w64 32bit"
-#elif defined(__MINGW64__)
-           << "MinGW-w64 64bit"
+        << "gcc"
 #else
-           << "<unknown compiler>"
+        << "<unknown compiler>"
 #endif
 
 #ifdef ASSIMP_BUILD_DEBUG
-           << " debug"
+        << " debug"
 #endif
 
-           << (flags & ASSIMP_CFLAGS_NOBOOST ? " noboost" : "")
-           << (flags & ASSIMP_CFLAGS_SHARED ? " shared" : "")
-           << (flags & ASSIMP_CFLAGS_SINGLETHREADED ? " singlethreaded" : "")
-           << (flags & ASSIMP_CFLAGS_DOUBLE_SUPPORT ? " double : " : "single : ");
+        << (flags & ASSIMP_CFLAGS_NOBOOST ? " noboost" : "")
+        << (flags & ASSIMP_CFLAGS_SHARED  ? " shared" : "")
+        << (flags & ASSIMP_CFLAGS_SINGLETHREADED  ? " singlethreaded" : "");
 
-    ASSIMP_LOG_DEBUG(stream.str());
+        ASSIMP_LOG_DEBUG(stream.str());
 }
 
 // ------------------------------------------------------------------------------------------------
 // Reads the given file and returns its contents if successful.
 const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags) {
     ai_assert(nullptr != pimpl);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
     const std::string pFile(_pFile);
 
@@ -618,76 +593,34 @@ const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags) {
             return nullptr;
         }
 
-        std::unique_ptr<Profiler> profiler(GetPropertyInteger(AI_CONFIG_GLOB_MEASURE_TIME, 0) ? new Profiler() : nullptr);
+        std::unique_ptr<Profiler> profiler(GetPropertyInteger(AI_CONFIG_GLOB_MEASURE_TIME,0)?new Profiler():NULL);
         if (profiler) {
             profiler->BeginRegion("total");
         }
 
-        // Find an worker class which can handle the file extension.
-        // Multiple importers may be able to handle the same extension (.xml!); gather them all.
-        SetPropertyInteger("importerIndex", -1);
-        struct ImporterAndIndex {
-            BaseImporter * importer;
-            unsigned int   index;
-        };
-        std::vector<ImporterAndIndex> possibleImporters;
-        for (unsigned int a = 0; a < pimpl->mImporter.size(); a++)  {
-
-            // Every importer has a list of supported extensions.
-            std::set<std::string> extensions;
-            pimpl->mImporter[a]->GetExtensionList(extensions);
-
-            // CAUTION: Do not just search for the extension!
-            // GetExtension() returns the part after the *last* dot, but some extensions have dots
-            // inside them, e.g. ogre.mesh.xml. Compare the entire end of the string.
-            for (std::set<std::string>::const_iterator it = extensions.cbegin(); it != extensions.cend(); ++it) {
-
-                // Yay for C++<20 not having std::string::ends_with()
-                std::string extension = "." + *it;
-                if (extension.length() <= pFile.length()) {
-                    // Possible optimization: Fetch the lowercase filename!
-                    if (0 == ASSIMP_stricmp(pFile.c_str() + pFile.length() - extension.length(), extension.c_str())) {
-                        ImporterAndIndex candidate = { pimpl->mImporter[a], a };
-                        possibleImporters.push_back(candidate);
-                        break;
-                    }
-                }
-
-            }
-
-        }
-
-        // If just one importer supports this extension, pick it and close the case.
+        // Find an worker class which can handle the file
         BaseImporter* imp = nullptr;
-        if (1 == possibleImporters.size()) {
-            imp = possibleImporters[0].importer;
-            SetPropertyInteger("importerIndex", possibleImporters[0].index);
-        }
-        // If multiple importers claim this file extension, ask them to look at the actual file data to decide.
-        // This can happen e.g. with XML (COLLADA vs. Irrlicht).
-        else {
-            for (std::vector<ImporterAndIndex>::const_iterator it = possibleImporters.begin(); it < possibleImporters.end(); ++it) {
-                BaseImporter & importer = *it->importer;
+        SetPropertyInteger("importerIndex", -1);
+        for( unsigned int a = 0; a < pimpl->mImporter.size(); a++)  {
 
-                ASSIMP_LOG_INFO("Found a possible importer: " + std::string(importer.GetInfo()->mName) + "; trying signature-based detection");
-                if (importer.CanRead( pFile, pimpl->mIOHandler, true)) {
-                    imp = &importer;
-                    SetPropertyInteger("importerIndex", it->index);
-                    break;
-                }
-
+            if( pimpl->mImporter[a]->CanRead( pFile, pimpl->mIOHandler, false)) {
+                imp = pimpl->mImporter[a];
+                SetPropertyInteger("importerIndex", a);
+                break;
             }
-
         }
 
         if (!imp)   {
             // not so bad yet ... try format auto detection.
-            ASSIMP_LOG_INFO("File extension not known, trying signature-based detection");
-            for( unsigned int a = 0; a < pimpl->mImporter.size(); a++)  {
-                if( pimpl->mImporter[a]->CanRead( pFile, pimpl->mIOHandler, true)) {
-                    imp = pimpl->mImporter[a];
-                    SetPropertyInteger("importerIndex", a);
-                    break;
+            const std::string::size_type s = pFile.find_last_of('.');
+            if (s != std::string::npos) {
+                ASSIMP_LOG_INFO("File extension not known, trying signature-based detection");
+                for( unsigned int a = 0; a < pimpl->mImporter.size(); a++)  {
+                    if( pimpl->mImporter[a]->CanRead( pFile, pimpl->mIOHandler, true)) {
+                        imp = pimpl->mImporter[a];
+                        SetPropertyInteger("importerIndex", a);
+                        break;
+                    }
                 }
             }
             // Put a proper error message if no suitable importer was found
@@ -713,7 +646,7 @@ const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags) {
         if ( nullptr != desc ) {
             ext = desc->mName;
         }
-        ASSIMP_LOG_INFO("Found a matching importer for this file format: ", ext, "." );
+        ASSIMP_LOG_INFO("Found a matching importer for this file format: " + ext + "." );
         pimpl->mProgressHandler->UpdateFileRead( 0, fileSize );
 
         if (profiler) {
@@ -767,7 +700,6 @@ const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags) {
         // if failed, extract the error string
         else if( !pimpl->mScene) {
             pimpl->mErrorString = imp->GetErrorText();
-            pimpl->mException = imp->GetException();
         }
 
         // clear any data allocated by post-process steps
@@ -792,8 +724,8 @@ const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags) {
 #endif // ! ASSIMP_CATCH_GLOBAL_EXCEPTIONS
 
     // either successful or failure - the pointer expresses it anyways
-    ASSIMP_END_EXCEPTION_REGION_WITH_ERROR_STRING(const aiScene*, pimpl->mErrorString, pimpl->mException);
-
+    ASSIMP_END_EXCEPTION_REGION_WITH_ERROR_STRING(const aiScene*, pimpl->mErrorString);
+    
     return pimpl->mScene;
 }
 
@@ -802,7 +734,7 @@ const aiScene* Importer::ReadFile( const char* _pFile, unsigned int pFlags) {
 // Apply post-processing to the currently bound scene
 const aiScene* Importer::ApplyPostProcessing(unsigned int pFlags) {
     ai_assert(nullptr != pimpl);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
     // Return immediately if no scene is active
     if (!pimpl->mScene) {
@@ -843,7 +775,7 @@ const aiScene* Importer::ApplyPostProcessing(unsigned int pFlags) {
     }
 #endif // ! DEBUG
 
-    std::unique_ptr<Profiler> profiler(GetPropertyInteger(AI_CONFIG_GLOB_MEASURE_TIME, 0) ? new Profiler() : nullptr);
+    std::unique_ptr<Profiler> profiler(GetPropertyInteger(AI_CONFIG_GLOB_MEASURE_TIME,0)?new Profiler():NULL);
     for( unsigned int a = 0; a < pimpl->mPostProcessingSteps.size(); a++)   {
         BaseProcess* process = pimpl->mPostProcessingSteps[a];
         pimpl->mProgressHandler->UpdatePostProcess(static_cast<int>(a), static_cast<int>(pimpl->mPostProcessingSteps.size()) );
@@ -880,7 +812,7 @@ const aiScene* Importer::ApplyPostProcessing(unsigned int pFlags) {
         }
 #endif // ! DEBUG
     }
-    pimpl->mProgressHandler->UpdatePostProcess( static_cast<int>(pimpl->mPostProcessingSteps.size()),
+    pimpl->mProgressHandler->UpdatePostProcess( static_cast<int>(pimpl->mPostProcessingSteps.size()), 
         static_cast<int>(pimpl->mPostProcessingSteps.size()) );
 
     // update private scene flags
@@ -893,14 +825,14 @@ const aiScene* Importer::ApplyPostProcessing(unsigned int pFlags) {
     ASSIMP_LOG_INFO("Leaving post processing pipeline");
 
     ASSIMP_END_EXCEPTION_REGION(const aiScene*);
-
+    
     return pimpl->mScene;
 }
 
 // ------------------------------------------------------------------------------------------------
 const aiScene* Importer::ApplyCustomizedPostProcessing( BaseProcess *rootProcess, bool requestValidation ) {
     ai_assert(nullptr != pimpl);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
 
     // Return immediately if no scene is active
@@ -909,7 +841,7 @@ const aiScene* Importer::ApplyCustomizedPostProcessing( BaseProcess *rootProcess
     }
 
     // If no flags are given, return the current scene with no further action
-    if (nullptr == rootProcess) {
+    if ( NULL == rootProcess ) {
         return pimpl->mScene;
     }
 
@@ -941,7 +873,7 @@ const aiScene* Importer::ApplyCustomizedPostProcessing( BaseProcess *rootProcess
     }
 #endif // ! DEBUG
 
-    std::unique_ptr<Profiler> profiler(GetPropertyInteger(AI_CONFIG_GLOB_MEASURE_TIME, 0) ? new Profiler() : nullptr);
+    std::unique_ptr<Profiler> profiler( GetPropertyInteger( AI_CONFIG_GLOB_MEASURE_TIME, 0 ) ? new Profiler() : NULL );
 
     if ( profiler ) {
         profiler->BeginRegion( "postprocess" );
@@ -982,14 +914,14 @@ bool Importer::IsExtensionSupported(const char* szExtension) const {
 // ------------------------------------------------------------------------------------------------
 size_t Importer::GetImporterCount() const {
     ai_assert(nullptr != pimpl);
-
+    
     return pimpl->mImporter.size();
 }
 
 // ------------------------------------------------------------------------------------------------
 const aiImporterDesc* Importer::GetImporterInfo(size_t index) const {
     ai_assert(nullptr != pimpl);
-
+    
     if (index >= pimpl->mImporter.size()) {
         return nullptr;
     }
@@ -1000,7 +932,7 @@ const aiImporterDesc* Importer::GetImporterInfo(size_t index) const {
 // ------------------------------------------------------------------------------------------------
 BaseImporter* Importer::GetImporter (size_t index) const {
     ai_assert(nullptr != pimpl);
-
+    
     if (index >= pimpl->mImporter.size()) {
         return nullptr;
     }
@@ -1011,7 +943,7 @@ BaseImporter* Importer::GetImporter (size_t index) const {
 // Find a loader plugin for a given file extension
 BaseImporter* Importer::GetImporter (const char* szExtension) const {
     ai_assert(nullptr != pimpl);
-
+    
     return GetImporter(GetImporterIndex(szExtension));
 }
 
@@ -1023,14 +955,15 @@ size_t Importer::GetImporterIndex (const char* szExtension) const {
 
     ASSIMP_BEGIN_EXCEPTION_REGION();
 
-    // skip over wild-card and dot characters at string head --
+    // skip over wildcard and dot characters at string head --
     for ( ; *szExtension == '*' || *szExtension == '.'; ++szExtension );
 
     std::string ext(szExtension);
     if (ext.empty()) {
         return static_cast<size_t>(-1);
     }
-    ext = ai_tolower(ext);
+    std::transform( ext.begin(), ext.end(), ext.begin(), ToLower<char> );
+
     std::set<std::string> str;
     for (std::vector<BaseImporter*>::const_iterator i =  pimpl->mImporter.begin();i != pimpl->mImporter.end();++i)  {
         str.clear();
@@ -1050,7 +983,7 @@ size_t Importer::GetImporterIndex (const char* szExtension) const {
 // Helper function to build a list of all file extensions supported by ASSIMP
 void Importer::GetExtensionList(aiString& szOut) const {
     ai_assert(nullptr != pimpl);
-
+    
     ASSIMP_BEGIN_EXCEPTION_REGION();
     std::set<std::string> str;
     for (std::vector<BaseImporter*>::const_iterator i =  pimpl->mImporter.begin();i != pimpl->mImporter.end();++i)  {
@@ -1076,7 +1009,7 @@ void Importer::GetExtensionList(aiString& szOut) const {
 // Set a configuration property
 bool Importer::SetPropertyInteger(const char* szName, int iValue) {
     ai_assert(nullptr != pimpl);
-
+    
     bool existing;
     ASSIMP_BEGIN_EXCEPTION_REGION();
         existing = SetGenericProperty<int>(pimpl->mIntProperties, szName,iValue);
@@ -1088,7 +1021,7 @@ bool Importer::SetPropertyInteger(const char* szName, int iValue) {
 // Set a configuration property
 bool Importer::SetPropertyFloat(const char* szName, ai_real iValue) {
     ai_assert(nullptr != pimpl);
-
+    
     bool existing;
     ASSIMP_BEGIN_EXCEPTION_REGION();
         existing = SetGenericProperty<ai_real>(pimpl->mFloatProperties, szName,iValue);
@@ -1100,7 +1033,7 @@ bool Importer::SetPropertyFloat(const char* szName, ai_real iValue) {
 // Set a configuration property
 bool Importer::SetPropertyString(const char* szName, const std::string& value) {
     ai_assert(nullptr != pimpl);
-
+    
     bool existing;
     ASSIMP_BEGIN_EXCEPTION_REGION();
         existing = SetGenericProperty<std::string>(pimpl->mStringProperties, szName,value);
@@ -1112,7 +1045,7 @@ bool Importer::SetPropertyString(const char* szName, const std::string& value) {
 // Set a configuration property
 bool Importer::SetPropertyMatrix(const char* szName, const aiMatrix4x4& value) {
     ai_assert(nullptr != pimpl);
-
+    
     bool existing;
     ASSIMP_BEGIN_EXCEPTION_REGION();
         existing = SetGenericProperty<aiMatrix4x4>(pimpl->mMatrixProperties, szName,value);
@@ -1121,22 +1054,10 @@ bool Importer::SetPropertyMatrix(const char* szName, const aiMatrix4x4& value) {
 }
 
 // ------------------------------------------------------------------------------------------------
-// Set a configuration property
-bool Importer::SetPropertyPointer(const char* szName, void* value) {
-    ai_assert(nullptr != pimpl);
-
-    bool existing;
-    ASSIMP_BEGIN_EXCEPTION_REGION();
-        existing = SetGenericProperty<void*>(pimpl->mPointerProperties, szName,value);
-    ASSIMP_END_EXCEPTION_REGION(bool);
-    return existing;
-}
-
-// ------------------------------------------------------------------------------------------------
 // Get a configuration property
 int Importer::GetPropertyInteger(const char* szName, int iErrorReturn /*= 0xffffffff*/) const {
     ai_assert(nullptr != pimpl);
-
+    
     return GetGenericProperty<int>(pimpl->mIntProperties,szName,iErrorReturn);
 }
 
@@ -1144,37 +1065,29 @@ int Importer::GetPropertyInteger(const char* szName, int iErrorReturn /*= 0xffff
 // Get a configuration property
 ai_real Importer::GetPropertyFloat(const char* szName, ai_real iErrorReturn /*= 10e10*/) const {
     ai_assert(nullptr != pimpl);
-
+    
     return GetGenericProperty<ai_real>(pimpl->mFloatProperties,szName,iErrorReturn);
 }
 
 // ------------------------------------------------------------------------------------------------
 // Get a configuration property
-std::string Importer::GetPropertyString(const char* szName, const std::string& iErrorReturn /*= ""*/) const {
+const std::string Importer::GetPropertyString(const char* szName, const std::string& iErrorReturn /*= ""*/) const {
     ai_assert(nullptr != pimpl);
-
+    
     return GetGenericProperty<std::string>(pimpl->mStringProperties,szName,iErrorReturn);
 }
 
 // ------------------------------------------------------------------------------------------------
 // Get a configuration property
-aiMatrix4x4 Importer::GetPropertyMatrix(const char* szName, const aiMatrix4x4& iErrorReturn /*= aiMatrix4x4()*/) const {
+const aiMatrix4x4 Importer::GetPropertyMatrix(const char* szName, const aiMatrix4x4& iErrorReturn /*= aiMatrix4x4()*/) const {
     ai_assert(nullptr != pimpl);
-
+    
     return GetGenericProperty<aiMatrix4x4>(pimpl->mMatrixProperties,szName,iErrorReturn);
 }
 
 // ------------------------------------------------------------------------------------------------
-// Get a configuration property
-void* Importer::GetPropertyPointer(const char* szName, void* iErrorReturn /*= nullptr*/) const {
-    ai_assert(nullptr != pimpl);
-
-    return GetGenericProperty<void*>(pimpl->mPointerProperties,szName,iErrorReturn);
-}
-
-// ------------------------------------------------------------------------------------------------
 // Get the memory requirements of a single node
-inline
+inline 
 void AddNodeWeight(unsigned int& iScene,const aiNode* pcNode) {
     if ( nullptr == pcNode ) {
         return;
@@ -1192,13 +1105,14 @@ void AddNodeWeight(unsigned int& iScene,const aiNode* pcNode) {
 // Get the memory requirements of the scene
 void Importer::GetMemoryRequirements(aiMemoryInfo& in) const {
     ai_assert(nullptr != pimpl);
-
+    
     in = aiMemoryInfo();
     aiScene* mScene = pimpl->mScene;
 
     // return if we have no scene loaded
-    if (!mScene)
+    if (!pimpl->mScene)
         return;
+
 
     in.total = sizeof(aiScene);
 
@@ -1261,7 +1175,7 @@ void Importer::GetMemoryRequirements(aiMemoryInfo& in) const {
 
         // add all bone anims
         for (unsigned int a = 0; a < pc->mNumChannels; ++a) {
-            const aiNodeAnim* pc2 = pc->mChannels[a];
+            const aiNodeAnim* pc2 = pc->mChannels[i];
             in.animations += sizeof(aiNodeAnim);
             in.animations += pc2->mNumPositionKeys * sizeof(aiVectorKey);
             in.animations += pc2->mNumScalingKeys * sizeof(aiVectorKey);
@@ -1288,6 +1202,5 @@ void Importer::GetMemoryRequirements(aiMemoryInfo& in) const {
             in.materials += pc->mProperties[a]->mDataLength;
         }
     }
-
     in.total += in.materials;
 }

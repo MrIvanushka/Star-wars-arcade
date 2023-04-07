@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
 
 All rights reserved.
 
@@ -38,13 +38,13 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------
 */
-#include "AbstractImportExportBase.h"
 #include "UnitTestPCH.h"
+#include "AbstractImportExportBase.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/Exporter.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include <assimp/Exporter.hpp>
-#include <assimp/Importer.hpp>
 
 using namespace Assimp;
 
@@ -58,18 +58,7 @@ public:
 
         Exporter exporter;
         aiReturn res = exporter.Export(scene, "assjson", "./spider_test.json");
-        if (aiReturn_SUCCESS != res) {
-            return false;
-        }
-
-        Assimp::ExportProperties exportProperties;
-        exportProperties.SetPropertyBool("JSON_SKIP_WHITESPACES", true);
-        aiReturn resNoWhitespace = exporter.Export(scene, "assjson", "./spider_test_nowhitespace.json", 0u, &exportProperties);
-        if (aiReturn_SUCCESS != resNoWhitespace) {
-            return false;
-        }
-
-        return true;
+        return aiReturn_SUCCESS == res;
     }
 };
 

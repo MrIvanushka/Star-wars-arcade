@@ -1,7 +1,7 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include"../Model/Observer.h"
+#include"../Utilities/Observer.h"
 #include"../Engine/GameObject.h"
 #include"bounds.h"
 

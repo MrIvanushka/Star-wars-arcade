@@ -3,7 +3,9 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
+
+
 
 All rights reserved.
 
@@ -46,10 +48,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef AI_COMMONMETADATA_H_INC
 #define AI_COMMONMETADATA_H_INC
 
-#ifdef __GNUC__
-#pragma GCC system_header
-#endif
-
 /// Scene metadata holding the name of the importer which loaded the source asset.
 /// This is always present if the scene was created from an imported asset.
 #define AI_METADATA_SOURCE_FORMAT "SourceAsset_Format"
@@ -61,9 +59,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /// Scene metadata holding the name of the software which generated the source asset, if available.
 /// Not all formats add this metadata.
 #define AI_METADATA_SOURCE_GENERATOR "SourceAsset_Generator"
-
-/// Scene metadata holding the source asset copyright statement, if available.
-/// Not all formats add this metadata.
-#define AI_METADATA_SOURCE_COPYRIGHT "SourceAsset_Copyright"
 
 #endif

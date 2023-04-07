@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
 
 
 
@@ -70,7 +70,9 @@ PretransformVertices::PretransformVertices() :
 
 // ------------------------------------------------------------------------------------------------
 // Destructor, private as well
-PretransformVertices::~PretransformVertices() = default;
+PretransformVertices::~PretransformVertices() {
+	// nothing to do here
+}
 
 // ------------------------------------------------------------------------------------------------
 // Returns whether the processing step is present in the given flag field.
@@ -427,7 +429,7 @@ void PretransformVertices::Execute(aiScene *pScene) {
 	const unsigned int iOldNodes = CountNodes(pScene->mRootNode);
 
 	if (configTransform) {
-		pScene->mRootNode->mTransformation = configTransformation * pScene->mRootNode->mTransformation;
+		pScene->mRootNode->mTransformation = configTransformation;
 	}
 
 	// first compute absolute transformation matrices for all nodes
@@ -443,7 +445,7 @@ void PretransformVertices::Execute(aiScene *pScene) {
 			delete mesh->mBones[a];
 
 		delete[] mesh->mBones;
-        mesh->mBones = nullptr;
+		mesh->mBones = NULL;
 	}
 
 	// now build a list of output meshes
@@ -470,16 +472,16 @@ void PretransformVertices::Execute(aiScene *pScene) {
 			pScene->mMeshes = npp;
 		}
 
-		// now iterate through all meshes and transform them to world-space
+		// now iterate through all meshes and transform them to worldspace
 		for (unsigned int i = 0; i < pScene->mNumMeshes; ++i) {
 			ApplyTransform(pScene->mMeshes[i], *reinterpret_cast<aiMatrix4x4 *>(pScene->mMeshes[i]->mBones));
 
 			// prevent improper destruction
-            pScene->mMeshes[i]->mBones = nullptr;
+			pScene->mMeshes[i]->mBones = NULL;
 			pScene->mMeshes[i]->mNumBones = 0;
 		}
 	} else {
-		apcOutMeshes.reserve(static_cast<size_t>(pScene->mNumMaterials) << 1u);
+		apcOutMeshes.reserve(pScene->mNumMaterials << 1u);
 		std::list<unsigned int> aiVFormats;
 
 		std::vector<unsigned int> s(pScene->mNumMeshes, 0);
@@ -537,22 +539,22 @@ void PretransformVertices::Execute(aiScene *pScene) {
 			for (unsigned int i = 0; i < pScene->mNumMeshes; ++i) {
 				aiMesh *mesh = pScene->mMeshes[i];
 				mesh->mNumBones = 0;
-                mesh->mBones = nullptr;
+				mesh->mBones = NULL;
 
 				// we're reusing the face index arrays. avoid destruction
 				for (unsigned int a = 0; a < mesh->mNumFaces; ++a) {
 					mesh->mFaces[a].mNumIndices = 0;
-                    mesh->mFaces[a].mIndices = nullptr;
+					mesh->mFaces[a].mIndices = NULL;
 				}
 
 				delete mesh;
 
 				// Invalidate the contents of the old mesh array. We will most
 				// likely have less output meshes now, so the last entries of
-				// the mesh array are not overridden. We set them to nullptr to
+				// the mesh array are not overridden. We set them to NULL to
 				// make sure the developer gets notified when his application
 				// attempts to access these fields ...
-                mesh = nullptr;
+				mesh = NULL;
 			}
 
 			// It is impossible that we have more output meshes than
@@ -569,14 +571,14 @@ void PretransformVertices::Execute(aiScene *pScene) {
 		delete pScene->mAnimations[i];
 	delete[] pScene->mAnimations;
 
-	pScene->mAnimations = nullptr;
+	pScene->mAnimations = NULL;
 	pScene->mNumAnimations = 0;
 
 	// --- we need to keep all cameras and lights
 	for (unsigned int i = 0; i < pScene->mNumCameras; ++i) {
 		aiCamera *cam = pScene->mCameras[i];
 		const aiNode *nd = pScene->mRootNode->FindNode(cam->mName);
-        ai_assert(nullptr != nd);
+		ai_assert(NULL != nd);
 
 		// multiply all properties of the camera with the absolute
 		// transformation of the corresponding node
@@ -588,7 +590,7 @@ void PretransformVertices::Execute(aiScene *pScene) {
 	for (unsigned int i = 0; i < pScene->mNumLights; ++i) {
 		aiLight *l = pScene->mLights[i];
 		const aiNode *nd = pScene->mRootNode->FindNode(l->mName);
-        ai_assert(nullptr != nd);
+		ai_assert(NULL != nd);
 
 		// multiply all properties of the camera with the absolute
 		// transformation of the corresponding node
@@ -678,9 +680,9 @@ void PretransformVertices::Execute(aiScene *pScene) {
 	if (!DefaultLogger::isNullLogger()) {
 		ASSIMP_LOG_DEBUG("PretransformVerticesProcess finished");
 
-		ASSIMP_LOG_INFO("Removed ", iOldNodes, " nodes and ", iOldAnimationChannels, " animation channels (",
+		ASSIMP_LOG_INFO_F("Removed ", iOldNodes, " nodes and ", iOldAnimationChannels, " animation channels (",
 				CountNodes(pScene->mRootNode), " output nodes)");
-		ASSIMP_LOG_INFO("Kept ", pScene->mNumLights, " lights and ", pScene->mNumCameras, " cameras.");
-		ASSIMP_LOG_INFO("Moved ", iOldMeshes, " meshes to WCS (number of output meshes: ", pScene->mNumMeshes, ")");
+		ASSIMP_LOG_INFO_F("Kept ", pScene->mNumLights, " lights and ", pScene->mNumCameras, " cameras.");
+		ASSIMP_LOG_INFO_F("Moved ", iOldMeshes, " meshes to WCS (number of output meshes: ", pScene->mNumMeshes, ")");
 	}
 }

@@ -42,7 +42,10 @@ public:
         {
             direction.y = 0.f;
 
-            _controller->move(glm::normalize(direction), deltaTime);
+            _controller->accelerate(glm::normalize(direction), deltaTime);
+        }
+        else{
+            _controller->slowDown(deltaTime);
         }
     }
     
