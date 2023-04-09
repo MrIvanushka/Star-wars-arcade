@@ -40,7 +40,6 @@ void NavMeshSurface::add_area(const std::vector<TPPLPoint>& border){
 void NavMeshSurface::expand(const NavMeshSurface& surface) {
     std::vector<TPPLPoint> new_border;
     long first1 = -1, last1 = -1, first2 = -1, last2 = -1; // first and last intersection points
-    //bool transit = false; // whether one of intersection points has [0] index
     auto border1 = this->m_polygons.begin();
     auto border2 = surface.m_polygons.begin();
 
@@ -65,11 +64,11 @@ void NavMeshSurface::expand(const NavMeshSurface& surface) {
 
     if (first1 <= last1) {
         for (long i = 0; i < first1; new_border.push_back(border1->GetPoint(i++)));
-        for (long i = first2; i % border2->GetNumPoints() != last2; new_border.push_back(border2->GetPoint(i % border2->GetNumPoints())), ++i);
+        for (long i = first2; i % border2->GetNumPoints() != last2; new_border.push_back(border2->GetPoint(i++ % border2->GetNumPoints())));
         for (long i = last1; i < border1->GetNumPoints(); new_border.push_back(border1->GetPoint(i++)));
     }
     else {
-        for (long i = first2; i % border2->GetNumPoints() != last2; new_border.push_back(border2->GetPoint(i % border2->GetNumPoints())), ++i);
+        for (long i = first2; i % border2->GetNumPoints() != last2; new_border.push_back(border2->GetPoint(i++ % border2->GetNumPoints())));
         for (long i = last1; i < first1; new_border.push_back(border1->GetPoint(i++)));
     }
 
@@ -145,7 +144,6 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
         open_set_hash.erase(std::find(open_set_hash.begin(), open_set_hash.end(), current));
 
         if (current == end_poly){
-            std::cout << "exit" << std::endl;
             return NavMeshPath(reconstruct_path(came_from, end_poly, start, end));
         }
 
@@ -167,7 +165,6 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
     }
     
     // default output
-    std::cout << "Path not found" << std::endl;
     std::vector<TPPLPoint> path;
     path.push_back(start);
     path.push_back(end);
@@ -235,6 +232,6 @@ NavMeshPath::NavMeshPath(const std::vector<TPPLPoint>& points){
     path = points;
 }
 
-std::vector<TPPLPoint> NavMeshPath::get_points() const{
+const std::vector<TPPLPoint> NavMeshPath::get_points() const{
     return path;
 }

@@ -7,8 +7,6 @@
 #include "polypartition.h"
 #include "Struct_utilities.hpp"
 
-#include <iostream>
-
 class NavMeshPath;
 
 class NavMeshSurface {
@@ -39,7 +37,7 @@ class NavMeshPath{
         
         NavMeshPath(const std::vector<TPPLPoint>& points);
 
-        std::vector<TPPLPoint> get_points() const;
+        const std::vector<TPPLPoint> get_points() const;
 
     private:
         std::vector<TPPLPoint> path;

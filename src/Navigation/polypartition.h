@@ -54,6 +54,24 @@ struct TPPLPoint {
 
   static tppl_float distance(const TPPLPoint& p1, const TPPLPoint& p2);
 
+  TPPLPoint() {}
+
+  TPPLPoint(const TPPLPoint& other) {
+    this->x = other.x;
+    this->y = other.y;
+    this->id = other.id;
+  }
+
+  TPPLPoint(tppl_float _x, tppl_float _y) : x(_x), y(_y), id(0) {}
+
+  TPPLPoint& operator=(const TPPLPoint& other) {
+    this->x = other.x;
+    this->y = other.y;
+    this->id = other.id;
+
+    return *this;
+  }
+
   TPPLPoint operator+(const TPPLPoint &p) const {
     TPPLPoint r;
     r.x = x + p.x;
