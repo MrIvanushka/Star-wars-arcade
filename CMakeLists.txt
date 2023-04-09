@@ -45,7 +45,11 @@ src/Physics/ray.h
 src/Physics/rigidbody.cpp 
 src/Physics/rigidbody.h 
 src/FieldScene.h 
-src/FieldScene.cpp)
+src/FieldScene.cpp
+src/Navigation/NavMesh.cpp
+src/Navigation/polypartition.cpp
+src/Navigation/Struct_utilities.cpp
+)
 
 add_subdirectory(./glfw)
 target_link_libraries(SWTOR glfw)
