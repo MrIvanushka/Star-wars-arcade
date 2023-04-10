@@ -19,14 +19,13 @@ class NavMeshSurface {
 
         [[nodiscard]] NavMeshPath get_path(const TPPLPoint& start, const TPPLPoint& end);
 
-        TPPLPolyList m_polygons;  // [0]] element should always be border
-        TPPLPolyList outpolys;
-
     private:
         std::vector<TPPLPoint> reconstruct_path(const std::unordered_map<TPPLPoly_it, TPPLPoly_it>& came_from, TPPLPoly_it& current, const TPPLPoint& start, const TPPLPoint& end);
 
         void update_grid();
 
+        TPPLPolyList m_polygons;  // [0]] element should always be border
+        TPPLPolyList outpolys;
         std::unordered_map<TPPLPoly_it, std::unordered_map<TPPLPoly_it, poly_intersection>> poly_grid;
         std::unordered_map<TPPLPoly_it, TPPLPoint> centers;
 };
