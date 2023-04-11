@@ -11,11 +11,12 @@
 #include"../Engine/Material.h"
 #include "../Engine/GameObject.h"
 #include "../Engine/MeshRenderer.h"
+#include "../Engine/SkinnedMeshRenderer.h"
 
 class Model : public Component
 {
 private:
-    std::vector<MeshRenderer*> meshes;
+    std::vector<IMeshRenderer*> meshes;
 public:
     Model(GameObject* object) : Component(object)
     {}
@@ -45,6 +46,10 @@ public:
                                      material, shader, orTexDif, orTexSpec));
     }
 
+    void addSkinnedMesh(SkinnedMesh* mesh, Material* material, Shader* shader, Texture* orTexDif, Texture* orTexSpec) {
+        this->meshes.push_back(new SkinnedMeshRenderer(mesh, material, shader, orTexDif, orTexSpec));
+    }
+
     ~Model()
     {
         for (auto*& i : this->meshes)
@@ -53,7 +58,7 @@ public:
 
     void render() override
     {
-        for (MeshRenderer* renderer : meshes)
+        for (IMeshRenderer* renderer : meshes)
         {
             renderer->render();
         }

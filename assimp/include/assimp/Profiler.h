@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
 
 
 All rights reserved.
@@ -68,13 +68,15 @@ using namespace Formatter;
  */
 class Profiler {
 public:
-    Profiler() = default;
+    Profiler() {
+        // empty
+    }
 
 
     /** Start a named timer */
     void BeginRegion(const std::string& region) {
         regions[region] = std::chrono::system_clock::now();
-        ASSIMP_LOG_DEBUG("START `",region,"`");
+        ASSIMP_LOG_DEBUG((format("START `"),region,"`"));
     }
 
 
@@ -86,7 +88,7 @@ public:
         }
 
         std::chrono::duration<double> elapsedSeconds = std::chrono::system_clock::now() - regions[region];
-        ASSIMP_LOG_DEBUG("END   `",region,"`, dt= ", elapsedSeconds.count()," s");
+        ASSIMP_LOG_DEBUG((format("END   `"),region,"`, dt= ", elapsedSeconds.count()," s"));
     }
 
 private:

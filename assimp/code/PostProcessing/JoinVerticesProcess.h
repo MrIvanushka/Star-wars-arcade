@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
 
 
 All rights reserved.
@@ -64,13 +64,8 @@ namespace Assimp
  */
 class ASSIMP_API JoinVerticesProcess : public BaseProcess {
 public:
-    // -------------------------------------------------------------------
-    /// @brief  The default class constructor.
-    JoinVerticesProcess() = default;
-    
-    // -------------------------------------------------------------------
-    /// @brief  The default class destructor.
-    ~JoinVerticesProcess() = default;
+    JoinVerticesProcess();
+    ~JoinVerticesProcess();
 
     // -------------------------------------------------------------------
     /** Returns whether the processing step is present in the given flag field.

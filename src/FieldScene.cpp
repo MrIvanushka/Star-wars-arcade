@@ -16,18 +16,18 @@ FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebuff
 void FieldScene::initShaders(int GL_VERSION_MAJOR, int GL_VERSION_MINOR)
 {
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "../Shaders/vertex_core.glsl", "../Shaders/fragment_directional.glsl"));
+                                       "Shaders/vertex_core.glsl", "Shaders/fragment_directional.glsl"));
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "../Shaders/vertex_unlit.glsl", "../Shaders/fragment_unlit.glsl"));
+                                       "Shaders/vertex_unlit.glsl", "Shaders/fragment_unlit.glsl"));
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "../Shaders/vertex_skinned_diffuse.glsl", "../Shaders/fragment_skinned_diffuse.glsl"));
+                                       "Shaders/vertex_skinned_diffuse.glsl", "Shaders/fragment_skinned_diffuse.glsl"));
 }
 
 void FieldScene::initTextures()
 {
-    this->textures.push_back(new Texture("../Images/skybox.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("../Images/red.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("../Images/red.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("Images/skybox.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("Images/red.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("Images/red.png", GL_TEXTURE_2D));
 }
 
 void FieldScene::initMaterials()
@@ -46,8 +46,8 @@ void FieldScene::initObjects()
     skybox->getComponent<Model>()->addMesh(mesh, this->materials[0], this->shaders[1], this->textures[0], this->textures[0]);
     this->gameObjects.push_back(skybox);
 */
-    auto holocroneData = AssimpLoader::loadWithArmature(importer1, "../OBJFiles/Idle.fbx", clips);  
-    auto otherData = AssimpLoader::loadWithArmature(importer2, "../OBJFiles/Walking.fbx", clips);  
+    auto holocroneData = AssimpLoader::loadWithArmature(importer1, "OBJFiles/Idle.fbx", clips);  
+    auto otherData = AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);  
     GameObject* character = new GameObject(glm::vec3(3.f, -15.f, 0.f), glm::vec3(0.f), glm::vec3(0.1f));
     character->addComponent<Model>();
     SkinnedMesh* holoMesh = new SkinnedMesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), character, holocroneData[0].boneNameToIndexMap);

@@ -3,7 +3,9 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
+
+
 
 All rights reserved.
 
@@ -45,23 +47,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace Assimp;
 
-#ifndef ASSIMP_BUILD_NO_EXPORT
-
 class TestProgressHandler : public ProgressHandler {
 public:
-    TestProgressHandler() :
-            ProgressHandler(),
-            mPercentage(0.f) {
+    TestProgressHandler() : ProgressHandler() {
         // empty
     }
 
-    virtual ~TestProgressHandler() = default;
+    virtual ~TestProgressHandler() {
+        // empty
+    }
 
     bool Update(float percentage = -1.f) override {
-        mPercentage = percentage;
         return true;
     }
-    float mPercentage;
 };
 
 class ExporterTest : public ::testing::Test {
@@ -79,11 +77,12 @@ TEST_F(ExporterTest, ExporterIdTest) {
     Exporter exporter;
     size_t exportFormatCount = exporter.GetExportFormatCount();
     EXPECT_NE(0u, exportFormatCount) << "No registered exporters";
-    typedef std::map<std::string, const aiExportFormatDesc *> ExportIdMap;
+    typedef std::map<std::string, const aiExportFormatDesc*> ExportIdMap;
     ExportIdMap exporterMap;
-    for (size_t i = 0; i < exportFormatCount; ++i) {
+    for (size_t i = 0; i < exportFormatCount; ++i)
+    {
         // Check that the exporter description exists and makes sense
-        const aiExportFormatDesc *desc = exporter.GetExportFormatDescription(i);
+        const aiExportFormatDesc* desc = exporter.GetExportFormatDescription(i);
         ASSERT_NE(nullptr, desc) << "Missing aiExportFormatDesc at index " << i;
         EXPECT_NE(nullptr, desc->id) << "Null exporter ID at index " << i;
         EXPECT_STRNE("", desc->id) << "Empty exporter ID at index " << i;
@@ -98,8 +97,6 @@ TEST_F(ExporterTest, ExporterIdTest) {
         EXPECT_TRUE(result.second) << "Duplicate exported id: '" << key << "' " << desc->description << " *." << desc->fileExtension << " at index " << i;
     }
 
-    const aiExportFormatDesc *desc = exporter.GetExportFormatDescription(exportFormatCount);
+    const aiExportFormatDesc* desc = exporter.GetExportFormatDescription(exportFormatCount);
     EXPECT_EQ(nullptr, desc) << "More exporters than claimed";
 }
-
-#endif

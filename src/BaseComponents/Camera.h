@@ -20,7 +20,14 @@
 
 enum direction {FORWARD = 0, BACKWARD, LEFT, RIGHT};
 
-class Camera : public Component {
+class IReadonlyCamera{
+public:
+    virtual glm::vec3 getFront() = 0;
+    virtual glm::vec3 getRight() = 0;
+    virtual glm::quat getRotation() = 0;
+};
+
+class Camera : public Component, public IReadonlyCamera {
 private:
     glm::mat4 ViewMatrix;
     glm::mat4 ProjectionMatrix;
@@ -84,6 +91,18 @@ public:
     glm::vec3 getPosition()
     {
         return this->gameObject->getPosition();
+    }
+
+    glm::vec3 getFront() override{
+        return front;
+    }
+
+    glm::vec3 getRight() override {
+        return right;
+    }
+
+    glm::quat getRotation() override{
+        return gameObject->getRotation();
     }
 };
 

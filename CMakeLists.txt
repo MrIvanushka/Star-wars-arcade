@@ -8,48 +8,26 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 add_executable(SWTOR main.cpp 
-src/Engine/Game.h 
 src/Engine/Game.cpp 
-src/BaseComponents/Camera.h 
-src/BaseComponents/Light.h 
-src/Engine/Material.h 
 src/Engine/GameObject.cpp 
-src/Engine/GameObject.h 
 src/Engine/Mesh.cpp 
-src/Engine/Mesh.h 
-src/Engine/MeshRenderer.h 
-src/BaseComponents/Model.h 
-src/Engine/OBJLoader.h 
 src/Engine/Scene.cpp 
-src/Engine/Scene.h 
-src/Engine/Shader.h 
-src/Engine/Texture.h 
-src/Engine/Vertex.h 
 src/Engine/Vertex.cpp
-src/Engine/Input.h 
 src/Engine/Input.cpp 
 src/Engine/AssimpLoader.cpp 
-src/Engine/AssimpLoader.h 
+src/BaseComponents/Animator.cpp
 src/Physics/bounds.cpp 
-src/Physics/bounds.h 
 src/Physics/meshcollider.cpp  
 src/Physics/environment.cpp 
-src/Physics/environment.h 
 src/Physics/linalg.cpp 
-src/Physics/linalg.h 
-src/Physics/list.hpp 
 src/Physics/octree.cpp 
-src/Physics/octree.h 
 src/Physics/ray.cpp 
-src/Physics/ray.h 
 src/Physics/rigidbody.cpp 
-src/Physics/rigidbody.h 
-src/FieldScene.h 
-src/FieldScene.cpp
 src/Navigation/NavMesh.cpp
 src/Navigation/polypartition.cpp
 src/Navigation/Struct_utilities.cpp
-)
+src/Utilities/StateMachine.cpp
+src/FieldScene.cpp)
 
 add_subdirectory(./glfw)
 target_link_libraries(SWTOR glfw)

@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2022, assimp team
+Copyright (c) 2006-2019, assimp team
 
 
 All rights reserved.
@@ -67,11 +67,14 @@ class ASSIMP_API ProgressHandler
 {
 protected:
     /// @brief  Default constructor
-    ProgressHandler () AI_NO_EXCEPT = default;
+    ProgressHandler () AI_NO_EXCEPT {
+        // empty
+    }
 
 public:
     /// @brief  Virtual destructor.
-    virtual ~ProgressHandler () = default;
+    virtual ~ProgressHandler () {
+    }
 
     // -------------------------------------------------------------------
     /** @brief Progress callback.
@@ -88,7 +91,7 @@ public:
      *   occasion (loaders and Assimp are generally allowed to perform
      *   all needed cleanup tasks prior to returning control to the
      *   caller). If the loading is aborted, #Importer::ReadFile()
-     *   returns always nullptr.
+     *   returns always NULL.
      *   */
     virtual bool Update(float percentage = -1.f) = 0;
 
