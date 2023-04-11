@@ -66,6 +66,20 @@ void GameObject::start()
     }
 }
 
+void GameObject::enableComponents()
+{
+    for (Component *component: this->components) {
+        component->onEnable();
+    }
+}
+
+void GameObject::disableComponents()
+{
+    for (Component *component: this->components) {
+        component->onDisable();
+    }
+}
+
 void GameObject::update(float deltaTime)
 {
     OrientedPoint::update(deltaTime);
@@ -121,6 +135,11 @@ void GameObject::rotateAt(glm::vec3 newRot) {
 }
 
 void GameObject::setActive(bool value) {
+    if(isActive && !value)
+        disableComponents();
+    else if(!isActive && value)
+        enableComponents();
+
     this->isActive = value;
     moved=true;
 }

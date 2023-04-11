@@ -74,6 +74,9 @@ public:
         }
         return nullptr;
     }
+private:
+    void enableComponents();
+    void disableComponents();
 };
 
 
@@ -92,6 +95,8 @@ public:
     {
         delete gameObject;
     }
+    virtual void onEnable() {}
+    virtual void onDisable() {}
     virtual void start() {}
     virtual void update(float deltaTime) {}
     virtual void render() {}
