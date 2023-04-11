@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(SWTOR)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 23)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -23,6 +23,9 @@ src/Physics/linalg.cpp
 src/Physics/octree.cpp 
 src/Physics/ray.cpp 
 src/Physics/rigidbody.cpp 
+src/Navigation/NavMesh.cpp
+src/Navigation/polypartition.cpp
+src/Navigation/Struct_utilities.cpp
 src/Utilities/StateMachine.cpp
 src/FieldScene.cpp)
 
