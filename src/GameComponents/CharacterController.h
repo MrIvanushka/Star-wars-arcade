@@ -1,64 +1,58 @@
 #ifndef SWTOR_CHARACTERCONTROLLER_H
 #define SWTOR_CHARACTERCONTROLLER_H
 
+#include<vector>
+
 #include "../Engine/GameObject.h"
+#include "../Physics/meshcollider.h"
+//#include "../Physics/TerrainCollider.h"
 
-
-class CharacterController : public Component
+class CharacterController : public Component, public ArgObserver<Collision>
 {
-    float _maxSpeed = 10;
-    float _acceleration = 40;
+    const float _maxGroundAngle = 45;
+    const float _maxSpeed = 10;
+    const float _acceleration = 40;
+    const glm::vec3 _gravityAcceleration = glm::vec3(0, -9.81f, 0);
     glm::quat _offsetRotation;
 
     glm::vec3 _velocity;
+    glm::vec3 _gravityVelocity;
+
+    bool _isGrounded = true;
+
+    MeshCollider* _selfCollider;
+    std::set<Collider*> _touchedColliders;
+    
+    std::vector<glm::vec3> _groundNormals;
+    std::vector<glm::vec3> _wallNormals;
 
 public:
-    CharacterController(GameObject* object) : Component(object)
-    {
-        _offsetRotation = glm::angleAxis(glm::radians(180.f), glm::vec3(0,1,0));
-        _velocity = glm::vec3(0.f);
-        
-    }
 
-    void update(float deltaTime) override{
-        gameObject->move(_velocity * deltaTime);
+    CharacterController(GameObject* object) : Component(object) {}
 
-        if(glm::length(_velocity) > 0.001f)
-        {
-            glm::vec3 movingDirection = glm::normalize(_velocity);
-            gameObject->rotateAt(_offsetRotation * glm::quatLookAt(movingDirection, glm::vec3(0, 1, 0)));
-        }
-    }
+    void start() override;
 
-    void accelerate(glm::vec3 direction, float deltaTime)
-    {
-        _velocity += direction * _acceleration * deltaTime;
-        float currentSpeed = glm::length(_velocity);
+    void update(float deltaTime) override;
 
-        if(currentSpeed > _maxSpeed)
-            _velocity *= _maxSpeed / currentSpeed;
-    }
+    void accelerate(glm::vec3 direction, float deltaTime);
 
-    void slowDown(float deltaTime)
-    {
-        float currentSpeed = glm::length(_velocity);
-        float delta = _acceleration * deltaTime;
+    void slowDown(float deltaTime);
 
-        if(currentSpeed <= delta)
-            _velocity = glm::vec3(0.f);
-        else
-            _velocity *= (currentSpeed - delta) / currentSpeed;
-    }
+    float getCurrentSpeed();
 
-    float getCurrentSpeed()
-    {
-        return glm::length(_velocity);
-    }
+    float getMaxSpeed();
 
-    float getMaxSpeed()
-    {
-        return _maxSpeed;
-    }
+    void handle(Collision collision) override;
+
+private:
+
+    void move(float deltaTime);
+
+    void fall(float deltaTime);
+
+    void processNorm(glm::vec3 norm);
+
+    void processCollisions();
 };
 
 #endif //SWTOR_CHARACTERCONTROLLER_H

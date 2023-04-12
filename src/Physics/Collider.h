@@ -15,12 +15,9 @@ struct Collision
 };
 
 class Collider : public Component, public ArgObservable<Collision> {
-private:
-    void handleCollision(BoundingRegion br, glm::vec3 norm)
-    {   
-	    invoke(Collision(br, norm));
-    }
 public:
+    bool isStatic = false;
+
 	friend class Octree::node;
 	friend class Ray;
 
@@ -32,6 +29,16 @@ public:
     bool moved()
     {
 	    return gameObject->isMoved();
+    }
+
+    OrientedPoint* getCenter()
+    {
+        return gameObject;
+    }
+private:
+    void handleCollision(BoundingRegion br, glm::vec3 norm)
+    {   
+	    invoke(Collision(br, norm));
     }
 };
 
