@@ -16,6 +16,7 @@ src/Engine/Vertex.cpp
 src/Engine/Input.cpp 
 src/Engine/AssimpLoader.cpp 
 src/BaseComponents/Animator.cpp
+src/GameComponents/Character.cpp
 src/Physics/bounds.cpp 
 src/Physics/meshcollider.cpp  
 src/Physics/environment.cpp 
@@ -26,6 +27,8 @@ src/Physics/rigidbody.cpp
 src/Navigation/NavMesh.cpp
 src/Navigation/polypartition.cpp
 src/Navigation/Struct_utilities.cpp
+src/Navigation/NavMeshAgent.cpp
+src/Navigation/CharacterStates.cpp
 src/Utilities/StateMachine.cpp
 src/FieldScene.cpp)
 

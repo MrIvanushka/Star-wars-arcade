@@ -165,10 +165,7 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
     }
     
     // default output
-    std::vector<TPPLPoint> path;
-    path.push_back(start);
-    path.push_back(end);
-    return NavMeshPath(path);
+    return NavMeshPath();
 }
 
 /* Building grid */
@@ -232,6 +229,6 @@ NavMeshPath::NavMeshPath(const std::vector<TPPLPoint>& points){
     path = points;
 }
 
-const std::vector<TPPLPoint> NavMeshPath::get_points() const{
+const std::vector<TPPLPoint>& NavMeshPath::get_points() const{
     return path;
 }

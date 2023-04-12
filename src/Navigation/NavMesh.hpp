@@ -24,7 +24,7 @@ class NavMeshSurface {
 
         void update_grid();
 
-        TPPLPolyList m_polygons;  // [0]] element should always be border
+        TPPLPolyList m_polygons;  // [0] element should always be border
         TPPLPolyList outpolys;
         std::unordered_map<TPPLPoly_it, std::unordered_map<TPPLPoly_it, poly_intersection>> poly_grid;
         std::unordered_map<TPPLPoly_it, TPPLPoint> centers;
@@ -36,7 +36,7 @@ class NavMeshPath{
         
         NavMeshPath(const std::vector<TPPLPoint>& points);
 
-        const std::vector<TPPLPoint> get_points() const;
+        const std::vector<TPPLPoint>& get_points() const;
 
     private:
         std::vector<TPPLPoint> path;

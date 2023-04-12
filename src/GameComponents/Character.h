@@ -1,3 +1,6 @@
+#ifndef CHARACTER_H
+#define CHARACTER_H
+
 class Character {
 private:
     float _health;
@@ -10,3 +13,5 @@ public:
     void Heal(float health);
     bool IsDead();
 };
+
+#endif // CHARACTER_H

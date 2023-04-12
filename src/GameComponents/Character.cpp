@@ -21,7 +21,3 @@ void Character::Heal(float health) {
     _health += health;
     if (_health > _maxHealth) _health = _maxHealth;
 }
-
-int main() {
-    return 0;
-}
