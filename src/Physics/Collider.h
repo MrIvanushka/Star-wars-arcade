@@ -15,9 +15,9 @@ struct Collision
 };
 
 class Collider : public Component, public ArgObservable<Collision> {
+private:
+    std::set<Collider*> _touchedColliders;
 public:
-    bool isStatic = false;
-
 	friend class Octree::node;
 	friend class Ray;
 
@@ -35,10 +35,26 @@ public:
     {
         return gameObject;
     }
+
+    void update(float deltaTime) override
+    {
+        std::set<Collider*> _previousTouchedColliders(_touchedColliders);
+
+        if(moved())
+            _touchedColliders = std::set<Collider*>();
+        else
+            for(auto touchedCollider : _previousTouchedColliders)
+                if(touchedCollider->moved() == false)
+                    _touchedColliders.insert(touchedCollider);
+
+    }
 private:
     void handleCollision(BoundingRegion br, glm::vec3 norm)
     {   
-	    invoke(Collision(br, norm));
+        if(_touchedColliders.find(br.collider) != _touchedColliders.end())
+            invoke(Collision(br, norm));
+
+        _touchedColliders.insert(br.collider);
     }
 };
 
