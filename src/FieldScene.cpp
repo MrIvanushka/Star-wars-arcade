@@ -4,6 +4,7 @@
 #include "Physics/rigidbody.h"
 #include "Animations/BasicBlendAnimator.h"
 #include "Animations/BasicAnimator.h"
+#include "Animations/CharacterAnimator.h"
 #include"GameComponents/CameraController.h"
 #include"GameComponents/CameraFollower.h"
 #include"GameComponents/Follower.h"
@@ -38,6 +39,8 @@ void FieldScene::initMaterials()
 
 Assimp::Importer importer1;
 Assimp::Importer importer2;
+Assimp::Importer importer3;
+Assimp::Importer importer4;
 std::vector<AnimationClip> clips;//<--MUST be deleted
 void FieldScene::initObjects()
 {/*
@@ -89,7 +92,10 @@ void FieldScene::initObjects()
     this->gameObjects.push_back(platform3);
     
     auto holocroneData = AssimpLoader::loadWithArmature(importer1, "OBJFiles/Idle.fbx", clips);  
-    auto otherData = AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);  
+    AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);
+    AssimpLoader::loadWithArmature(importer3, "OBJFiles/Jump.fbx", clips);  
+    AssimpLoader::loadWithArmature(importer4, "OBJFiles/Fall A Loop.fbx", clips);
+
     GameObject* character = new GameObject(glm::vec3(3.f, -15.f, 0.f), glm::vec3(0.f), glm::vec3(0.1f));
     character->addComponent<Model>();
     SkinnedMesh* holoMesh = new SkinnedMesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), character, holocroneData[0].boneNameToIndexMap);
@@ -101,10 +107,10 @@ void FieldScene::initObjects()
     character->addComponent<Follower>();
     character->getComponent<Follower>()->setTarget(cube);
 
-    character->addComponent<BasicBlendAnimator>();
-    character->getComponent<BasicBlendAnimator>()->setupStateMachine(clips, cube->getComponent<CharacterController>());
-    character->getComponent<BasicBlendAnimator>()->attachMesh(holoMesh);
-    character->getComponent<BasicBlendAnimator>()->attachMesh(secondMesh);
+    character->addComponent<CharacterAnimator>();
+    character->getComponent<CharacterAnimator>()->setupStateMachine(clips, cube->getComponent<CharacterController>());
+    character->getComponent<CharacterAnimator>()->attachMesh(holoMesh);
+    character->getComponent<CharacterAnimator>()->attachMesh(secondMesh);
 
     GameObject* camera = new GameObject(glm::vec3(-25.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
     camera->addComponent<CameraController>();

@@ -12,6 +12,7 @@ class CharacterController : public Component, public ArgObserver<Collision>
     const float _maxGroundAngle = 45;
     const float _maxSpeed = 10;
     const float _acceleration = 40;
+    const float _jumpForce = 1000;
     const glm::vec3 _gravityAcceleration = glm::vec3(0, -9.81f, 0);
     glm::quat _offsetRotation;
 
@@ -38,9 +39,15 @@ public:
 
     void slowDown(float deltaTime);
 
+    void jump(float deltaTime);
+
     float getCurrentSpeed();
 
+    float getGravitySpeed();
+
     float getMaxSpeed();
+
+    bool isGrounded();
 
     void handle(Collision collision) override;
 

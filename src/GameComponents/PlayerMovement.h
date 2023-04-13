@@ -47,6 +47,9 @@ public:
         else{
             _controller->slowDown(deltaTime);
         }
+
+        if(input->keyIsPressed("Space"))
+            _controller->jump(deltaTime);
     }
     
 };

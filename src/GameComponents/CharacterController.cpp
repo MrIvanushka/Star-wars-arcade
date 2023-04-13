@@ -12,7 +12,7 @@ void CharacterController::start() {
 void CharacterController::update(float deltaTime) {
     processCollisions();
 
-    if(_groundNormals.size() > 0)
+    if(_groundNormals.size() > 0 && _gravityVelocity.y < 0.001f)
     {
         _isGrounded = true;
         _gravityVelocity = glm::vec3(0.f);
@@ -54,14 +54,31 @@ void CharacterController::slowDown(float deltaTime)
     }
 }
 
+void CharacterController::jump(float deltaTime){
+    if(_isGrounded)
+    {
+        _gravityVelocity += _jumpForce * glm::vec3(0,1,0) * deltaTime;
+    }
+}
+
 float CharacterController::getCurrentSpeed()
 {
     return glm::length(_velocity);
 }
 
+float CharacterController::getGravitySpeed()
+{
+    return _gravityVelocity.y;
+}
+
 float CharacterController::getMaxSpeed()
 {
     return _maxSpeed;
+}
+
+bool CharacterController::isGrounded()
+{
+    return _isGrounded;
 }
 
 void CharacterController::handle(Collision collision) {

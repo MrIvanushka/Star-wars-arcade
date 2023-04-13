@@ -14,13 +14,17 @@ protected:
 
     virtual void update(float deltaTime) {}
 public:
-    State() {}
+    State(){}
+    
     State(std::vector<Transition*> transitions);
 
     void onEnable();
+    
     void updateAll(float deltaTime);
+    
+    void addTransition(Transition* transition);
 
-    bool needTransit(Transition* completedTransition);
+    bool needTransit(Transition** completedTransition);
 };
 
 class Transition
