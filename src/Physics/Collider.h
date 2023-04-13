@@ -17,6 +17,7 @@ struct Collision
 class Collider : public Component, public ArgObservable<Collision> {
 private:
     std::set<Collider*> _touchedColliders;
+    std::set<Collider*> _newColliders;
 public:
 	friend class Octree::node;
 	friend class Ray;
@@ -38,15 +39,28 @@ public:
 
     void update(float deltaTime) override
     {
-        std::set<Collider*> _previousTouchedColliders(_touchedColliders);
-
         if(moved())
-            _touchedColliders = std::set<Collider*>();
+        {
+            _touchedColliders = _newColliders;
+        }
         else
-            for(auto touchedCollider : _previousTouchedColliders)
-                if(touchedCollider->moved() == false)
-                    _touchedColliders.insert(touchedCollider);
+        {
+            std::set<Collider*> _previousColliders(_touchedColliders);
 
+            for(auto collider : _previousColliders)
+                if(collider->moved())
+                    _touchedColliders.erase(collider);
+
+            for(auto collider : _newColliders)
+                _touchedColliders.insert(collider);
+        }
+
+        _newColliders = std::set<Collider*>();
+    }
+
+    std::set<Collider> getTouchedColliders()
+    {
+        return _touchedColliders;
     }
 private:
     void handleCollision(BoundingRegion br, glm::vec3 norm)
@@ -54,7 +68,7 @@ private:
         if(_touchedColliders.find(br.collider) != _touchedColliders.end())
             invoke(Collision(br, norm));
 
-        _touchedColliders.insert(br.collider);
+        _newColliders.insert(br.collider);
     }
 };
 
