@@ -1,5 +1,39 @@
 #include "CharacterStates.hpp"
 
+/* SeeTargetTransition */
+
+SeeTargetTransition::SeeTargetTransition(State* nextState, Collider* collider, Fraction fraction) :
+    Transition(nextState), m_collider(collider), fraction_member(fraction)
+{
+    // TODO
+}
+
+void SeeTargetTransition::onEnable() {
+    // TODO
+}
+
+void SeeTargetTransition::update(float deltaTime) {
+    // TODO
+}
+
+bool SeeTargetTransition::needTransit() {
+    // TODO
+    return false;
+}
+
+/* KillTransition */
+
+KillTransition::KillTransition(State* nextState, Character* character) :
+    Transition(nextState), m_character(character) {}
+
+void KillTransition::onEnable() {}
+
+void KillTransition::update(float deltaTime) {}
+
+bool KillTransition::needTransit() {
+    return m_character->IsDead();
+}
+
 /* WanderingState */
 
 WanderingState::WanderingState(NavMeshAgent* navMeshAgent, const std::vector<Transition*>& transitions) :
@@ -34,27 +68,6 @@ void PatrollingState::update(float deltaTime) {
     }
 }
 
-/* SeeTargetTransition */
-
-SeeTargetTransition::SeeTargetTransition(State* nextState, Collider* collider, Fraction fraction) :
-    Transition(nextState), m_collider(collider), fraction_member(fraction)
-{
-    // TODO
-}
-
-void SeeTargetTransition::onEnable() {
-    // TODO
-}
-
-void SeeTargetTransition::update(float deltaTime) {
-    // TODO
-}
-
-bool SeeTargetTransition::needTransit() {
-    // TODO
-    return false;
-}
-
 /* AttackState */
 
 AttackState::AttackState(Animator* animator, const std::vector<Transition*>& transitions) :
@@ -78,17 +91,4 @@ void FollowState::update(float deltaTime) {}
 /* ShootingState */
 
 //TODO: Implementation
-
-/* KillTransition */
-
-KillTransition::KillTransition(State* nextState, Character* character) :
-    Transition(nextState), m_character(character) {}
-
-void KillTransition::onEnable() {}
-
-void KillTransition::update(float deltaTime) {}
-
-bool KillTransition::needTransit() {
-    return m_character->IsDead();
-}
 

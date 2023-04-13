@@ -19,6 +19,37 @@ enum Fraction {
     Sith,
 };
 
+class SeeTargetTransition : public Transition
+{
+    private:
+        Collider* m_collider;
+        Fraction fraction_member;
+    
+    public:
+        SeeTargetTransition(State* nextState, Collider* collider, Fraction fraction);
+
+        void onEnable() override;
+
+        void update(float deltaTime) override;
+
+        bool needTransit() override;
+};
+
+class KillTransition : public Transition
+{
+    private:
+        Character* m_character;
+
+    public:
+        KillTransition(State* nextState, Character* character);
+
+        void onEnable() override;
+
+        void update(float deltaTime) override;
+
+        bool needTransit() override;
+};
+
 class WanderingState : public State 
 {
     private:
@@ -49,22 +80,6 @@ class PatrollingState : public State
         void start() override;
 
         void update(float deltaTime) override;
-};
-
-class SeeTargetTransition : public Transition
-{
-    private:
-        Collider* m_collider;
-        Fraction fraction_member;
-    
-    public:
-        SeeTargetTransition(State* nextState, Collider* collider, Fraction fraction);
-
-        void onEnable() override;
-
-        void update(float deltaTime) override;
-
-        bool needTransit() override;
 };
 
 class AttackState : public State
@@ -104,21 +119,6 @@ class ShootingState : public State
         void start() override;
         
         void update(float deltaTime) override;
-};
-
-class KillTransition : public Transition
-{
-    private:
-        Character* m_character;
-
-    public:
-        KillTransition(State* nextState, Character* character);
-
-        void onEnable() override;
-
-        void update(float deltaTime) override;
-
-        bool needTransit() override;
 };
 
 #endif // CHARACTERSTATES_H
