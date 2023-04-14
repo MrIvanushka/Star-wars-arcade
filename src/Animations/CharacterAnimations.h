@@ -19,4 +19,44 @@ public:
     }
 };
 
+
+class CharacterJumpTransition : public Transition{
+private:
+    CharacterController* _controller;
+public:
+    CharacterJumpTransition(State* nextState, CharacterController* controller) : Transition(nextState), _controller(controller)
+    {}
+
+    bool needTransit() override
+    {
+        return _controller->getGravitySpeed() > 0.01f;
+    }   
+};
+
+class CharacterFallTransition : public Transition{
+private:
+    CharacterController* _controller;
+public:
+    CharacterFallTransition(State* nextState, CharacterController* controller) : Transition(nextState), _controller(controller)
+    {}
+
+    bool needTransit() override
+    {
+        return !_controller->isGrounded();
+    }
+};
+
+class CharacterLandTransition : public Transition{
+private:
+    CharacterController* _controller;
+public:
+    CharacterLandTransition(State* nextState, CharacterController* controller) : Transition(nextState), _controller(controller)
+    {}
+
+    bool needTransit() override
+    {
+        return _controller->isGrounded();
+    }
+};
+
 #endif

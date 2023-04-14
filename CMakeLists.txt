@@ -16,6 +16,7 @@ src/Engine/Vertex.cpp
 src/Engine/Input.cpp 
 src/Engine/AssimpLoader.cpp 
 src/BaseComponents/Animator.cpp
+src/GameComponents/CharacterController.cpp
 src/GameComponents/Character.cpp
 src/Physics/bounds.cpp 
 src/Physics/meshcollider.cpp  

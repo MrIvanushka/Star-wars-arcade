@@ -33,6 +33,14 @@ public:
 	~MeshCollider() = default;
 	void initialize(unsigned int noPoints, float* coordinates, unsigned int noFaces, unsigned int* indices);
 	void initialize(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+
+	std::vector<Face> getFaces(){
+		return faces;
+	}
+
+	BoundingRegion getRegion(){
+		return br;
+	}
 };
 
 #endif

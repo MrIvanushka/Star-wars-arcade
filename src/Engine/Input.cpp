@@ -22,6 +22,7 @@ void Input::update(GLFWwindow* window)
     keyStatus["A"] = glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
     keyStatus["S"] = glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
     keyStatus["D"] = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
+    keyStatus["Space"] = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
     keyStatus["LM"] = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
     double mouseX, mouseY;

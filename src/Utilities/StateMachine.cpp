@@ -1,35 +1,40 @@
 #include "StateMachine.h"
-
+#include<iostream>
 State::State(std::vector<Transition*> transitions) : _transitions(transitions) {}
 
 void State::onEnable()
 {
-    for(auto& transition : _transitions)
-    {
-        transition->onEnable();
-    }
+    if(_transitions.size() > 0)
+        for(auto transition : _transitions)
+            transition->onEnable();
+    
     start();
 }
 
 void State::updateAll(float deltaTime)
 {
-    for(auto& transition : _transitions)
+    for(auto transition : _transitions)
     {
         transition->update(deltaTime);
     }
     update(deltaTime);
 }
 
-bool State::needTransit(Transition* completedTransition)
+void State::addTransition(Transition* transition)
+{
+    _transitions.push_back(transition);
+}
+
+bool State::needTransit(Transition** completedTransition)
 {
     if(_transitions.size() == 0)
         return false;
 
-    for(auto& transition : _transitions)
+    for(auto transition : _transitions)
     {
         if(transition->needTransit())
         {
-            completedTransition = transition;
+            *completedTransition = transition;
             return true;
         }
     }
@@ -47,13 +52,13 @@ void StateMachine::update(float deltaTime)
 
     Transition* completedTransition;
 
-    if(_currentState->needTransit(completedTransition))
+    if(_currentState->needTransit(&completedTransition))
         transit(completedTransition->_nextState);
 
 }
 
 void StateMachine::transit(State* nextState)
 {
+    nextState->onEnable();
     _currentState = nextState;
-    _currentState->onEnable();
 }

@@ -7,7 +7,7 @@
 
 void Scene::initialize(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int frameBufferWidth, int frameBufferHeight)
 {
-    collisionProcessor = new Octree::node(BoundingRegion(glm::vec3(-64.0f), glm::vec3(64.0f)));
+    collisionProcessor = new Octree::node(BoundingRegion(glm::vec3(-1024.0f), glm::vec3(1024.0f)));
 
     this->initShaders(GL_VERSION_MAJOR, GL_VERSION_MINOR);
     this->initTextures();

@@ -90,34 +90,41 @@ void GameObject::render()
 }
 
 void GameObject::move(glm::vec3 delta) {
+    if(glm::length(delta) > 0.0001f)
+        moved = true;
+
     this->position += delta;
-    moved=true;
 }
 
 void GameObject::rotate(glm::quat delta) {
+    if(glm::length(delta) > 0.0001f)
+        moved=true;
+
     rotation = rotation * delta;
     moved=true;
 }
 
 void GameObject::rotate(glm::vec3 delta) {
     rotate(glm::quat(delta));
-    moved=true;
 }
 
 void GameObject::moveAt(glm::vec3 newPos)
 {
+    if(glm::length(this->position - newPos) > 0.0001f)
+        moved = true;
+
     this->position = newPos;
-    moved=true;
 }
 
 void GameObject::rotateAt(glm::quat newRot) {
+    if(glm::length(newRot - rotation) > 0.0001f)
+        moved=true;
+
     rotation = newRot;
-    moved=true;
 }
 
 void GameObject::rotateAt(glm::vec3 newRot) {
     rotate(glm::quat(newRot));
-    moved=true;
 }
 
 void GameObject::setActive(bool value) {
