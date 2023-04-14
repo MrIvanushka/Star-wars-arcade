@@ -11,23 +11,31 @@
 
 #include "NavMeshAgent.hpp"
 
-static constexpr auto seed = 42;
-static constexpr auto MAX_POSITION = 1000, MIN_POSITION = 0; // Field size
+constexpr const int seed = 42;
+constexpr const float MAX_POSITION = 1000, MIN_POSITION = 0; // Field size
+constexpr const float ATTACK_DISTANCE = 10;
+constexpr const float SEE_DISTANCE = 100;
 
 enum Fraction {
     Jedi,
     Sith,
 };
 
+class Vision;
+
 class SeeTargetTransition : public Transition
 {
     private:
-        Collider* m_collider;
+        Vision* m_vision;
         Fraction fraction_member;
     
     public:
-        SeeTargetTransition(State* nextState, Collider* collider, Fraction fraction);
+        SeeTargetTransition(State* nextState, Vision* m_vision, Fraction fraction);
 
+        void setVision(Vision* new_vision) { m_vision = new_vision; }
+
+        void setFraction(Fraction fraction) { m_fraction = fraction; }
+        
         void onEnable() override;
 
         void update(float deltaTime) override;
@@ -42,6 +50,8 @@ class KillTransition : public Transition
 
     public:
         KillTransition(State* nextState, Character* character);
+
+        void setCharacter(Character* new_character) { m_character = new_character; }
 
         void onEnable() override;
 
@@ -90,6 +100,8 @@ class AttackState : public State
     public:
         AttackState(Animator* animator, const std::vector<Transition*>& transitions);
 
+        void setAnimator(Animator* new_animator) { m_animator = new_animator; }
+        
         void start() override;
         
         void update(float deltaTime) override;
@@ -98,11 +110,15 @@ class AttackState : public State
 class FollowState : public State
 {
     private:
+        NavMeshAgent* m_character;
         NavMeshAgent* m_target;
+
     
     public:
-        FollowState(NavMeshAgent* target, const std::vector<Transition*>& transitions);
+        FollowState(NavMeshAgent* character, NavMeshAgent* target, const std::vector<Transition*>& transitions);
 
+        void setTarget(NavMeshAgent* new_target) { m_target = new_target; }
+        
         void start() override;
         
         void update(float deltaTime) override;

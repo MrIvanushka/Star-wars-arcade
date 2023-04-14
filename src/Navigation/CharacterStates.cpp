@@ -2,8 +2,8 @@
 
 /* SeeTargetTransition */
 
-SeeTargetTransition::SeeTargetTransition(State* nextState, Collider* collider, Fraction fraction) :
-    Transition(nextState), m_collider(collider), fraction_member(fraction)
+SeeTargetTransition::SeeTargetTransition(State* nextState, Vision* vision, Fraction fraction) :
+    Transition(nextState), m_vision(vision), fraction_member(fraction)
 {
     // TODO
 }

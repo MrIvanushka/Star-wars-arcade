@@ -38,6 +38,8 @@ class NavMeshPath{
 
         const std::vector<TPPLPoint>& get_points() const;
 
+        const TPPLPoint& operator[](size_t index) const;
+
     private:
         std::vector<TPPLPoint> path;
 };

@@ -58,7 +58,7 @@ public:
         _newColliders = std::set<Collider*>();
     }
 
-    std::set<Collider> getTouchedColliders()
+    std::set<Collider*> getTouchedColliders()
     {
         return _touchedColliders;
     }

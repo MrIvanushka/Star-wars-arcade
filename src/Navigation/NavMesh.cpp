@@ -229,6 +229,10 @@ NavMeshPath::NavMeshPath(const std::vector<TPPLPoint>& points){
     path = points;
 }
 
+const TPPLPoint& NavMeshPath::operator[](size_t index) const{
+    return path[index];
+}
+
 const std::vector<TPPLPoint>& NavMeshPath::get_points() const{
     return path;
 }

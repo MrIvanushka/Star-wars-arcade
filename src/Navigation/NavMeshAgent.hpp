@@ -6,13 +6,19 @@
 
 #include "NavMesh.hpp"
 
+constexpr const float ACCELERATION_TIME = 1.0f;
+
 class NavMeshAgent : public Component
 {
     private:
         NavMeshSurface* m_surface;
+
         NavMeshPath m_path;
+        size_t current_index;
         glm::vec3 current_destination;
+        double passed_distance;
         double stop_distance;
+
         CharacterController* m_cctrl;
 
     public:
