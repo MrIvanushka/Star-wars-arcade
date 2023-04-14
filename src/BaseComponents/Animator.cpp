@@ -28,7 +28,11 @@ void AnimationState::update(float deltaTime)
                 meshTransforms[boneId] = element.second;
             }
         }
-        mesh.setBoneTransforms(meshTransforms);
+
+		if(_currentTime < _transitDuration)
+        	mesh.setBoneTransforms(meshTransforms, _currentTime / _transitDuration);
+		else
+			mesh.setBoneTransforms(meshTransforms);
     }
 }
 
@@ -247,6 +251,20 @@ void AnimationClip::ReadNodeHierarchy(float AnimationTimeTicks, const aiNode* pN
     }
 }
 
+float AnimationClip::getDuration()
+{
+	float TicksPerSecond = (float)(_animation->mTicksPerSecond != 0 ? _animation->mTicksPerSecond : 25.0f) * _speed;
+	return _animation->mDuration / TicksPerSecond;
+}
+
+void AnimationClip::changeSpeed(float newSpeed)
+{
+	if(newSpeed <= 0)
+		throw std::logic_error("Trying to set negative animation speed");
+
+	_speed = newSpeed;
+}
+
 void AnimationClip::GetBoneTransforms(float timeTicks, std::map<std::string, glm::mat4>& Transforms)
 {
     glm::mat4 Identity(1.0f);
@@ -272,7 +290,7 @@ const aiNodeAnim* AnimationClip::FindNodeAnim(const std::string& NodeName)
 
 float AnimationClip::scoreTimeInTicks(float currentTime)
 {
-    float TicksPerSecond = (float)(_animation->mTicksPerSecond != 0 ? _animation->mTicksPerSecond : 25.0f);
+    float TicksPerSecond = (float)(_animation->mTicksPerSecond != 0 ? _animation->mTicksPerSecond : 25.0f) * _speed;
     float TimeInTicks = currentTime * TicksPerSecond;
     return fmod(TimeInTicks, (float)_animation->mDuration);
 }

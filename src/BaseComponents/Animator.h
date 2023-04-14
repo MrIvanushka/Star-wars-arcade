@@ -71,11 +71,14 @@ private:
     aiNode* _rootNode;
     std::map<std::string, glm::mat4> _boneOffsets;
     glm::mat4 _globalInverse;
+    float _speed;
 public:
-    AnimationClip(aiAnimation* animation, aiNode* root, std::map<std::string, glm::mat4> boneOffsets, glm::mat4 globalInverse) : 
-        _animation(animation), _rootNode(root), _boneOffsets(boneOffsets), _globalInverse(globalInverse) {}
+    AnimationClip(aiAnimation* animation, aiNode* root, std::map<std::string, glm::mat4> boneOffsets, glm::mat4 globalInverse, float speed = 1.f) : 
+        _animation(animation), _rootNode(root), _boneOffsets(boneOffsets), _globalInverse(globalInverse), _speed(speed) {}
     void GetBoneTransforms(float timeTicks, std::map<std::string, glm::mat4>& Transforms);
     float scoreTimeInTicks(float currentTime);
+    float getDuration();
+    void changeSpeed(float newSpeed);
 private:
     void CalcInterpolatedScaling(aiVector3D& out, float animationTime, const aiNodeAnim* pNodeAnim);
     void CalcInterpolatedRotation(aiQuaternion& out, float animationTime, const aiNodeAnim* pNodeAnim);

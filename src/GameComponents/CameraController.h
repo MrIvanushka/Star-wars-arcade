@@ -8,8 +8,8 @@
 class CameraController : public Component
 {
 private:
-    float _sensitivityX = 1;
-    float _sensitivityY = 1;
+    float _sensitivityX = -1;
+    float _sensitivityY = -1;
     glm::vec2 _previousMousePosition;
     CameraFollower* _follower;
 public:
