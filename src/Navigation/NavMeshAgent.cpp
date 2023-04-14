@@ -1,7 +1,7 @@
 #include "NavMeshAgent.hpp"
 
-NavMeshAgent::NavMeshAgent(GameObject* object, NavMeshSurface* surface, CharacterController* ctrl) : 
-    Component(object), m_surface(surface), m_cctrl(ctrl)
+NavMeshAgent::NavMeshAgent(GameObject* object) : 
+    Component(object)
 {
     m_path = NavMeshPath();
     current_destination = gameObject->getPosition();
@@ -22,8 +22,15 @@ void NavMeshAgent::setStopDistance(double new_stop_distance) {
     stop_distance = new_stop_distance;
 }
 
+void NavMeshAgent::start() {
+    m_cctrl = gameObject->getComponent<CharacterController>();
+}
+
 void NavMeshAgent::update(float deltaTime) {
-    m_cctrl->update(deltaTime);
+    if (hasPath())
+    {
+        //m_cctrl->accelerate();
+    }
 }
 
 bool NavMeshAgent::hasPath() {

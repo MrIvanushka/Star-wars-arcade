@@ -16,7 +16,10 @@ class NavMeshAgent : public Component
         CharacterController* m_cctrl;
 
     public:
-        NavMeshAgent(GameObject* object, NavMeshSurface* surface, CharacterController* ctrl);
+        NavMeshAgent(GameObject* object);
+
+    public:
+        void addSurface(NavMeshSurface* surface);  // to implement
 
         void setDestination(glm::vec3 point);
 
@@ -24,7 +27,9 @@ class NavMeshAgent : public Component
 
         void setStopDistance(double new_stop_distance);
 
-        void update(float deltaTime);
+        void start() override;
+
+        void update(float deltaTime) override;
 
         bool hasPath();
 };
