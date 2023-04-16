@@ -2,23 +2,33 @@
 
 /* SeeTargetTransition */
 
-SeeTargetTransition::SeeTargetTransition(State* nextState, Vision* vision, Fraction fraction) :
-    Transition(nextState), m_vision(vision), fraction_member(fraction)
-{
-    // TODO
-}
+SeeTargetTransition::SeeTargetTransition(State* nextState, NavMeshAgent* character, NavMeshAgent* target, /*Vision* vision,*/ Fraction fraction) :
+    Transition(nextState), m_character(character), m_target(target), /*m_vision(vision),*/ fraction_member(fraction)
+{}
 
 void SeeTargetTransition::onEnable() {
-    // TODO
+    
 }
 
 void SeeTargetTransition::update(float deltaTime) {
-    // TODO
+
 }
 
 bool SeeTargetTransition::needTransit() {
-    // TODO
-    return false;
+    return (glm::distance(m_target->getPosition(), m_character->getPosition()) < SEE_DISTANCE);
+}
+
+/* LeaderDiedTransition */
+
+LeaderDiedTransition::LeaderDiedTransition(State* nextState, Character* character) :
+    Transition(nextState), m_character(character) {}
+
+void LeaderDiedTransition::onEnable() {}
+
+void LeaderDiedTransition::update(float deltaTime) {}
+
+bool LeaderDiedTransition::needTransit() {
+    return m_character->IsDead();
 }
 
 /* KillTransition */
@@ -73,7 +83,9 @@ void PatrollingState::update(float deltaTime) {
 AttackState::AttackState(Animator* animator, const std::vector<Transition*>& transitions) :
     m_animator(animator), State(transitions) {}
 
-void AttackState::start() {}
+void AttackState::start() {
+    m_animator->start();
+}
 
 void AttackState::update(float deltaTime) {
     m_animator->update(deltaTime);
@@ -81,14 +93,28 @@ void AttackState::update(float deltaTime) {
 
 /* FollowState */
 
-FollowState::FollowState(NavMeshAgent* target, const std::vector<Transition*>& transitions) :
-    m_target(target), State(transitions) {}
+FollowState::FollowState(NavMeshAgent* character, NavMeshAgent* target, const std::vector<Transition*>& transitions) :
+    m_target(target), m_character(character), State(transitions) {}
 
-void FollowState::start() {}
+void FollowState::start() {
+    
+}
 
-void FollowState::update(float deltaTime) {}
+void FollowState::update(float deltaTime) {
+    m_character->setDestination(m_target->getPosition());
+}
 
 /* ShootingState */
 
-//TODO: Implementation
+ShootingState::ShootingState(/*Weapon* weapon, */const std::vector<Transition*>& transitions) :
+    State(transitions)
+{}
+
+void ShootingState::start() {
+    //m_weapon->start();
+}
+
+void ShootingState::update(float deltaTime) {
+    //m_weapon->update(deltaTime);
+}
 

@@ -24,7 +24,6 @@ class NavMeshAgent : public Component
     public:
         NavMeshAgent(GameObject* object);
 
-    public:
         void addSurface(NavMeshSurface* surface);  // to implement
 
         void setDestination(glm::vec3 point);
@@ -32,6 +31,8 @@ class NavMeshAgent : public Component
         void removeDestination();
 
         void setStopDistance(double new_stop_distance);
+
+        glm::vec3 getPosition();
 
         void start() override;
 

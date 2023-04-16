@@ -12,15 +12,46 @@ class AI : public Component
         StateMachine* _stateMachine;
     
     private:
-        Vision* m_vision;
+        //Vision* m_vision;
 
     public:
-        AI(GameObject* obj, Vision* vision) : Component(obj), m_vision(vision) {}
+        AI(GameObject* obj/*, Vision* vision*/) : Component(obj)/*, m_vision(vision)*/ {}
 
         void update(float deltaTime) override {
             _stateMachine->update(deltaTime);
         }
 
-}
+};
 
-#endif
+class Jedi : public AI
+{
+    private:
+
+    public:
+        Jedi(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
+
+        void setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, Character* target_character, Animator* animator);
+};
+
+class SquadLeader : public AI
+{
+    private:
+
+    public:
+        SquadLeader(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
+
+        void setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, Character* target_character/*, Weapon* weapon*/);
+};
+
+class SquadMember : public AI
+{
+    private:
+        Character* sq_leader;
+
+    public:
+        SquadMember(GameObject* obj, Character* leader/*, Vision* vision*/) : AI(obj/*, vision*/), sq_leader(leader) {}
+
+        void setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, NavMeshAgent* leader, Character* target_character/*, Weapon* weapon*/);
+};
+
+#endif // CHARACTERSTATEMACHINES_H

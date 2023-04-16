@@ -29,6 +29,10 @@ void NavMeshAgent::setStopDistance(double new_stop_distance) {
     stop_distance = new_stop_distance;
 }
 
+glm::vec3 NavMeshAgent::getPosition() {
+    return gameObject->getPosition();
+}
+
 void NavMeshAgent::start() {
     m_cctrl = gameObject->getComponent<CharacterController>();
 }
@@ -44,6 +48,10 @@ void NavMeshAgent::update(float deltaTime) {
             {
                 ++current_index;
                 m_cctrl->accelerate(glm::vec3({m_path[current_index].x, m_path[current_index].y, 0.0f}) - gameObject->getPosition(), ACCELERATION_TIME);
+            }
+            else
+            {
+                m_path = NavMeshPath();
             }
         }
     }
