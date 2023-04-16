@@ -132,49 +132,4 @@ private:
     virtual float updateBlendFactor() = 0;
 };
 
-class ExitTimeTransition : public Transition
-{
-private:
-    float _duration;
-    float _currentTime;
-public:
-    ExitTimeTransition(State* nextState, float duration) : Transition(nextState), _duration(duration)
-    {}
-
-    void onEnable() override
-    {
-        _currentTime = 0;
-    }
-
-    void update(float deltaTime) override
-    {
-        _currentTime += deltaTime;
-    }
-
-    bool needTransit() override
-    {
-        return _currentTime > _duration;
-    }  
-};
-
-
-class ParameterTransition : public Transition
-{
-private:
-    bool* _parameter;
-public:
-    ParameterTransition(State* nextState, bool* parameter) : Transition(nextState), _parameter(parameter)
-    {}
-
-    void onEnable() override{
-        *_parameter = false;
-    }
-
-
-    bool needTransit() override
-    {
-        return *_parameter;
-    }   
-};
-
 #endif //SWTOR_ANIMATOR_H

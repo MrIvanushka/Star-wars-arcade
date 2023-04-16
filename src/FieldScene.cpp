@@ -9,6 +9,7 @@
 #include"GameComponents/CameraFollower.h"
 #include"GameComponents/Follower.h"
 #include"GameComponents/PlayerMovement.h"
+#include"GameComponents/PlayerAttackController.h"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
 {
@@ -41,7 +42,9 @@ Assimp::Importer importer1;
 Assimp::Importer importer2;
 Assimp::Importer importer3;
 Assimp::Importer importer4;
+Assimp::Importer importer5;
 std::vector<AnimationClip> clips;//<--MUST be deleted
+
 void FieldScene::initObjects()
 {/*
     GameObject* skybox = new GameObject(glm::vec3(2.f, 0.f, 0.f), glm::vec3(180.f, 0.f, 0.f));
@@ -75,6 +78,7 @@ void FieldScene::initObjects()
     AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);
     AssimpLoader::loadWithArmature(importer3, "OBJFiles/Jump.fbx", clips);  
     AssimpLoader::loadWithArmature(importer4, "OBJFiles/Fall A Loop.fbx", clips);
+    AssimpLoader::loadWithArmature(importer5, "OBJFiles/Standing Melee Attack Horizontal.fbx", clips);
 
     GameObject* character = new GameObject(glm::vec3(3.f, -15.f, 0.f), glm::vec3(0.f), glm::vec3(0.1f));
     character->addComponent<Model>();
@@ -86,9 +90,10 @@ void FieldScene::initObjects()
     cube->addComponent<CharacterController>();
     character->addComponent<Follower>();
     character->getComponent<Follower>()->setTarget(cube);
+    cube->addComponent<PlayerAttackController>();
 
     character->addComponent<CharacterAnimator>();
-    character->getComponent<CharacterAnimator>()->setupStateMachine(clips, cube->getComponent<CharacterController>());
+    character->getComponent<CharacterAnimator>()->setupStateMachine(clips, cube->getComponent<CharacterController>(), cube->getComponent<PlayerAttackController>());
     character->getComponent<CharacterAnimator>()->attachMesh(holoMesh);
     character->getComponent<CharacterAnimator>()->attachMesh(secondMesh);
 

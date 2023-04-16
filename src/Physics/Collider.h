@@ -16,6 +16,7 @@ struct Collision
 
 class Collider : public Component, public ArgObservable<Collision> {
 private:
+    bool _isTrigger = false;
     std::set<Collider*> _touchedColliders;
     std::set<Collider*> _newColliders;
 public:
@@ -27,6 +28,15 @@ public:
 
     ~Collider() = default;
     
+    void setAsTrigger()
+    {
+        _isTrigger = true;
+    }
+
+    bool isTrigger(){
+        return _isTrigger;
+    }
+
     bool moved()
     {
 	    return gameObject->isMoved();

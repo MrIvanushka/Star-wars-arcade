@@ -315,7 +315,7 @@ bool Octree::node::insert(BoundingRegion obj) {
 // check collisions with all objects in node
 void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
     for (BoundingRegion br : objects) {
-        if (br == obj || br.collider->isEnabled() == false) {
+        if (br == obj || br.collider->isEnabled() == false || br.collider->isTrigger() == true) {
             // do not test collisions with the same instance
             continue;
         }
