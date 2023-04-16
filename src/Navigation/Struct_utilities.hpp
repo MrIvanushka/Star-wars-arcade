@@ -35,7 +35,6 @@ struct poly_intersection {
         poly_intersection& operator=(const poly_intersection& other);
 
         std::vector<TPPLPoint> line;
-        bool centers_connected;
 };
 
 struct Node{

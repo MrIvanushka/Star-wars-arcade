@@ -21,6 +21,8 @@ NavMeshSurface::NavMeshSurface(const std::vector<TPPLPoint>& border) {
 
 void NavMeshSurface::add_area(const std::vector<TPPLPoint>& border){
 
+    if (expansion_called) { throw std::runtime_error("New areas cannot be added after expansion called"); }
+
     // Validity check
     if (border.size() < 3) throw std::runtime_error("Invalid area");
             
@@ -38,41 +40,11 @@ void NavMeshSurface::add_area(const std::vector<TPPLPoint>& border){
 }
 
 void NavMeshSurface::expand(const NavMeshSurface& surface) {
-    std::vector<TPPLPoint> new_border;
-    long first1 = -1, last1 = -1, first2 = -1, last2 = -1; // first and last intersection points
-    auto border1 = this->m_polygons.begin();
-    auto border2 = surface.m_polygons.begin();
+    expansion_called = true;
 
-    if (border2->has_vertex(border1->GetPoint(0)) != -1) {
-        first1 = border1->GetNumPoints();
-        while (border2->has_vertex(border1->GetPoint(--first1)) != -1);
-        first2 = border2->has_vertex(border1->GetPoint(++first1));
-
-        ++last1;
-        while (border2->has_vertex(border1->GetPoint(++last1)) != -1);
-        last2 = border2->has_vertex(border1->GetPoint(--last1));
+    for (auto it = surface.outpolys.begin(); it != surface.outpolys.end(); ++it) {
+        this->outpolys.emplace_back(*it);
     }
-    else {
-        ++first1;
-        while (border2->has_vertex(border1->GetPoint(++first1)) == -1);
-        last1 = first1;
-        first2 = border2->has_vertex(border1->GetPoint(first1));
-
-        while (border2->has_vertex(border1->GetPoint(++last1)) != -1);
-        last2 = border2->has_vertex(border1->GetPoint(--last1));
-    }
-
-    if (first1 <= last1) {
-        for (long i = 0; i < first1; new_border.push_back(border1->GetPoint(i++)));
-        for (long i = first2; i % border2->GetNumPoints() != last2; new_border.push_back(border2->GetPoint(i++ % border2->GetNumPoints())));
-        for (long i = last1; i < border1->GetNumPoints(); new_border.push_back(border1->GetPoint(i++)));
-    }
-    else {
-        for (long i = first2; i % border2->GetNumPoints() != last2; new_border.push_back(border2->GetPoint(i++ % border2->GetNumPoints())));
-        for (long i = last1; i < first1; new_border.push_back(border1->GetPoint(i++)));
-    }
-
-    *border1 = TPPLPoly(new_border, false, TPPL_ORIENTATION_CCW);
 
     for (auto it = ++surface.m_polygons.begin(); it != surface.m_polygons.end(); ++it) {
         this->m_polygons.emplace_back(*it);
@@ -101,12 +73,6 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
 }
 
 [[nodiscard]] NavMeshPath NavMeshSurface::get_path(const TPPLPoint& start, const TPPLPoint& end){
-
-    // Check if points are inside holes
-    if ((!m_polygons.begin()->contains_point(start) || !m_polygons.begin()->contains_point(end))) {return NavMeshPath();}
-    for (auto polygon = std::next(m_polygons.begin(), 1); polygon != m_polygons.end(); ++polygon){
-        if ((polygon->contains_point(start) || polygon->contains_point(end))) {return NavMeshPath();}
-    }
 
     TPPLPoly_it start_poly, end_poly;
 
@@ -165,7 +131,10 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
     }
     
     // default output
-    return NavMeshPath();
+    std::vector<TPPLPoint> path;
+    path.push_back(start);
+    path.push_back(end);
+    return NavMeshPath(path);
 }
 
 /* Building grid */
@@ -173,12 +142,11 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
 void NavMeshSurface::update_grid(){
 
     poly_grid.clear();
-    outpolys.clear();
     centers.clear();
 
     //  decomposition
     TPPLPartition handler;
-    handler.ConvexPartition_HM(&m_polygons, &outpolys);
+    if (!expansion_called) { outpolys.clear(); handler.ConvexPartition_HM(&m_polygons, &outpolys); }
     //handler.Triangulate_EC(&inpolys, &outpolys);
     
     //  building grid of neighbour polygons
@@ -189,15 +157,6 @@ void NavMeshSurface::update_grid(){
         centers[current_poly] = current_center;
 
         for (auto it = std::next(current_poly, 1); it != outpolys.end(); ++it){
-            
-            bool has_centers_connected = true;
-            //  check for centers connected
-            TPPLPoint it_center = it->centroid();
-            for (auto polygon : m_polygons){
-                if (polygon.intersects_with_line(current_center, it_center)){
-                    has_centers_connected = false;
-                }
-            }
 
             //  then find common sides
             std::vector<TPPLPoint> common_points;
@@ -210,10 +169,7 @@ void NavMeshSurface::update_grid(){
             }
 
             if (common_points.size() == 2){
-                poly_grid[current_poly][it].centers_connected = has_centers_connected;
                 poly_grid[current_poly][it].line = common_points;
-
-                poly_grid[it][current_poly].centers_connected = has_centers_connected;
                 poly_grid[it][current_poly].line = common_points;
             }
 

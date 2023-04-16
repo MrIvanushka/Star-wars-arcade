@@ -10,6 +10,8 @@
 #include "../GameComponents/Character.h"
 #include "NavMeshAgent.hpp"
 
+#include <iostream>
+
 static constexpr const int seed = 42;
 static constexpr const float MAX_POSITION = 1000, MIN_POSITION = 0; // Field size
 
@@ -64,6 +66,8 @@ public:
 
     void onEnable() override
     {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+
         _currentTime = 0;
     }
 
@@ -90,13 +94,12 @@ public:
         Transition(nextState), m_character(character), m_target(target)
     {}
 
-    void onEnable() override{
-        
+    void onEnable() override {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
     }
 
 
-    bool needTransit() override
-    {
+    bool needTransit() override {
         return (glm::distance(m_target->getPosition(), m_character->getPosition()) < ATTACK_DISTANCE);
     }   
 };
@@ -110,13 +113,13 @@ public:
     ShootingDurationTransition(State* nextState) : Transition(nextState), _duration(SHOOTING_DURATION)
     {}
 
-    void onEnable() override
-    {
+    void onEnable() override {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+
         _currentTime = 0;
     }
 
-    void update(float deltaTime) override
-    {
+    void update(float deltaTime) override {
         _currentTime += deltaTime;
     }
 
@@ -137,13 +140,12 @@ public:
         Transition(nextState), m_character(character), m_target(target)
     {}
 
-    void onEnable() override{
-        
+    void onEnable() override {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
     }
 
 
-    bool needTransit() override
-    {
+    bool needTransit() override {
         return (glm::distance(m_target->getPosition(), m_character->getPosition()) < SHOOTING_DISTANCE);
     }   
 };

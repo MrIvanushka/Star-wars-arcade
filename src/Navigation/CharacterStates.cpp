@@ -7,7 +7,7 @@ SeeTargetTransition::SeeTargetTransition(State* nextState, NavMeshAgent* charact
 {}
 
 void SeeTargetTransition::onEnable() {
-    
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 void SeeTargetTransition::update(float deltaTime) {
@@ -23,7 +23,9 @@ bool SeeTargetTransition::needTransit() {
 LeaderDiedTransition::LeaderDiedTransition(State* nextState, Character* character) :
     Transition(nextState), m_character(character) {}
 
-void LeaderDiedTransition::onEnable() {}
+void LeaderDiedTransition::onEnable() {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+}
 
 void LeaderDiedTransition::update(float deltaTime) {}
 
@@ -36,7 +38,9 @@ bool LeaderDiedTransition::needTransit() {
 KillTransition::KillTransition(State* nextState, Character* character) :
     Transition(nextState), m_character(character) {}
 
-void KillTransition::onEnable() {}
+void KillTransition::onEnable() {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+}
 
 void KillTransition::update(float deltaTime) {}
 
@@ -50,6 +54,8 @@ WanderingState::WanderingState(NavMeshAgent* navMeshAgent, const std::vector<Tra
     m_navMeshAgent(navMeshAgent), State(transitions), eng(seed), dist6(MIN_POSITION, MAX_POSITION) {}
 
 void WanderingState::start() {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+
     while (!m_navMeshAgent->hasPath()) {
         m_navMeshAgent->setDestination(glm::vec3(dist6(eng), dist6(eng), dist6(eng)));
     }
@@ -67,6 +73,8 @@ PatrollingState::PatrollingState(NavMeshAgent* navMeshAgent, const std::vector<T
     m_navMeshAgent(navMeshAgent), State(transitions), eng(seed), dist6(MIN_POSITION, MAX_POSITION) {}
 
 void PatrollingState::start() {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+
     while (!m_navMeshAgent->hasPath()) {
         m_navMeshAgent->setDestination(glm::vec3(dist6(eng), dist6(eng), dist6(eng)));
     }
@@ -84,6 +92,8 @@ AttackState::AttackState(Animator* animator, const std::vector<Transition*>& tra
     m_animator(animator), State(transitions) {}
 
 void AttackState::start() {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+
     m_animator->start();
 }
 
@@ -97,7 +107,7 @@ FollowState::FollowState(NavMeshAgent* character, NavMeshAgent* target, const st
     m_target(target), m_character(character), State(transitions) {}
 
 void FollowState::start() {
-    
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 void FollowState::update(float deltaTime) {
@@ -111,6 +121,8 @@ ShootingState::ShootingState(/*Weapon* weapon, */const std::vector<Transition*>&
 {}
 
 void ShootingState::start() {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    
     //m_weapon->start();
 }
 
