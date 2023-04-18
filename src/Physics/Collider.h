@@ -4,6 +4,7 @@
 #include"../Utilities/Observer.h"
 #include"../Engine/GameObject.h"
 #include"bounds.h"
+#include<iostream>
 
 struct Collision
 {
@@ -71,6 +72,11 @@ public:
     std::set<Collider*> getTouchedColliders()
     {
         return _touchedColliders;
+    }
+
+    bool touches(Collider* collider) 
+    {
+        return _touchedColliders.contains(collider);
     }
 private:
     void handleCollision(BoundingRegion br, glm::vec3 norm)

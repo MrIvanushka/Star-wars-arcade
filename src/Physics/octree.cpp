@@ -339,6 +339,7 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
                     unsigned int noFacesObj = MeshObj->faces.size();
                     
                     // check all faces in br against all faces in obj
+
                     for (unsigned int i = 0; i < noFacesBr; i++) {
                         for (unsigned int j = 0; j < noFacesObj; j++) {
                             if (MeshBr->faces[i].collidesWithFace(

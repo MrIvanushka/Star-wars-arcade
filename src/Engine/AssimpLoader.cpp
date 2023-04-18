@@ -97,6 +97,7 @@ MeshPack AssimpLoader::processMesh(aiMesh* mesh, const aiScene* scene) {
     }
     // process min/max for BR
     // calculate max distance from the center
+
     br.center = (min + max) / 2.0f;
     br.ogCenter = br.center;
     br.collider = NULL;

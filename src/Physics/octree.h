@@ -2,7 +2,7 @@
 #define OCTREE_H
 
 #define NO_CHILDREN 8
-#define MIN_BOUNDS 0.1
+#define MIN_BOUNDS 1
 
 #include <vector>
 #include <queue>

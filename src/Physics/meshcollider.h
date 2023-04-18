@@ -38,8 +38,8 @@ public:
 		return faces;
 	}
 
-	BoundingRegion getRegion(){
-		return br;
+	BoundingRegion* getRegion(){
+		return &br;
 	}
 };
 

@@ -34,6 +34,42 @@ void AnimationState::update(float deltaTime)
 		else
 			mesh.setBoneTransforms(meshTransforms);
     }
+	
+	std::vector<std::string> events;
+
+	getEvents(_currentTime, events);
+
+	for(auto& event : events) {
+		if(_listenerPool.contains(event))
+		{
+			auto &vec = _listenerPool[event];
+
+			for(auto &elem : vec){
+				elem->handle();
+			}
+		}
+
+	}
+}
+
+void AnimationState::addListener(std::string eventName, Observer* listener)
+{
+	if(_listenerPool.contains(eventName) == false)
+		_listenerPool[eventName] = std::vector<Observer*>();
+
+	_listenerPool[eventName].push_back(listener);
+}
+
+void SingleAnimationState::getEvents(float currentTime, std::vector<std::string> &eventNames){
+	float timeTicks = _clip->scoreTimeInTicks(currentTime);
+	_clip->processEvents(timeTicks, _prevTimeTicks, eventNames);
+	_prevTimeTicks = timeTicks;
+}
+
+void BlendTree::getEvents(float currentTime, std::vector<std::string> &eventNames){
+	float timeTicks = _clips[0].Clip->scoreTimeInTicks(currentTime);
+	_clips[0].Clip->processEvents(timeTicks, _prevTimeTicks, eventNames);
+	_prevTimeTicks = timeTicks;
 }
 
 void SingleAnimationState::getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms)
@@ -270,6 +306,21 @@ void AnimationClip::GetBoneTransforms(float timeTicks, std::map<std::string, glm
     glm::mat4 Identity(1.0f);
 
     ReadNodeHierarchy(timeTicks, _rootNode, Identity, Transforms);
+}
+
+void AnimationClip::processEvents(float timeTicks, float prevTimeTicks, std::vector<std::string> &eventNames){
+	for(int i = 0; i < _events.size(); i++){
+		if(_events[i].timeInTicks > prevTimeTicks && _events[i].timeInTicks < timeTicks)
+			eventNames.push_back(_events[i].name);
+	}
+}
+
+void AnimationClip::addEvent(std::string name, float timeInTicks){
+	EventPair newPair;
+	newPair.name = name;
+	newPair.timeInTicks = timeInTicks;
+	_events.push_back(newPair);
+	std::sort(_events.begin(), _events.end());
 }
 
 const aiNodeAnim* AnimationClip::FindNodeAnim(const std::string& NodeName)
