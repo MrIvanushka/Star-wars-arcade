@@ -2,10 +2,10 @@
 
 /* Jedi */
 
-void Jedi::setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, Character* target_character, Animator* animator) {
+void Jedi::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character) {
     State* wanderingS = new WanderingState(character, {});
     State* followingS = new FollowState(character, target, {});
-    State* attackS = new AttackState(animator, {});
+    State* attackS = new AttackState();
 
     Transition* seeTargetT = new SeeTargetTransition(followingS, character, target, Fraction::Jedi);
     Transition* durationT = new AttackDurationTransition(followingS);
@@ -22,7 +22,7 @@ void Jedi::setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, Char
 
 /* Squad Leader */
 
-void SquadLeader::setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, Character* target_character/*, Weapon* weapon*/) {
+void SquadLeader::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character/*, Weapon* weapon*/) {
     State* patrollingS = new PatrollingState(character, {});
     State* followingS = new FollowState(character, target, {});
     State* shootS = new ShootingState(/*weapon, */{});
@@ -42,7 +42,7 @@ void SquadLeader::setupStateMachine(NavMeshAgent* character, NavMeshAgent* targe
 
 /* Squad Member */
 
-void SquadMember::setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, NavMeshAgent* leader, Character* target_character/*, Weapon* weapon*/) {
+void SquadMember::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, OrientedPoint* leader, Character* target_character/*, Weapon* weapon*/) {
     State* LfollowingS = new FollowState(character, leader, {});
     State* TfollowingS = new FollowState(character, target, {});
     State* shootS = new ShootingState(/*weapon, */{});

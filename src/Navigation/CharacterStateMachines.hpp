@@ -30,7 +30,7 @@ class Jedi : public AI
     public:
         Jedi(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
 
-        void setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, Character* target_character, Animator* animator);
+        void setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character);
 };
 
 class SquadLeader : public AI
@@ -40,7 +40,7 @@ class SquadLeader : public AI
     public:
         SquadLeader(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
 
-        void setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, Character* target_character/*, Weapon* weapon*/);
+        void setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character/*, Weapon* weapon*/);
 };
 
 class SquadMember : public AI
@@ -51,7 +51,11 @@ class SquadMember : public AI
     public:
         SquadMember(GameObject* obj, Character* leader/*, Vision* vision*/) : AI(obj/*, vision*/), sq_leader(leader) {}
 
-        void setupStateMachine(NavMeshAgent* character, NavMeshAgent* target, NavMeshAgent* leader, Character* target_character/*, Weapon* weapon*/);
+        void setupStateMachine(NavMeshAgent* character, OrientedPoint* target, OrientedPoint* leader, Character* target_character/*, Weapon* weapon*/);
 };
 
 #endif // CHARACTERSTATEMACHINES_H
+
+//Character -> Idamagable
+//NavMeshAgent remove slowdown
+//y ==> z

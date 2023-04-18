@@ -6,8 +6,6 @@
 
 #include "NavMesh.hpp"
 
-constexpr const float ACCELERATION_TIME = 1.0f;
-
 class NavMeshAgent : public Component
 {
     private:

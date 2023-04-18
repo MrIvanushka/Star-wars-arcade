@@ -5,6 +5,7 @@
 #include <random>
 
 #include "../Utilities/StateMachine.h"
+#include "../Utilities/Observer.h"
 #include "../Physics/Collider.h"
 #include "../BaseComponents/Animator.h"
 #include "../GameComponents/Character.h"
@@ -38,11 +39,11 @@ class SeeTargetTransition : public Transition
     private:
         //Vision* m_vision;
         NavMeshAgent* m_character;
-        NavMeshAgent* m_target;
+        OrientedPoint* m_target;
         Fraction fraction_member;
     
     public:
-        SeeTargetTransition(State* nextState, NavMeshAgent* character, NavMeshAgent* target, /*Vision* m_vision,*/ Fraction fraction);
+        SeeTargetTransition(State* nextState, NavMeshAgent* character, OrientedPoint* target, /*Vision* m_vision,*/ Fraction fraction);
 
         //void setVision(Vision* new_vision) { m_vision = new_vision; }
 
@@ -87,10 +88,10 @@ class AttackDistanceTransition : public Transition
 {
 private:
     NavMeshAgent* m_character;
-    NavMeshAgent* m_target;
+    OrientedPoint* m_target;
 
 public:
-    AttackDistanceTransition(State* nextState, NavMeshAgent* character, NavMeshAgent* target) : 
+    AttackDistanceTransition(State* nextState, NavMeshAgent* character, OrientedPoint* target) : 
         Transition(nextState), m_character(character), m_target(target)
     {}
 
@@ -133,10 +134,10 @@ class ShootingDistanceTransition : public Transition
 {
 private:
     NavMeshAgent* m_character;
-    NavMeshAgent* m_target;
+    OrientedPoint* m_target;
 
 public:
-    ShootingDistanceTransition(State* nextState, NavMeshAgent* character, NavMeshAgent* target) : 
+    ShootingDistanceTransition(State* nextState, NavMeshAgent* character, OrientedPoint* target) : 
         Transition(nextState), m_character(character), m_target(target)
     {}
 
@@ -216,31 +217,26 @@ class PatrollingState : public State
         void update(float deltaTime) override;
 };
 
-class AttackState : public State
+class AttackState : public State, public Observable
 {
-    private:
-        Animator* m_animator;
-
     public:
-        AttackState(Animator* animator, const std::vector<Transition*>& transitions);
+        AttackState() {}
 
-        void setAnimator(Animator* new_animator) { m_animator = new_animator; }
+        AttackState(const std::vector<Transition*>& transitions);
         
         void start() override;
-        
-        void update(float deltaTime) override;
 };
 
 class FollowState : public State
 {
     private:
         NavMeshAgent* m_character;
-        NavMeshAgent* m_target;
+        OrientedPoint* m_target;
 
     public:
-        FollowState(NavMeshAgent* character, NavMeshAgent* target, const std::vector<Transition*>& transitions);
+        FollowState(NavMeshAgent* character, OrientedPoint* target, const std::vector<Transition*>& transitions);
 
-        void setTarget(NavMeshAgent* new_target) { m_target = new_target; }
+        void setTarget(OrientedPoint* new_target) { m_target = new_target; }
         
         void start() override;
         

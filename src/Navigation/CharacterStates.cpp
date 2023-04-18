@@ -2,7 +2,7 @@
 
 /* SeeTargetTransition */
 
-SeeTargetTransition::SeeTargetTransition(State* nextState, NavMeshAgent* character, NavMeshAgent* target, /*Vision* vision,*/ Fraction fraction) :
+SeeTargetTransition::SeeTargetTransition(State* nextState, NavMeshAgent* character, OrientedPoint* target, /*Vision* vision,*/ Fraction fraction) :
     Transition(nextState), m_character(character), m_target(target), /*m_vision(vision),*/ fraction_member(fraction)
 {}
 
@@ -88,22 +88,18 @@ void PatrollingState::update(float deltaTime) {
 
 /* AttackState */
 
-AttackState::AttackState(Animator* animator, const std::vector<Transition*>& transitions) :
-    m_animator(animator), State(transitions) {}
+AttackState::AttackState(const std::vector<Transition*>& transitions) :
+    State(transitions) {}
 
 void AttackState::start() {
     std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-    m_animator->start();
-}
-
-void AttackState::update(float deltaTime) {
-    m_animator->update(deltaTime);
+    invoke();
 }
 
 /* FollowState */
 
-FollowState::FollowState(NavMeshAgent* character, NavMeshAgent* target, const std::vector<Transition*>& transitions) :
+FollowState::FollowState(NavMeshAgent* character, OrientedPoint* target, const std::vector<Transition*>& transitions) :
     m_target(target), m_character(character), State(transitions) {}
 
 void FollowState::start() {
