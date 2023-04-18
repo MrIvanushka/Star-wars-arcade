@@ -8,7 +8,7 @@
 #include "../Utilities/Observer.h"
 #include "../Physics/Collider.h"
 #include "../BaseComponents/Animator.h"
-#include "../GameComponents/Character.h"
+#include "../GameComponents/IDamageable.h"
 #include "NavMeshAgent.hpp"
 
 #include <iostream>
@@ -27,7 +27,7 @@ enum Fraction {
     None,
     Jedi,
     Sith,
-    Soldier,
+    Soldier, // remove this
 };
 
 class Vision;
@@ -154,12 +154,12 @@ public:
 class LeaderDiedTransition : public Transition
 {
     private:
-        Character* m_character;
+        IDamageable* m_character;
 
     public:
-        LeaderDiedTransition(State* nextState, Character* character);
+        LeaderDiedTransition(State* nextState, IDamageable* character);
 
-        void setCharacter(Character* new_character) { m_character = new_character; }
+        void setCharacter(IDamageable* new_character) { m_character = new_character; }
 
         void onEnable() override;
 
@@ -171,12 +171,12 @@ class LeaderDiedTransition : public Transition
 class KillTransition : public Transition
 {
     private:
-        Character* m_character;
+        IDamageable* m_character;
 
     public:
-        KillTransition(State* nextState, Character* character);
+        KillTransition(State* nextState, IDamageable* character);
 
-        void setCharacter(Character* new_character) { m_character = new_character; }
+        void setCharacter(IDamageable* new_character) { m_character = new_character; }
 
         void onEnable() override;
 

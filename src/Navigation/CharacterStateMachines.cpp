@@ -2,7 +2,7 @@
 
 /* Jedi */
 
-void Jedi::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character) {
+void Jedi::setupStateMachine(NavMeshAgent* character, GameObject* target) {
     State* wanderingS = new WanderingState(character, {});
     State* followingS = new FollowState(character, target, {});
     State* attackS = new AttackState();
@@ -10,7 +10,7 @@ void Jedi::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Cha
     Transition* seeTargetT = new SeeTargetTransition(followingS, character, target, Fraction::Jedi);
     Transition* durationT = new AttackDurationTransition(followingS);
     Transition* distanceT = new AttackDistanceTransition(attackS, character, target);
-    Transition* killT = new KillTransition(wanderingS, target_character);
+    Transition* killT = new KillTransition(wanderingS, target->getComponent<IDamageable>());
 
     wanderingS->addTransition(seeTargetT);
     followingS->addTransition(distanceT);
@@ -22,7 +22,7 @@ void Jedi::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Cha
 
 /* Squad Leader */
 
-void SquadLeader::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character/*, Weapon* weapon*/) {
+void SquadLeader::setupStateMachine(NavMeshAgent* character, GameObject* target/*, Weapon* weapon*/) {
     State* patrollingS = new PatrollingState(character, {});
     State* followingS = new FollowState(character, target, {});
     State* shootS = new ShootingState(/*weapon, */{});
@@ -30,7 +30,7 @@ void SquadLeader::setupStateMachine(NavMeshAgent* character, OrientedPoint* targ
     Transition* seeTargetT = new SeeTargetTransition(followingS, character, target, Fraction::Soldier);
     Transition* durationT = new ShootingDurationTransition(followingS);
     Transition* distanceT = new ShootingDistanceTransition(shootS, character, target);
-    Transition* killT = new KillTransition(patrollingS, target_character);
+    Transition* killT = new KillTransition(patrollingS, target->getComponent<IDamageable>());
 
     patrollingS->addTransition(seeTargetT);
     followingS->addTransition(distanceT);
@@ -42,8 +42,8 @@ void SquadLeader::setupStateMachine(NavMeshAgent* character, OrientedPoint* targ
 
 /* Squad Member */
 
-void SquadMember::setupStateMachine(NavMeshAgent* character, OrientedPoint* target, OrientedPoint* leader, Character* target_character/*, Weapon* weapon*/) {
-    State* LfollowingS = new FollowState(character, leader, {});
+void SquadMember::setupStateMachine(NavMeshAgent* character, GameObject* target/*, Weapon* weapon*/) {
+    State* LfollowingS = new FollowState(character, sq_leader, {});
     State* TfollowingS = new FollowState(character, target, {});
     State* shootS = new ShootingState(/*weapon, */{});
     State* wanderingS = new WanderingState(character, {});
@@ -51,8 +51,8 @@ void SquadMember::setupStateMachine(NavMeshAgent* character, OrientedPoint* targ
     Transition* seeTargetT = new SeeTargetTransition(TfollowingS, character, target, Fraction::Soldier);
     Transition* durationT = new ShootingDurationTransition(TfollowingS);
     Transition* distanceT = new ShootingDistanceTransition(shootS, character, target);
-    Transition* killT = new KillTransition(LfollowingS, target_character);
-    Transition* LdiedT = new LeaderDiedTransition(wanderingS, sq_leader);
+    Transition* killT = new KillTransition(LfollowingS, target->getComponent<IDamageable>());
+    Transition* LdiedT = new LeaderDiedTransition(wanderingS, sq_leader->getComponent<IDamageable>());
 
     LfollowingS->addTransition(seeTargetT);
     TfollowingS->addTransition(distanceT);

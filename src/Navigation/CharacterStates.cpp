@@ -20,7 +20,7 @@ bool SeeTargetTransition::needTransit() {
 
 /* LeaderDiedTransition */
 
-LeaderDiedTransition::LeaderDiedTransition(State* nextState, Character* character) :
+LeaderDiedTransition::LeaderDiedTransition(State* nextState, IDamageable* character) :
     Transition(nextState), m_character(character) {}
 
 void LeaderDiedTransition::onEnable() {
@@ -30,12 +30,12 @@ void LeaderDiedTransition::onEnable() {
 void LeaderDiedTransition::update(float deltaTime) {}
 
 bool LeaderDiedTransition::needTransit() {
-    return m_character->IsDead();
+    return !m_character->isAlive();
 }
 
 /* KillTransition */
 
-KillTransition::KillTransition(State* nextState, Character* character) :
+KillTransition::KillTransition(State* nextState, IDamageable* character) :
     Transition(nextState), m_character(character) {}
 
 void KillTransition::onEnable() {
@@ -45,7 +45,7 @@ void KillTransition::onEnable() {
 void KillTransition::update(float deltaTime) {}
 
 bool KillTransition::needTransit() {
-    return m_character->IsDead();
+    return !m_character->isAlive();
 }
 
 /* WanderingState */

@@ -3,6 +3,7 @@
 
 #include "../Engine/GameObject.h"
 #include "../Physics/Collider.h"
+#include "../GameComponents/IDamageable.h"
 
 #include "CharacterStates.hpp"
 
@@ -30,7 +31,7 @@ class Jedi : public AI
     public:
         Jedi(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
 
-        void setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character);
+        void setupStateMachine(NavMeshAgent* character, GameObject* target);
 };
 
 class SquadLeader : public AI
@@ -40,18 +41,18 @@ class SquadLeader : public AI
     public:
         SquadLeader(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
 
-        void setupStateMachine(NavMeshAgent* character, OrientedPoint* target, Character* target_character/*, Weapon* weapon*/);
+        void setupStateMachine(NavMeshAgent* character, GameObject* target/*, Weapon* weapon*/);
 };
 
 class SquadMember : public AI
 {
     private:
-        Character* sq_leader;
+        GameObject* sq_leader;
 
     public:
-        SquadMember(GameObject* obj, Character* leader/*, Vision* vision*/) : AI(obj/*, vision*/), sq_leader(leader) {}
+        SquadMember(GameObject* obj, GameObject* leader/*, Vision* vision*/) : AI(obj/*, vision*/), sq_leader(leader) {}
 
-        void setupStateMachine(NavMeshAgent* character, OrientedPoint* target, OrientedPoint* leader, Character* target_character/*, Weapon* weapon*/);
+        void setupStateMachine(NavMeshAgent* character, GameObject* target/*, Weapon* weapon*/);
 };
 
 #endif // CHARACTERSTATEMACHINES_H
