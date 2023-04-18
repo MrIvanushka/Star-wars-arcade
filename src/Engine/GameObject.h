@@ -100,6 +100,12 @@ public:
     {
         return enabled && gameObject->activeSelf();
     }
+
+    template<typename T>
+    T* getComponent()
+    {
+        return gameObject->getComponent<T>();
+    }
 };
 
 #endif //SWTOR_GAMEOBJECT_H

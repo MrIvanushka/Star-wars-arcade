@@ -61,7 +61,7 @@ void FieldScene::initObjects()
     collisionProcessor->addToPending(cube, &cubeData[0].br);
     this->gameObjects.push_back(cube);
 
-    GameObject* platform = new GameObject(glm::vec3(3.f, -60.f, 0.f), glm::vec3(20.f, 0.f, 0.f), glm::vec3(20.f,10.f,20.f));
+    GameObject* platform = new GameObject(glm::vec3(3.f, -60.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(40.f,10.f,40.f));
     platform->addComponent<Model>();
     Mesh* platformMesh = new Mesh(cubeData[0].vertices.data(), cubeData[0].vertices.size(), cubeData[0].indices.data(), cubeData[0].indices.size(), platform);
     platform->getComponent<Model>()->addMesh(platformMesh, this->materials[0], this->shaders[0], this->textures[1], this->textures[2]);
@@ -70,26 +70,6 @@ void FieldScene::initObjects()
     cubeData[0].br.collider = platform->getComponent<MeshCollider>();
     collisionProcessor->addToPending(platform, &cubeData[0].br);
     this->gameObjects.push_back(platform);
-
-    GameObject* platform2 = new GameObject(glm::vec3(3.f, -60.f, 10.f), glm::vec3(-20.f, 0.f, 0.f), glm::vec3(20.f,10.f,20.f));
-    platform2->addComponent<Model>();
-    Mesh* platform2Mesh = new Mesh(cubeData[0].vertices.data(), cubeData[0].vertices.size(), cubeData[0].indices.data(), cubeData[0].indices.size(), platform2);
-    platform2->getComponent<Model>()->addMesh(platform2Mesh, this->materials[0], this->shaders[0], this->textures[1], this->textures[2]);
-    platform2->addComponent<MeshCollider>();
-    platform2->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
-    cubeData[0].br.collider = platform2->getComponent<MeshCollider>();
-    collisionProcessor->addToPending(platform2, &cubeData[0].br);
-    this->gameObjects.push_back(platform2);
-
-    GameObject* platform3 = new GameObject(glm::vec3(13.f, -60.f, 5.f), glm::vec3(20.f, 90.f, 0.f), glm::vec3(20.f,10.f,20.f));
-    platform3->addComponent<Model>();
-    Mesh* platform3Mesh = new Mesh(cubeData[0].vertices.data(), cubeData[0].vertices.size(), cubeData[0].indices.data(), cubeData[0].indices.size(), platform3);
-    platform3->getComponent<Model>()->addMesh(platform3Mesh, this->materials[0], this->shaders[0], this->textures[1], this->textures[2]);
-    platform3->addComponent<MeshCollider>();
-    platform3->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
-    cubeData[0].br.collider = platform3->getComponent<MeshCollider>();
-    collisionProcessor->addToPending(platform3, &cubeData[0].br);
-    this->gameObjects.push_back(platform3);
     
     auto holocroneData = AssimpLoader::loadWithArmature(importer1, "OBJFiles/Idle.fbx", clips);  
     AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);

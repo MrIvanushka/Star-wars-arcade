@@ -32,7 +32,7 @@ public:
 	    return gameObject->isMoved();
     }
 
-    OrientedPoint* getCenter()
+    GameObject* getCenter()
     {
         return gameObject;
     }
