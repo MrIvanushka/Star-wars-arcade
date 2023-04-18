@@ -4,6 +4,7 @@
 #include"../Utilities/Observer.h"
 #include"../Engine/GameObject.h"
 #include"bounds.h"
+#include<iostream>
 
 struct Collision
 {
@@ -16,6 +17,7 @@ struct Collision
 
 class Collider : public Component, public ArgObservable<Collision> {
 private:
+    bool _isTrigger = false;
     std::set<Collider*> _touchedColliders;
     std::set<Collider*> _newColliders;
 public:
@@ -27,6 +29,15 @@ public:
 
     ~Collider() = default;
     
+    void setAsTrigger()
+    {
+        _isTrigger = true;
+    }
+
+    bool isTrigger(){
+        return _isTrigger;
+    }
+
     bool moved()
     {
 	    return gameObject->isMoved();
@@ -61,6 +72,11 @@ public:
     std::set<Collider*> getTouchedColliders()
     {
         return _touchedColliders;
+    }
+
+    bool touches(Collider* collider) 
+    {
+        return _touchedColliders.contains(collider);
     }
 private:
     void handleCollision(BoundingRegion br, glm::vec3 norm)

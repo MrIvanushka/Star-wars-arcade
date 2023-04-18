@@ -11,13 +11,11 @@ public:
     virtual bool isAlive() = 0;
 };
 
-class HealthAttribute : IDamageable
+class HealthAttribute : public IDamageable
 {
     IDamageable* _damageable;
 public:
-    void addDamageable(IDamageable* damageable){
-        _damageable = damageable;
-    }
+    HealthAttribute(IDamageable* damageable) : _damageable(damageable) {}
     
     void takeDamage(float damage) override{
         _damageable->takeDamage(calculateDamage(damage));
@@ -58,7 +56,7 @@ private:
     bool _isDestroyed = false;
     HealthAttribute* _previousAttribute;
 public:
-    TemporaryHealthAttribute(float duration) : HealthAttribute(), _duration(duration) {}
+    TemporaryHealthAttribute(IDamageable* damageable, float duration) : HealthAttribute(damageable), _duration(duration) {}
 
     void initialize(HealthAttribute* previousAttribute){
         _previousAttribute = previousAttribute;

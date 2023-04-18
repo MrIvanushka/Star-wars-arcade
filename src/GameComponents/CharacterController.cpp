@@ -1,6 +1,10 @@
 #include "CharacterController.h"
 #include <iostream>
 
+void CharacterController::addStepTrigger(Collider* collider) {
+    _stepTrigger = collider;
+}
+
 void CharacterController::start() {
     _offsetRotation = glm::angleAxis(glm::radians(180.f), glm::vec3(0,1,0));
     _velocity = glm::vec3(0.f);
@@ -10,6 +14,9 @@ void CharacterController::start() {
 }
 
 void CharacterController::update(float deltaTime) {
+    if(deltaTime > 0.5)
+        deltaTime = 0.5;
+
     processCollisions();
 
     if(_groundNormals.size() > 0 && _gravityVelocity.y < 0.001f)
@@ -87,6 +94,7 @@ void CharacterController::handle(Collision collision) {
 
 void CharacterController::move(float deltaTime)
 {
+
     glm::vec3 actualVelocity = _velocity;
 
     for(int i = 0; i < _wallNormals.size(); i++)
@@ -140,16 +148,17 @@ void CharacterController::fall(float deltaTime)
     gameObject->move(_gravityVelocity * deltaTime);
 }
 
-void CharacterController::processNorm(glm::vec3 norm) {
-
+void CharacterController::processNorm(Collider* touchedCollider, glm::vec3 norm) {
     norm = glm::normalize(norm);
     float groundAngle = glm::degrees(acos(glm::dot(norm, glm::vec3(0,1,0))));
 
     if(groundAngle > _maxGroundAngle)
     {
-        _wallNormals.push_back(norm);
+        if(_stepTrigger != nullptr)
+            if(_stepTrigger->touches(touchedCollider))
+                _wallNormals.push_back(norm);
     }
-    else
+    else if(groundAngle <= _maxGroundAngle)
     {
         _groundNormals.push_back(norm);
     }
@@ -185,16 +194,18 @@ void CharacterController::processCollisions(){
             for(auto& face : faces){
                 glm::vec3 gotNorm;
 
-                if(face.collidesWithFace(collider->getCenter(), touchedFace, gameObject, gotNorm)){
+                if(touchedFace.collidesWithFace(collider->getCenter(), face, gameObject, gotNorm)){
                     foundCollision = true;
-                    processNorm(gotNorm);
+                    processNorm(collider, gotNorm);
                     break;
                 }
             }
         }
 
         if(foundCollision == false)
+        {
             notTouchedColliders.push_back(collider);
+        }
     }
 
     for(int i = 0; i < notTouchedColliders.size(); i++)

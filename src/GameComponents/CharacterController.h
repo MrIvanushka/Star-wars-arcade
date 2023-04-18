@@ -10,10 +10,10 @@
 class CharacterController : public Component, public ArgObserver<Collision>
 {
     const float _maxGroundAngle = 45;
-    const float _maxSpeed = 10;
-    const float _acceleration = 40;
+    const float _maxSpeed = 25;
+    const float _acceleration = 60;
     const float _jumpForce = 1000;
-    const glm::vec3 _gravityAcceleration = glm::vec3(0, -9.81f, 0);
+    const glm::vec3 _gravityAcceleration = glm::vec3(0, -50.f, 0);
     glm::quat _offsetRotation;
 
     glm::vec3 _velocity;
@@ -22,6 +22,7 @@ class CharacterController : public Component, public ArgObserver<Collision>
     bool _isGrounded = true;
 
     MeshCollider* _selfCollider;
+    Collider* _stepTrigger;
     std::set<Collider*> _touchedColliders;
     
     std::vector<glm::vec3> _groundNormals;
@@ -30,6 +31,8 @@ class CharacterController : public Component, public ArgObserver<Collision>
 public:
 
     CharacterController(GameObject* object) : Component(object) {}
+
+    void addStepTrigger(Collider* collider);
 
     void start() override;
 
@@ -57,7 +60,7 @@ private:
 
     void fall(float deltaTime);
 
-    void processNorm(glm::vec3 norm);
+    void processNorm(Collider* touchedCollider, glm::vec3 norm);
 
     void processCollisions();
 };
