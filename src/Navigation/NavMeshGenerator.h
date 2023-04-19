@@ -11,7 +11,7 @@
 
 class NavMeshGenerator{
 public:
-    static NavMeshSurface generate(std::vector<Vertex> vertices, std::vector<unsigned int> indices, OrientedPoint* center){
+    static NavMeshSurface* generate(std::vector<Vertex> vertices, std::vector<unsigned int> indices, OrientedPoint* center){
         glm::mat4 model = center->getModelMatrix();
         std::vector<bool> checked(vertices.size());
         std::vector<glm::vec3> points(vertices.size());
@@ -47,7 +47,7 @@ public:
         for(int i = 0; i < cornerPoints.size(); i++)
             std::cout << cornerPoints[i].x << " " << cornerPoints[i].y << " " << std::endl;
 
-        NavMeshSurface surface(cornerPoints);
+        NavMeshSurface* surface = new NavMeshSurface(cornerPoints);
         
         for(int i = 0; i < vertices.size(); i++)
         {
@@ -60,7 +60,7 @@ public:
                 {
                     for(int i = 0; i < cornerPoints.size(); i++)
                         std::cout << cornerPoints[i].x << ";" << cornerPoints[i].y << ";" << std::endl;
-                    surface.add_area(cornerPoints);
+                    surface->add_area(cornerPoints);
                 }
             }
         }

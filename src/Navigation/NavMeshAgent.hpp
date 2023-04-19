@@ -15,20 +15,22 @@ class NavMeshAgent : public Component
         size_t current_index;
         glm::vec3 current_destination;
         double passed_distance;
-        double stop_distance;
+        double stop_distance = 0.5;
 
         CharacterController* m_cctrl;
 
     public:
         NavMeshAgent(GameObject* object);
 
-        void addSurface(NavMeshSurface* surface);  // to implement
+        void addSurface(NavMeshSurface* surface);
 
         void setDestination(glm::vec3 point);
 
         void removeDestination();
 
         void setStopDistance(double new_stop_distance);
+
+        float getDistance();
 
         glm::vec3 getPosition();
 

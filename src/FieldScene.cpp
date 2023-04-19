@@ -1,7 +1,6 @@
 #include "FieldScene.h"
 #include "Engine/OBJLoader.h"
 #include "Engine/TerrainGenerator.h"
-#include "Engine/AssimpLoader.h"
 #include "Physics/rigidbody.h"
 #include "Animations/BasicBlendAnimator.h"
 #include "Animations/BasicAnimator.h"
@@ -14,6 +13,7 @@
 #include"GameComponents/DamageDealArea.h"
 #include"GameComponents/HealthPresenter.h"
 #include"Navigation/NavMeshGenerator.h"
+#include"Navigation/CharacterStateMachines.hpp"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
 {
@@ -81,10 +81,13 @@ void FieldScene::initObjects()
 
     auto navMeshData = AssimpLoader::load(importer1, "OBJFiles/Navmesh.fbx");
     GameObject* navmesh = new GameObject(glm::vec3(200.f, -140.f, 486.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
-    NavMeshGenerator::generate(navMeshData[0].vertices, navMeshData[0].indices, navmesh);
+    //navmesh->addComponent<Model>();
+    //Mesh* cMesh = new Mesh(navMeshData[0].vertices.data(), navMeshData[0].vertices.size(), navMeshData[0].indices.data(), navMeshData[0].indices.size(), navmesh);
+    //navmesh->getComponent<Model>()->addMesh(cMesh, this->materials[0], this->shaders[0], this->textures[3], this->textures[4]);
+    auto surface = NavMeshGenerator::generate(navMeshData[0].vertices, navMeshData[0].indices, navmesh);
     gameObjects.push_back(navmesh);
 
-    auto data = AssimpLoader::load(importer1, "../OBJFiles/temple.fbx");
+    auto data = AssimpLoader::load(importer1, "OBJFiles/temple.fbx");
     
     for(int i = 0; i < data.size(); i++)
     {
@@ -95,7 +98,7 @@ void FieldScene::initObjects()
         this->gameObjects.push_back(cube);
     }
 
-    auto templeData = AssimpLoader::load(importer1, "../OBJFiles/templeColliders.fbx");
+    auto templeData = AssimpLoader::load(importer1, "OBJFiles/templeColliders.fbx");
 
     for(int i = 0; i < templeData.size(); i++)
     {
@@ -105,14 +108,7 @@ void FieldScene::initObjects()
         collisionProcessor->addToPending(cube, cube->getComponent<MeshCollider>()->getRegion());
         this->gameObjects.push_back(cube);
     }
-
     auto cubeData = AssimpLoader::load(importer1, "OBJFiles/Cube.fbx");
-    GameObject* cube = new GameObject(glm::vec3(3.f, -6.f, 0.f), glm::vec3(0.f), glm::vec3(2.f,9.f,2.f));
-    cube->addComponent<MeshCollider>();
-    cube->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
-    collisionProcessor->addToPending(cube, cube->getComponent<MeshCollider>()->getRegion());
-    this->gameObjects.push_back(cube);
-    
     auto holocroneData = AssimpLoader::loadWithArmature(importer1, "OBJFiles/Idle.fbx", clips);  
     AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);
     AssimpLoader::loadWithArmature(importer6, "OBJFiles/Running.fbx", clips);
@@ -121,40 +117,13 @@ void FieldScene::initObjects()
     AssimpLoader::loadWithArmature(importer5, "OBJFiles/Standing Melee Attack Horizontal.fbx", clips);
     clips[ATTACK_ANIM].addEvent("DealDamage", 40);
 
-    GameObject* character = new GameObject(glm::vec3(3.f, -15.f, 0.f), glm::vec3(0.f), glm::vec3(0.1f));
-    character->addComponent<Model>();
-    SkinnedMesh* holoMesh = new SkinnedMesh(holocroneData[0].vertices.data(), holocroneData[0].vertices.size(), holocroneData[0].indices.data(), holocroneData[0].indices.size(), character, holocroneData[0].boneNameToIndexMap);
-    SkinnedMesh* secondMesh = new SkinnedMesh(holocroneData[1].vertices.data(), holocroneData[1].vertices.size(), holocroneData[1].indices.data(), holocroneData[1].indices.size(), character, holocroneData[1].boneNameToIndexMap);
-    character->getComponent<Model>()->addSkinnedMesh(holoMesh, this->materials[0], this->shaders[2], this->textures[1], this->textures[2]);
-    character->getComponent<Model>()->addSkinnedMesh(secondMesh, this->materials[0], this->shaders[2], this->textures[1], this->textures[2]);
+    auto cube = createCharacter(cubeData, holocroneData, glm::vec3(0));
     cube->addComponent<PlayerMovement>();
-    cube->addComponent<CharacterController>();
-    character->addComponent<Follower>();
-    character->getComponent<Follower>()->setTarget(cube);
-    cube->addComponent<PlayerAttackController>();
-
-    GameObject* stepTrigger = new GameObject(glm::vec3(3.f, -3.f, 0.f), glm::vec3(0.f), glm::vec3(2.1f,5.f,2.1f));
-    stepTrigger->addComponent<MeshCollider>();
-    stepTrigger->getComponent<MeshCollider>()->setAsTrigger();
-    stepTrigger->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
-    stepTrigger->addComponent<Follower>();
-    stepTrigger->getComponent<Follower>()->setTarget(cube);
-    cube->getComponent<CharacterController>()->addStepTrigger(stepTrigger->getComponent<MeshCollider>());
-    collisionProcessor->addToPending(stepTrigger, stepTrigger->getComponent<MeshCollider>()->getRegion());
-
-    this->gameObjects.push_back(stepTrigger);
-
-    GameObject* box = new GameObject(glm::vec3(3.f, -6.f, 6.f), glm::vec3(0.f), glm::vec3(5.f,5.f,5.f));
-    box->addComponent<Model>();
-    box->addComponent<Follower>();
-    box->getComponent<Follower>()->setTarget(cube);
-    box->addComponent<MeshCollider>();
-    box->getComponent<MeshCollider>()->setAsTrigger();
-    box->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
-    cubeData[0].br.collider = box->getComponent<MeshCollider>();
-    collisionProcessor->addToPending(box, &cubeData[0].br);
-    box->addComponent<DamageDealArea>();
-    this->gameObjects.push_back(box);
+    auto differentCube = createCharacter(cubeData, holocroneData, glm::vec3(-275 ,0, -560));
+    differentCube->addComponent<JediAI>();
+    differentCube->addComponent<NavMeshAgent>();
+    differentCube->getComponent<NavMeshAgent>()->addSurface(surface);
+    differentCube->getComponent<JediAI>()->setupStateMachine(differentCube->getComponent<NavMeshAgent>(), {glm::vec3(-66, -138, -258), glm::vec3(-275, -97, -406), glm::vec3(-14, -180, -560)});
 
     GameObject* damageable = new GameObject(glm::vec3(100.f, -100.f, 0.f), glm::vec3(0.f), glm::vec3(2.f,9.f,2.f));
     damageable->addComponent<MeshCollider>();
@@ -166,12 +135,6 @@ void FieldScene::initObjects()
     collisionProcessor->addToPending(damageable, damageable->getComponent<MeshCollider>()->getRegion());
     this->gameObjects.push_back(damageable);
 
-    character->addComponent<CharacterAnimator>();
-    character->getComponent<CharacterAnimator>()->setupStateMachine(clips, 
-    cube->getComponent<CharacterController>(), cube->getComponent<PlayerAttackController>(), box->getComponent<DamageDealArea>());
-    character->getComponent<CharacterAnimator>()->attachMesh(holoMesh);
-    character->getComponent<CharacterAnimator>()->attachMesh(secondMesh);
-
     GameObject* camera = new GameObject(glm::vec3(-25.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
     camera->addComponent<CameraController>();
     camera->addComponent<CameraFollower>();
@@ -179,12 +142,61 @@ void FieldScene::initObjects()
     camera->addComponent<Camera>();
     this->renderCamera = camera->getComponent<Camera>();
     this->gameObjects.push_back(camera);
-    this->gameObjects.push_back(character);
 
-    cube->getComponent<PlayerMovement>()->attachCamera(camera->getComponent<Camera>());
+    cube->getComponent<PlayerMovement>()->attachCamera(renderCamera);
 
     GameObject* direcionalLight = new GameObject(glm::vec3(-1000.f, 1000.f, 1000.f), glm::vec3(0.f, 0.f, 0.f));
     direcionalLight->addComponent<PointLight>();
     this->pointLights.push_back(direcionalLight->getComponent<PointLight>());
     this->gameObjects.push_back(direcionalLight);
+}
+
+GameObject* FieldScene::createCharacter(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos){
+    GameObject* cube = new GameObject(pos, glm::vec3(0.f), glm::vec3(2.f,9.f,2.f));
+    cube->addComponent<MeshCollider>();
+    cube->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
+    collisionProcessor->addToPending(cube, cube->getComponent<MeshCollider>()->getRegion());
+    this->gameObjects.push_back(cube);
+
+    GameObject* character = new GameObject(pos + glm::vec3(0.f, -9.f, 0.f), glm::vec3(0.f), glm::vec3(0.1f));
+    character->addComponent<Model>();
+    SkinnedMesh* holoMesh = new SkinnedMesh(characterData[0].vertices.data(), characterData[0].vertices.size(), characterData[0].indices.data(), characterData[0].indices.size(), character, characterData[0].boneNameToIndexMap);
+    SkinnedMesh* secondMesh = new SkinnedMesh(characterData[1].vertices.data(), characterData[1].vertices.size(), characterData[1].indices.data(), characterData[1].indices.size(), character, characterData[1].boneNameToIndexMap);
+    character->getComponent<Model>()->addSkinnedMesh(holoMesh, this->materials[0], this->shaders[2], this->textures[1], this->textures[2]);
+    character->getComponent<Model>()->addSkinnedMesh(secondMesh, this->materials[0], this->shaders[2], this->textures[1], this->textures[2]);
+    cube->addComponent<CharacterController>();
+    character->addComponent<Follower>();
+    character->getComponent<Follower>()->setTarget(cube);
+    cube->addComponent<PlayerAttackController>();
+    this->gameObjects.push_back(character);
+
+    GameObject* stepTrigger = new GameObject(pos + glm::vec3(0.f, 3.f, 0.f), glm::vec3(0.f), glm::vec3(2.1f,5.f,2.1f));
+    stepTrigger->addComponent<MeshCollider>();
+    stepTrigger->getComponent<MeshCollider>()->setAsTrigger();
+    stepTrigger->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
+    stepTrigger->addComponent<Follower>();
+    stepTrigger->getComponent<Follower>()->setTarget(cube);
+    cube->getComponent<CharacterController>()->addStepTrigger(stepTrigger->getComponent<MeshCollider>());
+    collisionProcessor->addToPending(stepTrigger, stepTrigger->getComponent<MeshCollider>()->getRegion());
+    this->gameObjects.push_back(stepTrigger);
+
+    GameObject* box = new GameObject(pos + glm::vec3(0.f, 0.f, 6.f), glm::vec3(0.f), glm::vec3(5.f,5.f,5.f));
+    box->addComponent<Model>();
+    box->addComponent<Follower>();
+    box->getComponent<Follower>()->setTarget(cube);
+    box->addComponent<MeshCollider>();
+    box->getComponent<MeshCollider>()->setAsTrigger();
+    box->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
+    cubeData[0].br.collider = box->getComponent<MeshCollider>();
+    collisionProcessor->addToPending(box, &cubeData[0].br);
+    box->addComponent<DamageDealArea>();
+    this->gameObjects.push_back(box);
+
+    character->addComponent<CharacterAnimator>();
+    character->getComponent<CharacterAnimator>()->setupStateMachine(clips, 
+    cube->getComponent<CharacterController>(), cube->getComponent<PlayerAttackController>(), box->getComponent<DamageDealArea>());
+    character->getComponent<CharacterAnimator>()->attachMesh(holoMesh);
+    character->getComponent<CharacterAnimator>()->attachMesh(secondMesh);
+
+    return cube;
 }
