@@ -12,7 +12,7 @@ NavMeshAgent::NavMeshAgent(GameObject* object) :
 
 void NavMeshAgent::setDestination(glm::vec3 point) {
     current_destination = point;
-    m_path = m_surface->get_path({gameObject->getPosition().x, gameObject->getPosition().y}, {current_destination.x, current_destination.y});
+    m_path = m_surface->get_path({gameObject->getPosition().x, gameObject->getPosition().z}, {current_destination.x, current_destination.z});
 
     current_index = 1; // [0] point is current position
 }
@@ -37,13 +37,13 @@ void NavMeshAgent::start() {
 void NavMeshAgent::update(float deltaTime) {
     if (hasPath())
     {
-        if (glm::distance(glm::vec3({m_path[current_index].x, m_path[current_index].y, 0.0f}), glm::vec3({m_path[current_index - 1].x, m_path[current_index - 1].y, 0.0f})) < 
-            glm::distance(glm::vec3({m_path[current_index - 1].x, m_path[current_index - 1].y, 0.0f}), gameObject->getPosition())) 
+        if (glm::distance(glm::vec3({m_path[current_index].x, 0.0f, m_path[current_index].y}), glm::vec3({m_path[current_index - 1].x, 0.0f, m_path[current_index - 1].y})) < 
+            glm::distance(glm::vec3({m_path[current_index - 1].x, 0.0f, m_path[current_index - 1].y}), gameObject->getPosition())) 
         {
             if (current_index < m_path.get_points().size() - 1)
             {
                 ++current_index;
-                m_cctrl->accelerate(glm::vec3(m_path[current_index].x, m_path[current_index].y, 0.0f) - gameObject->getPosition(), deltaTime);
+                m_cctrl->accelerate(glm::vec3(m_path[current_index].x, 0.0f, m_path[current_index].y) - gameObject->getPosition(), deltaTime);
             }
             else
             {

@@ -29,7 +29,6 @@ src/Navigation/NavMesh.cpp
 src/Navigation/polypartition.cpp
 src/Navigation/Struct_utilities.cpp
 src/Navigation/NavMeshAgent.cpp
-src/Navigation/CharacterStates.cpp
 src/Navigation/CharacterStateMachines.cpp
 src/Utilities/StateMachine.cpp
 src/FieldScene.cpp)

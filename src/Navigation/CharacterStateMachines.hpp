@@ -56,7 +56,3 @@ class SquadMember : public AI
 };
 
 #endif // CHARACTERSTATEMACHINES_H
-
-//Character -> Idamagable
-//NavMeshAgent remove slowdown
-//y ==> z

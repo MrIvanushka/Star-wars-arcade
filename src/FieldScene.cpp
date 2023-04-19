@@ -20,20 +20,20 @@ FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebuff
 void FieldScene::initShaders(int GL_VERSION_MAJOR, int GL_VERSION_MINOR)
 {
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "Shaders/vertex_core.glsl", "Shaders/fragment_directional.glsl"));
+                                       "../Shaders/vertex_core.glsl", "../Shaders/fragment_directional.glsl"));
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "Shaders/vertex_unlit.glsl", "Shaders/fragment_unlit.glsl"));
+                                       "../Shaders/vertex_unlit.glsl", "../Shaders/fragment_unlit.glsl"));
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "Shaders/vertex_skinned_diffuse.glsl", "Shaders/fragment_skinned_diffuse.glsl"));
+                                       "../Shaders/vertex_skinned_diffuse.glsl", "../Shaders/fragment_skinned_diffuse.glsl"));
 }
 
 void FieldScene::initTextures()
 {
-    this->textures.push_back(new Texture("Images/skybox.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/red.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/red.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/Walls_1.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/Walls_1(Bumped).png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/skybox.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/red.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/red.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/Walls_1.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/Walls_1(Bumped).png", GL_TEXTURE_2D));
 }
 
 void FieldScene::initMaterials()
@@ -58,7 +58,7 @@ void FieldScene::initObjects()
     this->gameObjects.push_back(skybox);
 */
 
-    auto data = AssimpLoader::load(importer1, "OBJFiles/temple.fbx");
+    auto data = AssimpLoader::load(importer1, "../OBJFiles/temple.fbx");
     
     for(int i = 0; i < data.size(); i++)
     {
@@ -69,7 +69,7 @@ void FieldScene::initObjects()
         this->gameObjects.push_back(cube);
     }
 
-    auto templeData = AssimpLoader::load(importer1, "OBJFiles/templeColliders.fbx");
+    auto templeData = AssimpLoader::load(importer1, "../OBJFiles/templeColliders.fbx");
 
     for(int i = 0; i < templeData.size(); i++)
     {
@@ -80,7 +80,7 @@ void FieldScene::initObjects()
         this->gameObjects.push_back(cube);
     }
 
-    auto cubeData = AssimpLoader::load(importer1, "OBJFiles/Cube.fbx");
+    auto cubeData = AssimpLoader::load(importer1, "../OBJFiles/Cube.fbx");
     GameObject* cube = new GameObject(glm::vec3(3.f, -6.f, 0.f), glm::vec3(0.f), glm::vec3(2.f,9.f,2.f));
     cube->addComponent<MeshCollider>();
     cube->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
@@ -88,12 +88,12 @@ void FieldScene::initObjects()
     this->gameObjects.push_back(cube);
 
     
-    auto holocroneData = AssimpLoader::loadWithArmature(importer1, "OBJFiles/Idle.fbx", clips);  
-    AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);
-    AssimpLoader::loadWithArmature(importer6, "OBJFiles/Running.fbx", clips);
-    AssimpLoader::loadWithArmature(importer3, "OBJFiles/Jump.fbx", clips);  
-    AssimpLoader::loadWithArmature(importer4, "OBJFiles/Fall A Loop.fbx", clips);
-    AssimpLoader::loadWithArmature(importer5, "OBJFiles/Standing Melee Attack Horizontal.fbx", clips);
+    auto holocroneData = AssimpLoader::loadWithArmature(importer1, "../OBJFiles/Idle.fbx", clips);  
+    AssimpLoader::loadWithArmature(importer2, "../OBJFiles/Walking.fbx", clips);
+    AssimpLoader::loadWithArmature(importer6, "../OBJFiles/Running.fbx", clips);
+    AssimpLoader::loadWithArmature(importer3, "../OBJFiles/Jump.fbx", clips);  
+    AssimpLoader::loadWithArmature(importer4, "../OBJFiles/Fall A Loop.fbx", clips);
+    AssimpLoader::loadWithArmature(importer5, "../OBJFiles/Standing Melee Attack Horizontal.fbx", clips);
     clips[ATTACK_ANIM].addEvent("DealDamage", 10);
 
     GameObject* character = new GameObject(glm::vec3(3.f, -15.f, 0.f), glm::vec3(0.f), glm::vec3(0.1f));

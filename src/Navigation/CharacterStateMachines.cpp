@@ -27,7 +27,7 @@ void SquadLeader::setupStateMachine(NavMeshAgent* character, GameObject* target/
     State* followingS = new FollowState(character, target, {});
     State* shootS = new ShootingState(/*weapon, */{});
 
-    Transition* seeTargetT = new SeeTargetTransition(followingS, character, target, Fraction::Soldier);
+    Transition* seeTargetT = new SeeTargetTransition(followingS, character, target, Fraction::Jedi);
     Transition* durationT = new ShootingDurationTransition(followingS);
     Transition* distanceT = new ShootingDistanceTransition(shootS, character, target);
     Transition* killT = new KillTransition(patrollingS, target->getComponent<IDamageable>());
@@ -48,7 +48,7 @@ void SquadMember::setupStateMachine(NavMeshAgent* character, GameObject* target/
     State* shootS = new ShootingState(/*weapon, */{});
     State* wanderingS = new WanderingState(character, {});
 
-    Transition* seeTargetT = new SeeTargetTransition(TfollowingS, character, target, Fraction::Soldier);
+    Transition* seeTargetT = new SeeTargetTransition(TfollowingS, character, target, Fraction::Jedi);
     Transition* durationT = new ShootingDurationTransition(TfollowingS);
     Transition* distanceT = new ShootingDistanceTransition(shootS, character, target);
     Transition* killT = new KillTransition(LfollowingS, target->getComponent<IDamageable>());
