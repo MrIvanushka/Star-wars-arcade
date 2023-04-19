@@ -13,6 +13,7 @@
 #include"GameComponents/PlayerAttackController.h"
 #include"GameComponents/DamageDealArea.h"
 #include"GameComponents/HealthPresenter.h"
+#include"Navigation/NavMeshGenerator.h"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
 {
@@ -81,6 +82,13 @@ void FieldScene::initObjects()
         this->gameObjects.push_back(cube);
     }
 
+    auto navMeshData = AssimpLoader::load(importer1, "OBJFiles/Navmesh.fbx");
+    GameObject* navmesh = new GameObject(glm::vec3(200.f, -140.f, 486.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
+    NavMeshGenerator::generate(navMeshData[0].vertices, navMeshData[0].indices, navmesh);
+    navmesh->addComponent<Model>();
+    Mesh* cMesh = new Mesh(navMeshData[0].vertices.data(), navMeshData[0].vertices.size(), navMeshData[0].indices.data(), navMeshData[0].indices.size(), navmesh);
+    navmesh->getComponent<Model>()->addMesh(cMesh, this->materials[0], this->shaders[0], this->textures[5], this->textures[6]);
+    gameObjects.push_back(navmesh);
 
     auto data = AssimpLoader::load(importer1, "OBJFiles/temple.fbx");
     
@@ -181,7 +189,7 @@ void FieldScene::initObjects()
 
     cube->getComponent<PlayerMovement>()->attachCamera(camera->getComponent<Camera>());
 
-    GameObject* direcionalLight = new GameObject(glm::vec3(-50.f, 50.f, 50.f), glm::vec3(0.f, 0.f, 0.f));
+    GameObject* direcionalLight = new GameObject(glm::vec3(-1000.f, 1000.f, 1000.f), glm::vec3(0.f, 0.f, 0.f));
     direcionalLight->addComponent<PointLight>();
     this->pointLights.push_back(direcionalLight->getComponent<PointLight>());
     this->gameObjects.push_back(direcionalLight);
