@@ -24,7 +24,7 @@ public:
     }
 
     void update(float deltaTime) override{ 
-        gameObject->moveAt(_positionOffset + _target->getPosition());
+        gameObject->moveAt(_positionOffset * glm::inverse(_target->getRotation()) + _target->getPosition());
         gameObject->rotateAt(_rotationOffset * _target->getRotation());
     }
 };

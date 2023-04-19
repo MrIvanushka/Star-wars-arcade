@@ -26,11 +26,30 @@ BoundingRegion::BoundingRegion(glm::vec3 min, glm::vec3 max)
 void BoundingRegion::transform() {
     if (instance) {
         if (type == BoundTypes::AABB) {
-            min = ogMin * instance->getScale() + instance->getPosition();
-            max = ogMax * instance->getScale() + instance->getPosition();
+            min = ogMin * instance->getScale() * glm::inverse(instance->getRotation()) + instance->getPosition();
+            max = ogMax * instance->getScale() * glm::inverse(instance->getRotation()) + instance->getPosition();
+
+            if(min.x > max.x)
+            {
+                auto t = min.x;
+                min.x = max.x;
+                max.x = t;
+            }
+            if(min.y > max.y)
+            {
+                auto t = min.y;
+                min.y = max.y;
+                max.y = t;
+            }
+            if(min.z > max.z)
+            {
+                auto t = min.z;
+                min.z = max.z;
+                max.z = t;
+            }
         }
         else {
-            center = ogCenter * instance->getScale() + instance->getPosition();
+            center = ogCenter * instance->getScale() * instance->getRotation() + instance->getPosition();
             
             float maxDim = instance->getScale()[0];
             for (int i = 1; i < 3; i++) {

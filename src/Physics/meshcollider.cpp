@@ -141,14 +141,18 @@ void MeshCollider::initialize(std::vector<Vertex> vertices, std::vector<unsigned
 		coordinates[3*i] = vertices[i].position[0];
 		coordinates[3*i+1] = vertices[i].position[1];
 		coordinates[3*i+2] = vertices[i].position[2];
-
-		if(indices[3*i] != indices[3*i+1] && indices[3*i] != indices[3*i+2])
+	}
+	for (int i = 0; i < indices.size() / 3; i++)
+	{
+		if(indices[3*i] != indices[3*i+1] && indices[3*i] != indices[3*i+2] && indices[3*i+1] != indices[3*i+2]
+		|| indices[3*i] >= vertices.size() || indices[3*i+1] >= vertices.size() || indices[3*i+2] >= vertices.size())
 		{
 			inds.push_back(indices[3*i]);
 			inds.push_back(indices[3*i + 1]);
 			inds.push_back(indices[3*i + 2]);
 		}
 	}
+
 	initialize(vertices.size(), coordinates, inds.size()/3, inds.data());
 	delete[] coordinates;
 }
@@ -192,7 +196,7 @@ void MeshCollider::initialize(unsigned int noPoints, float* coordinates,
 		}
 	}
 
-	this->br = BoundingRegion(center, sqrt(maxRadiusSquared));
+	this->br = BoundingRegion(min, max);
 	this->br.collider = this;
 
 	// calculate face normals

@@ -7,6 +7,7 @@
 #include"../Engine/GameObject.h"
 #include"../Engine/SkinnedMeshRenderer.h"
 #include"../Utilities/StateMachine.h"
+#include"../Utilities/Observer.h"
 #include<iostream>
 
 class IMeshContainer
@@ -51,6 +52,8 @@ protected:
 private:
     float _transitDuration;
     float _currentTime;
+
+    std::map<std::string, std::vector<Observer*>> _listenerPool;
 public:
     AnimationState(IMeshContainer* container, float transitDuration) :
       State(), _container(container), _transitDuration(transitDuration), _currentTime(0) {}
@@ -59,10 +62,20 @@ public:
     
     void start() override;
     void update(float deltaTime) override;
+    void addListener(std::string eventName, Observer* listener);
 private:
     virtual void getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms) = 0;
+    virtual void getEvents(float currentTime, std::vector<std::string> &eventNames) = 0;
 };
 
+struct EventPair{
+    std::string name;
+    float timeInTicks;
+
+    bool operator<(EventPair &a){
+        return timeInTicks < a.timeInTicks;
+    }
+};
 
 class AnimationClip
 {
@@ -72,6 +85,8 @@ private:
     std::map<std::string, glm::mat4> _boneOffsets;
     glm::mat4 _globalInverse;
     float _speed;
+
+    std::vector<EventPair> _events;
 public:
     AnimationClip(aiAnimation* animation, aiNode* root, std::map<std::string, glm::mat4> boneOffsets, glm::mat4 globalInverse, float speed = 1.f) : 
         _animation(animation), _rootNode(root), _boneOffsets(boneOffsets), _globalInverse(globalInverse), _speed(speed) {}
@@ -79,6 +94,8 @@ public:
     float scoreTimeInTicks(float currentTime);
     float getDuration();
     void changeSpeed(float newSpeed);
+    void addEvent(std::string name, float timeInTicks);
+    void processEvents(float timeTicks, float prevTimeTicks, std::vector<std::string> &eventNames);
 private:
     void CalcInterpolatedScaling(aiVector3D& out, float animationTime, const aiNodeAnim* pNodeAnim);
     void CalcInterpolatedRotation(aiQuaternion& out, float animationTime, const aiNodeAnim* pNodeAnim);
@@ -94,6 +111,7 @@ private:
 class SingleAnimationState : public AnimationState{
 private:
     AnimationClip* _clip;
+    float _prevTimeTicks = 0;
 public:
     SingleAnimationState(AnimationClip* clip, IMeshContainer* container, float transitDuration) :
         AnimationState(container, transitDuration), _clip(clip) {}
@@ -102,6 +120,7 @@ public:
 
 private:
     void getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms) override;
+    void getEvents(float currentTime, std::vector<std::string> &eventNames) override;
 };
 
 
@@ -116,6 +135,7 @@ class BlendTree : public AnimationState{
 private:
     std::vector<BlendingElement> _clips;
     float _blendFactor;
+    float _prevTimeTicks = 0;
 public:
     BlendTree(std::vector<BlendingElement> clips, IMeshContainer* container, float transitDuration) :
         AnimationState(container, transitDuration), _clips(clips) {}
@@ -129,52 +149,8 @@ public:
     }
 private:
     void getClipTransforms(float currentTime, std::map<std::string, glm::mat4>& transforms) override;
+    void getEvents(float currentTime, std::vector<std::string> &eventNames) override;
     virtual float updateBlendFactor() = 0;
-};
-
-class ExitTimeTransition : public Transition
-{
-private:
-    float _duration;
-    float _currentTime;
-public:
-    ExitTimeTransition(State* nextState, float duration) : Transition(nextState), _duration(duration)
-    {}
-
-    void onEnable() override
-    {
-        _currentTime = 0;
-    }
-
-    void update(float deltaTime) override
-    {
-        _currentTime += deltaTime;
-    }
-
-    bool needTransit() override
-    {
-        return _currentTime > _duration;
-    }  
-};
-
-
-class ParameterTransition : public Transition
-{
-private:
-    bool* _parameter;
-public:
-    ParameterTransition(State* nextState, bool* parameter) : Transition(nextState), _parameter(parameter)
-    {}
-
-    void onEnable() override{
-        *_parameter = false;
-    }
-
-
-    bool needTransit() override
-    {
-        return *_parameter;
-    }   
 };
 
 #endif //SWTOR_ANIMATOR_H
