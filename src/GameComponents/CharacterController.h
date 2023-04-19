@@ -22,7 +22,7 @@ class CharacterController : public Component, public ArgObserver<Collision>
     bool _isGrounded = true;
 
     MeshCollider* _selfCollider;
-    Collider* _stepTrigger;
+    Collider* _stepTrigger = nullptr;
     std::set<Collider*> _touchedColliders;
     
     std::vector<glm::vec3> _groundNormals;

@@ -18,19 +18,23 @@ NavMeshSurface::NavMeshSurface(const std::vector<TPPLPoint>& border) {
 }
 
 /* Insertion of new (hole) areas */
-
+#include <iostream>
 void NavMeshSurface::add_area(const std::vector<TPPLPoint>& border){
 
     if (expansion_called) { throw std::runtime_error("New areas cannot be added after expansion called"); }
 
     // Validity check
-    if (border.size() < 3) throw std::runtime_error("Invalid area");
+    if (border.size() < 3) throw std::runtime_error("Invalid area: polygon count is lower than 2");
             
     for ( size_t i = 0, j = border.size() - 1 ; i < border.size() ; j = i++ ){
         TPPLPoint p1 = border[i], p2 = border[j];
 
         for (auto polygon : m_polygons){
-            if (polygon.intersects_with_line(p1, p2) || !(m_polygons.begin()->contains_point(p1))) throw std::runtime_error("Invalid area");
+            if (polygon.intersects_with_line(p1, p2))
+                throw std::runtime_error("Invalid area: intersection with border of size " +std::to_string(polygon.GetNumPoints()) + " points "
+                + std::to_string(p1.x) + " " + std::to_string(p1.y) + "; " + std::to_string(p2.x) + " " + std::to_string(p2.y));
+            if(!(m_polygons.begin()->contains_point(p1)))
+                throw std::runtime_error("Invalid area: point away from border " +std::to_string(polygon.GetNumPoints()));
         }
     }
 

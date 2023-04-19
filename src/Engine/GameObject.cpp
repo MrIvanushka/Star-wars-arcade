@@ -9,6 +9,13 @@ OrientedPoint::OrientedPoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 s
     this->position = position;
     this->rotation = glm::quat(rotation * (3.1415f / 180.f));
     this->scale = scale;
+
+    glm::mat4 rotMat = glm::mat4_cast(this->rotation);
+    model = glm::translate(glm::mat4(1.0f), position); // M = I * T = T
+    model = model * rotMat; // M = M * R = T * R
+    model = glm::scale(model, scale); // M = M * S = T * R * S
+
+    normalModel = glm::transpose(glm::inverse(glm::mat3(model)));
 }
 
 GameObject::GameObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) : OrientedPoint(position, rotation, scale)

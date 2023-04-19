@@ -155,8 +155,15 @@ void CharacterController::processNorm(Collider* touchedCollider, glm::vec3 norm)
     if(groundAngle > _maxGroundAngle)
     {
         if(_stepTrigger != nullptr)
+        {
             if(_stepTrigger->touches(touchedCollider))
                 _wallNormals.push_back(norm);
+        }
+        else
+        {
+             _wallNormals.push_back(norm);
+        }
+        
     }
     else if(groundAngle <= _maxGroundAngle)
     {
