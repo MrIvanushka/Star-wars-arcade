@@ -13,6 +13,7 @@
 #include"GameComponents/PlayerAttackController.h"
 #include"GameComponents/DamageDealArea.h"
 #include"GameComponents/HealthPresenter.h"
+#include"Navigation/NavMeshGenerator.h"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
 {
@@ -72,15 +73,16 @@ void FieldScene::initObjects()
     for(int i = 0; i < colliders.size(); i++){
         GameObject* cube = new GameObject(glm::vec3(200.f, -100.f, 0.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
         cube->addComponent<MeshCollider>();
-        //cube->addComponent<Model>();
-        //Mesh* cMesh = new Mesh(colliders[i].vertices.data(), colliders[i].vertices.size(), colliders[i].indices.data(), colliders[i].indices.size(), cube);
-        //cube->getComponent<Model>()->addMesh(cMesh, this->materials[0], this->shaders[0], this->textures[5], this->textures[6]);
         cube->getComponent<MeshCollider>()->initialize(colliders[i].vertices, colliders[i].indices);
         cube->getComponent<MeshCollider>()->getRegion()->ogMin -= glm::vec3(0,3,0);
         collisionProcessor->addToPending(cube, cube->getComponent<MeshCollider>()->getRegion());
         this->gameObjects.push_back(cube);
     }
 
+    auto navMeshData = AssimpLoader::load(importer1, "OBJFiles/Navmesh.fbx");
+    GameObject* navmesh = new GameObject(glm::vec3(200.f, -140.f, 486.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
+    NavMeshGenerator::generate(navMeshData[0].vertices, navMeshData[0].indices, navmesh);
+    gameObjects.push_back(navmesh);
 
     auto data = AssimpLoader::load(importer1, "OBJFiles/temple.fbx");
     
@@ -181,7 +183,7 @@ void FieldScene::initObjects()
 
     cube->getComponent<PlayerMovement>()->attachCamera(camera->getComponent<Camera>());
 
-    GameObject* direcionalLight = new GameObject(glm::vec3(-50.f, 50.f, 50.f), glm::vec3(0.f, 0.f, 0.f));
+    GameObject* direcionalLight = new GameObject(glm::vec3(-1000.f, 1000.f, 1000.f), glm::vec3(0.f, 0.f, 0.f));
     direcionalLight->addComponent<PointLight>();
     this->pointLights.push_back(direcionalLight->getComponent<PointLight>());
     this->gameObjects.push_back(direcionalLight);
