@@ -48,6 +48,7 @@ enum TPPLVertexType {
 struct TPPLPoint {
   tppl_float x;
   tppl_float y;
+  
   // User-specified vertex identifier. Note that this isn't used internally
   // by the library, but will be faithfully copied around.
   int id;
@@ -56,21 +57,7 @@ struct TPPLPoint {
 
   TPPLPoint() {}
 
-  TPPLPoint(const TPPLPoint& other) {
-    this->x = other.x;
-    this->y = other.y;
-    this->id = other.id;
-  }
-
   TPPLPoint(tppl_float _x, tppl_float _y) : x(_x), y(_y), id(0) {}
-
-  TPPLPoint& operator=(const TPPLPoint& other) {
-    this->x = other.x;
-    this->y = other.y;
-    this->id = other.id;
-
-    return *this;
-  }
 
   TPPLPoint operator+(const TPPLPoint &p) const {
     TPPLPoint r;

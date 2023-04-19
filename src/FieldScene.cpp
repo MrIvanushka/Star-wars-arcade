@@ -84,7 +84,7 @@ void FieldScene::initObjects()
     NavMeshGenerator::generate(navMeshData[0].vertices, navMeshData[0].indices, navmesh);
     gameObjects.push_back(navmesh);
 
-    auto data = AssimpLoader::load(importer1, "OBJFiles/temple.fbx");
+    auto data = AssimpLoader::load(importer1, "../OBJFiles/temple.fbx");
     
     for(int i = 0; i < data.size(); i++)
     {
@@ -95,7 +95,7 @@ void FieldScene::initObjects()
         this->gameObjects.push_back(cube);
     }
 
-    auto templeData = AssimpLoader::load(importer1, "OBJFiles/templeColliders.fbx");
+    auto templeData = AssimpLoader::load(importer1, "../OBJFiles/templeColliders.fbx");
 
     for(int i = 0; i < templeData.size(); i++)
     {
