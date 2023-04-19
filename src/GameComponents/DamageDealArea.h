@@ -5,10 +5,11 @@
 #include "../Physics/Collider.h"
 #include "IDamageable.h"
 
-class DamageDealArea : public Component
+class DamageDealArea : public Component, public Observer
 {
 private:
     Collider* _selfCollider;
+    float _damage = 200;
 public:
     DamageDealArea(GameObject* object) : Component(object) {}
 
@@ -16,14 +17,18 @@ public:
         _selfCollider = gameObject->getComponent<Collider>();
     }
 
-    void dealDamage(float damage){
+    void handle() override{
+        dealDamage();
+    }
+
+    void dealDamage(){
         auto touchedColliders = _selfCollider->getTouchedColliders();
         
         for(auto touchedCollider : touchedColliders){
             IDamageable* damageableObject = touchedCollider->getComponent<IDamageable>();
 
             if(damageableObject != nullptr)
-                damageableObject->takeDamage(damage);
+                damageableObject->takeDamage(_damage);
         }
     }
 };

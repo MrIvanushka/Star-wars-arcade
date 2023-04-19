@@ -14,10 +14,12 @@ public:
         if(isAlive() == false)
             gameObject->setActive(false);
     }
-
+/*
     template<typename Attribute>
     void boost(){
         Attribute* newAttribute = new Attribute(_health);
         _health = newAttribute;
-    }
+    }*/
 };
+
+#endif

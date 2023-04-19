@@ -16,7 +16,7 @@ class CharacterAnimator : public Animator{
 public:
     CharacterAnimator(GameObject* obj) : Animator(obj) {}
 
-    void setupStateMachine(std::vector<AnimationClip> &clips, CharacterController* controller, Observable* attackController){
+    void setupStateMachine(std::vector<AnimationClip> &clips, CharacterController* controller, Observable* attackController, Observer* attackListener){
 
         std::vector<BlendingElement> blendedClips(3);
 
@@ -34,6 +34,7 @@ public:
         SingleAnimationState* jumpAnim = new SingleAnimationState(&clips[JUMP_ANIM], this, 0.1f);
         SingleAnimationState* fallAnim = new SingleAnimationState(&clips[FALL_ANIM], this, 0.3f);
         SingleAnimationState* attackAnim = new SingleAnimationState(&clips[ATTACK_ANIM], this, 0.3f);
+        attackAnim->addListener("DealDamage", attackListener);
 
         Transition* jumpTransition = new CharacterJumpTransition(jumpAnim, controller);
         Transition* fallTransition = new CharacterFallTransition(fallAnim, controller);
