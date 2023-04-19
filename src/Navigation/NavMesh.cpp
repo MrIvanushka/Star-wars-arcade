@@ -28,7 +28,11 @@ void NavMeshSurface::add_area(const std::vector<TPPLPoint>& border){
         TPPLPoint p1 = border[i], p2 = border[j];
 
         for (auto polygon : m_polygons){
-            if (polygon.intersects_with_line(p1, p2) || !(m_polygons.begin()->contains_point(p1))) throw std::runtime_error("Invalid area: intersection with border of size " +std::to_string(polygon.GetNumPoints()));
+            if (polygon.intersects_with_line(p1, p2))
+                throw std::runtime_error("Invalid area: intersection with border of size " +std::to_string(polygon.GetNumPoints()) + " points "
+                + std::to_string(p1.x) + " " + std::to_string(p1.y) + "; " + std::to_string(p2.x) + " " + std::to_string(p2.y));
+            if(!(m_polygons.begin()->contains_point(p1)))
+                throw std::runtime_error("Invalid area: point away from border " +std::to_string(polygon.GetNumPoints()));
         }
     }
 

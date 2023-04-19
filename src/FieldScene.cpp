@@ -73,9 +73,6 @@ void FieldScene::initObjects()
     for(int i = 0; i < colliders.size(); i++){
         GameObject* cube = new GameObject(glm::vec3(200.f, -100.f, 0.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
         cube->addComponent<MeshCollider>();
-        //cube->addComponent<Model>();
-        //Mesh* cMesh = new Mesh(colliders[i].vertices.data(), colliders[i].vertices.size(), colliders[i].indices.data(), colliders[i].indices.size(), cube);
-        //cube->getComponent<Model>()->addMesh(cMesh, this->materials[0], this->shaders[0], this->textures[5], this->textures[6]);
         cube->getComponent<MeshCollider>()->initialize(colliders[i].vertices, colliders[i].indices);
         cube->getComponent<MeshCollider>()->getRegion()->ogMin -= glm::vec3(0,3,0);
         collisionProcessor->addToPending(cube, cube->getComponent<MeshCollider>()->getRegion());
@@ -85,9 +82,6 @@ void FieldScene::initObjects()
     auto navMeshData = AssimpLoader::load(importer1, "OBJFiles/Navmesh.fbx");
     GameObject* navmesh = new GameObject(glm::vec3(200.f, -140.f, 486.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
     NavMeshGenerator::generate(navMeshData[0].vertices, navMeshData[0].indices, navmesh);
-    navmesh->addComponent<Model>();
-    Mesh* cMesh = new Mesh(navMeshData[0].vertices.data(), navMeshData[0].vertices.size(), navMeshData[0].indices.data(), navMeshData[0].indices.size(), navmesh);
-    navmesh->getComponent<Model>()->addMesh(cMesh, this->materials[0], this->shaders[0], this->textures[5], this->textures[6]);
     gameObjects.push_back(navmesh);
 
     auto data = AssimpLoader::load(importer1, "OBJFiles/temple.fbx");

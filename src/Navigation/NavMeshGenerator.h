@@ -59,7 +59,7 @@ public:
                 if(cornerPoints.size() > 2)
                 {
                     for(int i = 0; i < cornerPoints.size(); i++)
-                        std::cout << cornerPoints[i].x << " " << cornerPoints[i].y << " " << std::endl;
+                        std::cout << cornerPoints[i].x << ";" << cornerPoints[i].y << ";" << std::endl;
                     surface.add_area(cornerPoints);
                 }
             }

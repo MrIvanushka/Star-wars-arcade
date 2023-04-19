@@ -229,7 +229,7 @@ bool TPPLPoly::lines_are_intersecting(const TPPLPoint& v1_start, const TPPLPoint
   if (d1 > 0 && d2 > 0) return false;
   if (d1 < 0 && d2 < 0) return false;
 
-  if ((a1 * b2) - (a2 * b1) == 0.0f) return true;
+  if ((a1 * b2) - (a2 * b1) == 0.0f) return false;
 
   return true;
 }
