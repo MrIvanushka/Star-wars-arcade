@@ -1,7 +1,7 @@
 #include "meshcollider.h"
 #include "linalg.h"
 #include<iostream>
-bool Face::collidesWithFace(OrientedPoint* thisRB, Face& face, OrientedPoint* faceRB, glm::vec3& thisNorm) {
+bool Face::collidesWithFace(OrientedPoint* thisRB, Face& face, OrientedPoint* faceRB, glm::vec3& thisNorm, std::vector<glm::vec3>& touchFace) {
 	auto thisModel = thisRB->getModelMatrix();
 	auto thisNormalModel = thisRB->getNormalModelMatrix();
 	auto faceModel = faceRB->getModelMatrix();
@@ -9,8 +9,15 @@ bool Face::collidesWithFace(OrientedPoint* thisRB, Face& face, OrientedPoint* fa
 
 	// transform coordinates so that P1 is the origin
 	glm::vec3 P1 = mat4vec3mult(thisModel, this->mesh->points[this->i1]);
-	glm::vec3 P2 = mat4vec3mult(thisModel, this->mesh->points[this->i2]) - P1;
-	glm::vec3 P3 = mat4vec3mult(thisModel, this->mesh->points[this->i3]) - P1;
+	glm::vec3 P2 = mat4vec3mult(thisModel, this->mesh->points[this->i2]);
+	glm::vec3 P3 = mat4vec3mult(thisModel, this->mesh->points[this->i3]);
+
+	touchFace.push_back(P1);
+	touchFace.push_back(P2);
+	touchFace.push_back(P3);
+
+	P2 -= P1;
+	P3 -= P1;
 	glm::vec3 lines[3] = {
 		P2,
 		P3,

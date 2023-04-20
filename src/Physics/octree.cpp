@@ -330,6 +330,7 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
             auto* MeshBr = dynamic_cast<MeshCollider*>(br.collider);
 
             glm::vec3 norm;
+            std::vector<glm::vec3> touchFace;
 
             if (MeshBr != nullptr) {
                 unsigned int noFacesBr = MeshBr->faces.size();
@@ -346,7 +347,7 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
                                 br.instance,
                                 MeshObj->faces[j],
                                 obj.instance,
-                                norm
+                                norm, touchFace
                             )) {
                                 //throw an event!!
                                 MeshObj->handleCollision(br, norm);

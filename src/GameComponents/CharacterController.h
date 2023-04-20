@@ -18,6 +18,7 @@ class CharacterController : public Component, public ArgObserver<Collision>
 
     glm::vec3 _velocity;
     glm::vec3 _gravityVelocity;
+    glm::vec3 _groundPos;
 
     bool _isGrounded = true;
 
@@ -60,7 +61,7 @@ private:
 
     void fall(float deltaTime);
 
-    void processNorm(Collider* touchedCollider, glm::vec3 norm);
+    void processNorm(Collider* touchedCollider, glm::vec3 norm, glm::vec3 touchPos);
 
     void processCollisions();
 };
