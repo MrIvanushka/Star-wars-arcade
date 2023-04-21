@@ -10,20 +10,18 @@
 
 class Blaster : public Component{
 protected:
-    float _cooldown;
-    float _overheating=0;
-    float _heating_per_shot;
-    float _limit_overheating;
-    float _cooling_per_time;
-    float _reloadingTime;
-    float _currentTime;
+    float _overheating = 0;
+    float _heating_per_shot = 1;
+    float _limit_overheating = 5;
+    float _cooling_per_time = 1;
+    float _reloadingTime = 0.5;
+    float _currentTime = 0;
     bool _notOverheated = true;
 private:
     std::queue<Bullet*> queue_of_bullets;
 public:
     Blaster(GameObject* object) : Component(object){}
 
-    void setCooldown(float cooldown);
     void setLimitOverheating(float limit_overheating);
     void setHeatingPerShot(float heating_per_shot);
     void setCoolingPerTime(float cooling_per_time);
@@ -35,14 +33,13 @@ public:
 
     void shoot(glm::vec3 targetPos);
 
-    float getCooldown();
     float getLimitOverheating();
     float getHeatingPerShot();
     float getCoolingPerTime();
     bool canShoot();
 private:
     void Heating();
-    void Cooling();
+    void Cooling(float deltaTime);
 };
 
 

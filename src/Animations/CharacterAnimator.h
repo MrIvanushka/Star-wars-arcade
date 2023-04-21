@@ -34,7 +34,9 @@ public:
         SingleAnimationState* jumpAnim = new SingleAnimationState(&clips[JUMP_ANIM], this, 0.1f);
         SingleAnimationState* fallAnim = new SingleAnimationState(&clips[FALL_ANIM], this, 0.3f);
         SingleAnimationState* attackAnim = new SingleAnimationState(&clips[ATTACK_ANIM], this, 0.3f);
-        attackAnim->addListener("DealDamage", attackListener);
+
+        if(attackListener!=nullptr)
+            attackAnim->addListener("DealDamage", attackListener);
 
         Transition* jumpTransition = new CharacterJumpTransition(jumpAnim, controller);
         Transition* fallTransition = new CharacterFallTransition(fallAnim, controller);
@@ -42,7 +44,9 @@ public:
         Transition* exitAttackTransition = new ExitTimeTransition(movementTree, clips[ATTACK_ANIM].getDuration());
         Transition* landTransition = new CharacterLandTransition(movementTree, controller);
         ParameterTransition* attackTransition = new ParameterTransition(attackAnim);
-        attackController->Attach(*attackTransition);
+
+        if(attackController!=nullptr)
+            attackController->Attach(*attackTransition);
 
         movementTree->addTransition(jumpTransition);
         movementTree->addTransition(fallTransition);

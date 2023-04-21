@@ -22,16 +22,16 @@ void JediAI::setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> w
     _stateMachine = new StateMachine(wanderingState);
 }
 
-/*
-void SquadLeader::setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingPoints, Collider* visionCollider, Fraction fraction) {
-    State* patrollingS = new PatrollingState(character, wanderingPoints, {});
+
+void SquadLeaderAI::setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingPoints, Collider* visionCollider, Blaster* blaster, Octree::node* collisionProcessor, Fraction fraction) {
+    State* patrollingS = new WanderingState(character, wanderingPoints, {});
     FollowState* followingS = new FollowState(character, {});
-    State* shootS = new ShootingState({});
+    ShootingState* shootS = new ShootingState(blaster, {});
 
     Transition* durationT = new ExitTimeTransition(followingS, 1);
-    Transition* distanceT = new LowDistanceTransition(shootS, character, 5.f);
+    RaycastTransition* distanceT = new RaycastTransition(shootS, character->getGameObject(), collisionProcessor);
     KillTransition* killT = new KillTransition(patrollingS);
-    Transition* seeTargetT = new SeeTargetTransition(followingS, visionCollider, fraction, {killT, followingS});
+    Transition* seeTargetT = new SeeTargetTransition(followingS, visionCollider, fraction, {killT, followingS, shootS, distanceT});
 
     patrollingS->addTransition(seeTargetT);
     followingS->addTransition(distanceT);
@@ -40,7 +40,7 @@ void SquadLeader::setupStateMachine(NavMeshAgent* character, std::vector<glm::ve
 
     _stateMachine = new StateMachine(patrollingS);
 }
-
+/*
 
 void SquadMember::setupStateMachine(NavMeshAgent* character, GameObject* target) {
     State* LfollowingS = new FollowState(character, sq_leader, {});

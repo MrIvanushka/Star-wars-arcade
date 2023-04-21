@@ -1,8 +1,5 @@
 #include "Blaster.h"
 
-void Blaster::setCooldown(float cooldown){
-    _cooldown = cooldown;
-}
 void Blaster::setLimitOverheating(float limit_overheating){
     _limit_overheating = limit_overheating;
 }
@@ -17,8 +14,8 @@ void Blaster::setReloadingTime(float reloadingTime){
 }
 
 void Blaster::Heating(){
-    if(this->overheating + _heating_per_shot < this->limit_overheating){
-        this->overheating += _heating_per_shot;
+    if(_overheating + _heating_per_shot < _limit_overheating){
+        _overheating += _heating_per_shot;
     }
     else{
         _overheating = _limit_overheating;
@@ -27,11 +24,11 @@ void Blaster::Heating(){
 void Blaster::Cooling(float deltaTime){
     float coolValue = _cooling_per_time * deltaTime;
 
-    if(this->overheating - coolValue > 0){
-        this->overheating -= coolValue;
+    if(_overheating - coolValue > 0){
+        _overheating -= coolValue;
     }
     else{
-        this->overheating = 0;
+        _overheating = 0;
 
     }
 }
@@ -42,14 +39,16 @@ void Blaster::initialize(std::queue<Bullet*> queue_of_bullets)
 }
 
 void Blaster::shoot(glm::vec3 targetPos){
-    if(!_notOverheated && _overheating == 0){
+
+    if(!_notOverheated && _overheating < 0.01){
         _notOverheated = true;
     }
-    if(_notOverheated){
+    if(canShoot()){
         Bullet* bullet = queue_of_bullets.front();
-        bullet->initialize(gameObject->getPosition, targetPos - gameObject->getPosition());
+        bullet->initialize(gameObject->getPosition(), targetPos - gameObject->getPosition());
         queue_of_bullets.pop();
         queue_of_bullets.push(bullet);
+        _currentTime = 0;
 
         Heating(); 
 
@@ -64,24 +63,14 @@ void Blaster::update(float deltaTime){
     Cooling(deltaTime);
 }
 
-glm::vec3 Blaster::getMuzzlePosition(){
-    return(gameObject->getPosition + getRotation() * this->muzzle_position)_
-}
-glm::quat Blaster::getRotation(){
-    return this->rotation;
-}
-
-float Blaster::getCooldown(){
-    return this->cooldown;
-}
 float Blaster::getLimitOverheating(){
-    return this->limit_overheating;
+    return _limit_overheating;
 }
 float Blaster::getHeatingPerShot(){
-    return this->heating_per_shot;
+    return _heating_per_shot;
 }
 float Blaster::getCoolingPerTime(){
-    return this->cooling_per_time;
+    return _cooling_per_time;
 }
 bool Blaster::canShoot() {
     return (_notOverheated && _currentTime > _reloadingTime);

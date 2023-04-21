@@ -448,7 +448,7 @@ BoundingRegion* Octree::node::checkCollisionsRay(Ray r, float& tmin) {
                     // fine grain check with collision mesh
                     t_tmp = std::numeric_limits<float>::max();
                     if (r.intersectsMesh(MeshBr, br.instance, t_tmp)) {
-                        if (t_tmp < tmin) {
+                        if (t_tmp < tmin && t_tmp > 0) {
                             // found closer collision
                             tmin = t_tmp;
                             ret = &br;
@@ -457,7 +457,7 @@ BoundingRegion* Octree::node::checkCollisionsRay(Ray r, float& tmin) {
                 }
                 else {
                     // rely on coarse check
-                    if (tmin_tmp < tmin) {
+                    if (tmin_tmp < tmin && tmin_tmp > 0) {
                         tmin = tmin_tmp;
                         ret = &br;
                     }

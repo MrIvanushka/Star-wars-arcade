@@ -56,11 +56,11 @@ public:
         {
             FractionMember* fractionMember = collider->getComponent<FractionMember>();
 
-            if(fractionMember != nullptr){
+            if(fractionMember != nullptr && collider->isEnabled()){
                 if(fractionMember->getFraction() != _selfFraction){
                     for(int i = 0; i < _hunters.size(); i++)
                         _hunters[i]->setTarget(collider->getGameObject());
-
+                    std::cout << "See target" << std::endl;
                     return true;
                 }
             }
@@ -97,6 +97,9 @@ class KillTransition : public TargetHuntTransition
         void setTarget(GameObject* newTarget) { m_target = newTarget->getComponent<IDamageable>(); }
 
         bool needTransit() override {
+            if(!m_target->isAlive())
+                std::cout << "killed" << std::endl;
+
             return !m_target->isAlive();
         }
 };
@@ -201,13 +204,19 @@ class RaycastTransition : public TargetHuntTransition {
         void setTarget(GameObject* newTarget) { m_target = newTarget; }
 
         bool needTransit() override {
-            Ray ray(m_character->getPosition(), glm::normalize(m_target->getPosition() - m_character->getPosition()));
+            auto delta = glm::normalize(m_target->getPosition() - m_character->getPosition());
+
+            Ray ray(m_character->getPosition(), delta);
             float dist = 1000;
 
             auto foundRegion = _collisionProcessor->checkCollisionsRay(ray, dist);
 
             if(foundRegion != nullptr)
             {
+                std::cout << "something found " << foundRegion->center.x << " " << foundRegion->center.y << " " << foundRegion->center.z << " dist " << dist << std::endl;
+                std::cout << "self pos " << m_character->getPosition().x << " " << m_character->getPosition().y << " " << m_character->getPosition().z << std::endl;
+                std::cout << "target pos " << m_target->getPosition().x << " " << m_target->getPosition().y << " " << m_target->getPosition().z << std::endl;
+
                 if(foundRegion->collider->getComponent<IDamageable>())
                     return true;
             }

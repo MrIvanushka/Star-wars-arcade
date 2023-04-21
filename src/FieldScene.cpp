@@ -117,7 +117,8 @@ void FieldScene::initObjects()
     clips[ATTACK_ANIM].addEvent("DealDamage", 40);
 
     auto cube = createCharacter(cubeData, holocroneData, glm::vec3(0), Fraction::Jedi);
-    auto differentCube = createJediBot(cubeData, holocroneData, glm::vec3(-275 ,0, -560), surface, Fraction::Sith);
+    //auto differentCube = createJediBot(cubeData, holocroneData, glm::vec3(-275 ,0, -560), surface, Fraction::Sith);
+    auto creep = createSquadleaderBot(cubeData, holocroneData, glm::vec3(-300 ,0, -500), surface, Fraction::Sith);
 
     GameObject* camera = new GameObject(glm::vec3(-25.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
     camera->addComponent<CameraController>();
@@ -291,13 +292,39 @@ GameObject* FieldScene::createSquadleaderBot(std::vector<MeshPack> &cubeData, st
     this->gameObjects.push_back(visionSphere);
 
 
-    cube->addComponent<JediAI>();
-    Observable* attackState;
+    cube->addComponent<SquadLeaderAI>();
     cube->addComponent<NavMeshAgent>();
     cube->getComponent<NavMeshAgent>()->addSurface(surface);
     cube->getComponent<NavMeshAgent>()->setStopDistance(15.f);
-    cube->getComponent<JediAI>()->setupStateMachine(cube->getComponent<NavMeshAgent>(), {glm::vec3(-66, -138, -258), glm::vec3(-275, -97, -406), glm::vec3(-14, -180, -560)}, 
-    &attackState, visionSphere->getComponent<SphereCollider>(), fraction);
+
+    GameObject* blaster = new GameObject(pos + glm::vec3(0.f, 0.f, 3.f), glm::vec3(0.f), glm::vec3(2.1f,5.f,2.1f));
+    blaster->addComponent<Blaster>();
+    blaster->addComponent<Follower>();
+    blaster->getComponent<Follower>()->setTarget(cube);
+    this->gameObjects.push_back(blaster);
+
+    std::queue<Bullet*> bullets;
+
+    for(int i = 0; i < 10; i++)
+    {
+        GameObject* bullet = new GameObject(glm::vec3(0), glm::vec3(0), glm::vec3(1,1,3));
+
+        bullet->addComponent<Model>();
+        Mesh* bulletMesh = new Mesh(cubeData[0].vertices.data(), cubeData[0].vertices.size(), cubeData[0].indices.data(), cubeData[0].indices.size(), bullet);
+        bullet->getComponent<Model>()->addMesh(bulletMesh, this->materials[0], this->shaders[1], this->textures[1], this->textures[2]);
+        bullet->addComponent<Bullet>();
+        bullet->addComponent<MeshCollider>();
+        bullet->getComponent<MeshCollider>()->setAsTrigger();
+        bullet->getComponent<MeshCollider>()->initialize(cubeData[0].vertices, cubeData[0].indices);
+        collisionProcessor->addToPending(bullet, bullet->getComponent<MeshCollider>()->getRegion());
+        bullet->setActive(false);
+        bullets.push(bullet->getComponent<Bullet>());
+        this->gameObjects.push_back(bullet);
+    }
+    blaster->getComponent<Blaster>()->initialize(bullets);
+
+    cube->getComponent<SquadLeaderAI>()->setupStateMachine(cube->getComponent<NavMeshAgent>(), {glm::vec3(-66, -138, -258), glm::vec3(-275, -97, -406), glm::vec3(-14, -180, -560)}, 
+        visionSphere->getComponent<SphereCollider>(), blaster->getComponent<Blaster>(), collisionProcessor, fraction);
 
     GameObject* stepTrigger = new GameObject(pos + glm::vec3(0.f, 3.f, 0.f), glm::vec3(0.f), glm::vec3(2.1f,5.f,2.1f));
     stepTrigger->addComponent<MeshCollider>();
@@ -309,21 +336,9 @@ GameObject* FieldScene::createSquadleaderBot(std::vector<MeshPack> &cubeData, st
     collisionProcessor->addToPending(stepTrigger, stepTrigger->getComponent<MeshCollider>()->getRegion());
     this->gameObjects.push_back(stepTrigger);
 
-    GameObject* box = new GameObject(pos + glm::vec3(0.f, 0.f, 6.f), glm::vec3(0.f), glm::vec3(5.f,5.f,5.f));
-    box->addComponent<Model>();
-    box->addComponent<Follower>();
-    box->getComponent<Follower>()->setTarget(cube);
-    box->addComponent<SphereCollider>();
-    box->getComponent<SphereCollider>()->setAsTrigger();
-    cubeData[0].br.collider = box->getComponent<SphereCollider>();
-    collisionProcessor->addToPending(box, &cubeData[0].br);
-    box->addComponent<DamageDealArea>();
-    box->getComponent<DamageDealArea>()->initialize(fraction);
-    this->gameObjects.push_back(box);
-
     character->addComponent<CharacterAnimator>();
     character->getComponent<CharacterAnimator>()->setupStateMachine(clips, 
-        cube->getComponent<CharacterController>(), attackState, box->getComponent<DamageDealArea>());
+        cube->getComponent<CharacterController>(), nullptr, nullptr);
     character->getComponent<CharacterAnimator>()->attachMesh(holoMesh);
     character->getComponent<CharacterAnimator>()->attachMesh(secondMesh);
 
