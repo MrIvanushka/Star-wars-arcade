@@ -1,10 +1,7 @@
 #ifndef SWTOR_BULLET_H
 #define SWTOR_BULLET_H
 
-#include"GameObject.h"
-
-
-
+#include"../Engine/GameObject.h"
 
 class Bullet : public Component{
 private:
@@ -13,7 +10,6 @@ private:
     float _flytime;
     float _damage;
     
-
     glm::vec3 _shootingDirection;
 public:
     Bullet(GameObject* object) : Component(object){}

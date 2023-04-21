@@ -12,8 +12,9 @@ private:
     void initTextures() override;
     void initMaterials() override;
     void initObjects() override;
-    GameObject* createCharacter(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos);
-    GameObject* createBot(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos, NavMeshSurface* surface);
+    GameObject* createCharacter(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos, Fraction fraction);
+    GameObject* createJediBot(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos, NavMeshSurface* surface, Fraction fraction);
+    GameObject* createSquadleaderBot(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos, NavMeshSurface* surface, Fraction fraction);
 public:
     FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight);
 };
