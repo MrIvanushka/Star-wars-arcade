@@ -22,22 +22,22 @@ FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebuff
 void FieldScene::initShaders(int GL_VERSION_MAJOR, int GL_VERSION_MINOR)
 {
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "Shaders/vertex_core.glsl", "Shaders/fragment_directional.glsl"));
+                                       "../Shaders/vertex_core.glsl", "../Shaders/fragment_directional.glsl"));
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "Shaders/vertex_unlit.glsl", "Shaders/fragment_unlit.glsl"));
+                                       "../Shaders/vertex_unlit.glsl", "../Shaders/fragment_unlit.glsl"));
     this->shaders.push_back(new Shader(GL_VERSION_MAJOR, GL_VERSION_MINOR,
-                                       "Shaders/vertex_skinned_diffuse.glsl", "Shaders/fragment_skinned_diffuse.glsl"));
+                                       "../Shaders/vertex_skinned_diffuse.glsl", "../Shaders/fragment_skinned_diffuse.glsl"));
 }
 
 void FieldScene::initTextures()
 {
-    this->textures.push_back(new Texture("Images/skybox.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/red.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/red.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/Walls_1.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/Walls_1(Bumped).png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/Rock_a_v1.png", GL_TEXTURE_2D));
-    this->textures.push_back(new Texture("Images/Rock_detailed_n_v1.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/skybox.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/red.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/red.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/Walls_1.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/Walls_1(Bumped).png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/Rock_a_v1.png", GL_TEXTURE_2D));
+    this->textures.push_back(new Texture("../Images/Rock_detailed_n_v1.png", GL_TEXTURE_2D));
 }
 
 void FieldScene::initMaterials()
@@ -61,7 +61,7 @@ void FieldScene::initObjects()
     skybox->getComponent<Model>()->addMesh(mesh, this->materials[0], this->shaders[1], this->textures[0], this->textures[0]);
     this->gameObjects.push_back(skybox);
 */
-    auto rawTerrainData = AssimpLoader::load(importer1, "OBJFiles/Grid.fbx");
+    auto rawTerrainData = AssimpLoader::load(importer1, "../OBJFiles/Grid.fbx");
     GameObject* terrain = new GameObject(glm::vec3(200.f, -100.f, 0.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
     terrain->addComponent<Model>();
     auto colliders = TerrainGenerator::processTerrain(rawTerrainData[0].vertices);
@@ -78,7 +78,7 @@ void FieldScene::initObjects()
         this->gameObjects.push_back(cube);
     }
 
-    auto navMeshData = AssimpLoader::load(importer1, "OBJFiles/Navmesh.fbx");
+    auto navMeshData = AssimpLoader::load(importer1, "../OBJFiles/Navmesh.fbx");
     GameObject* navmesh = new GameObject(glm::vec3(200.f, -140.f, 486.f), glm::vec3(-90.f, 0.f, 0.f), glm::vec3(5.f));
     //navmesh->addComponent<Model>();
     //Mesh* cMesh = new Mesh(navMeshData[0].vertices.data(), navMeshData[0].vertices.size(), navMeshData[0].indices.data(), navMeshData[0].indices.size(), navmesh);
@@ -86,7 +86,7 @@ void FieldScene::initObjects()
     auto surface = NavMeshGenerator::generate(navMeshData[0].vertices, navMeshData[0].indices, navmesh);
     gameObjects.push_back(navmesh);
 
-    auto data = AssimpLoader::load(importer1, "OBJFiles/temple.fbx");
+    auto data = AssimpLoader::load(importer1, "../OBJFiles/temple.fbx");
     
     for(int i = 0; i < data.size(); i++)
     {
@@ -97,7 +97,7 @@ void FieldScene::initObjects()
         this->gameObjects.push_back(cube);
     }
 
-    auto templeData = AssimpLoader::load(importer1, "OBJFiles/templeColliders.fbx");
+    auto templeData = AssimpLoader::load(importer1, "../OBJFiles/templeColliders.fbx");
 
     for(int i = 0; i < templeData.size(); i++)
     {
@@ -107,13 +107,13 @@ void FieldScene::initObjects()
         collisionProcessor->addToPending(cube, cube->getComponent<MeshCollider>()->getRegion());
         this->gameObjects.push_back(cube);
     }
-    auto cubeData = AssimpLoader::load(importer1, "OBJFiles/Cube.fbx");
-    auto holocroneData = AssimpLoader::loadWithArmature(importer1, "OBJFiles/Idle.fbx", clips);  
-    AssimpLoader::loadWithArmature(importer2, "OBJFiles/Walking.fbx", clips);
-    AssimpLoader::loadWithArmature(importer6, "OBJFiles/Running.fbx", clips);
-    AssimpLoader::loadWithArmature(importer3, "OBJFiles/Jump.fbx", clips);  
-    AssimpLoader::loadWithArmature(importer4, "OBJFiles/Fall A Loop.fbx", clips);
-    AssimpLoader::loadWithArmature(importer5, "OBJFiles/Standing Melee Attack Horizontal.fbx", clips);
+    auto cubeData = AssimpLoader::load(importer1, "../OBJFiles/Cube.fbx");
+    auto holocroneData = AssimpLoader::loadWithArmature(importer1, "../OBJFiles/Idle.fbx", clips);  
+    AssimpLoader::loadWithArmature(importer2, "../OBJFiles/Walking.fbx", clips);
+    AssimpLoader::loadWithArmature(importer6, "../OBJFiles/Running.fbx", clips);
+    AssimpLoader::loadWithArmature(importer3, "../OBJFiles/Jump.fbx", clips);  
+    AssimpLoader::loadWithArmature(importer4, "../OBJFiles/Fall A Loop.fbx", clips);
+    AssimpLoader::loadWithArmature(importer5, "../OBJFiles/Standing Melee Attack Horizontal.fbx", clips);
     clips[ATTACK_ANIM].addEvent("DealDamage", 40);
 
     auto cube = createCharacter(cubeData, holocroneData, glm::vec3(0));
