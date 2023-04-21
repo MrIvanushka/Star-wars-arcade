@@ -7,9 +7,11 @@
 #include "../Utilities/StateMachine.h"
 #include "../Utilities/Observer.h"
 #include "../Physics/Collider.h"
+#include "../Physics/octree.h"
 #include "../BaseComponents/Animator.h"
 #include "../GameComponents/IDamageable.h"
 #include "../GameComponents/FractionMember.h"
+#include "../GameComponents/Blaster.h"
 #include "NavMeshAgent.hpp"
 
 #include <iostream>
@@ -170,5 +172,48 @@ class FollowState : public TargetHuntState
         }
 };
 
+class ShootingState : public TargetHuntState
+{
+    private:
+        Blaster* _blaster;
+        OrientedPoint* m_target;
+    public:
+        ShootingState(Blaster* blaster, const std::vector<Transition*>& transitions) :
+            TargetHuntState(transitions), _blaster(blaster) {}
+
+        void setTarget(GameObject* newTarget) override { m_target = newTarget; }
+        
+        void start(){
+            _blaster->shoot(m_target->getPosition());
+        }
+};
+
+class RaycastTransition : public TargetHuntTransition {
+    private:
+        Octree::node* _collisionProcessor;
+        OrientedPoint* m_character;
+        OrientedPoint* m_target;
+
+    public:
+        RaycastTransition(State* nextState, OrientedPoint* character, Octree::node* collisionProcessor) :
+            TargetHuntTransition(nextState), _collisionProcessor(collisionProcessor), m_character(character) {}
+
+        void setTarget(GameObject* newTarget) { m_target = newTarget; }
+
+        bool needTransit() override {
+            Ray ray(m_character->getPosition(), glm::normalize(m_target->getPosition() - m_character->getPosition()));
+            float dist = 1000;
+
+            auto foundRegion = _collisionProcessor->checkCollisionsRay(ray, dist);
+
+            if(foundRegion != nullptr)
+            {
+                if(foundRegion->collider->getComponent<IDamageable>())
+                    return true;
+            }
+
+            return false;
+        }
+};
 
 #endif // CHARACTERSTATES_H

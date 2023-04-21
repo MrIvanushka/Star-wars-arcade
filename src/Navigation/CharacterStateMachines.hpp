@@ -27,9 +27,9 @@ class JediAI : public AI
     public:
         JediAI(GameObject* obj) : AI(obj) {}
 
-        void setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets, Observable** attackScript, Collider* visionCollider);
+        void setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets, Observable** attackScript, Collider* visionCollider, Fraction fraction);
 };
-/*
+
 class SquadLeader : public AI
 {
     private:
@@ -37,8 +37,8 @@ class SquadLeader : public AI
     public:
         SquadLeader(GameObject* obj) : AI(obj) {}
 
-        void setupStateMachine(NavMeshAgent* character, GameObject* target);
-};
+        void setupStateMachine(NavMeshAgent* character, Collider* visionCollider, Fraction fraction);
+};/*
 
 class SquadMember : public AI
 {
