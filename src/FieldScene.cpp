@@ -12,6 +12,7 @@
 #include"GameComponents/PlayerAttackController.h"
 #include"GameComponents/DamageDealArea.h"
 #include"GameComponents/HealthPresenter.h"
+#include"GameComponents/Respawn.h"
 #include"Navigation/CharacterStateMachines.hpp"
 
 FieldScene::FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight)
@@ -116,9 +117,21 @@ void FieldScene::initObjects()
     AssimpLoader::loadWithArmature(importer5, "../OBJFiles/Standing Melee Attack Horizontal.fbx", clips);
     clips[ATTACK_ANIM].addEvent("DealDamage", 40);
 
+    /* Respawn */
+    GameObject* respawn = new GameObject(glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f));
+    respawn->addComponent<Respawn>();
+    respawn->getComponent<Respawn>()->setRespawnPoints(glm::vec3(-300 ,0, -500),  glm::vec3(-275 ,0, -360));
+    this->gameObjects.push_back(respawn);
+
     auto cube = createCharacter(cubeData, holocroneData, glm::vec3(0), Fraction::Jedi);
-    //auto differentCube = createJediBot(cubeData, holocroneData, glm::vec3(-275 ,0, -560), surface, Fraction::Sith);
-    auto creep = createSquadleaderBot(cubeData, holocroneData, glm::vec3(-300 ,0, -500), surface, Fraction::Sith);
+    auto differentCube = createJediBot(cubeData, holocroneData, glm::vec3(-275 ,0, -360), surface, Fraction::Sith);
+    auto creep = createSquadleaderBot(cubeData, holocroneData, glm::vec3(-300 ,0, -500), surface, Fraction::Jedi);
+
+    respawn->getComponent<Respawn>()->track(cube);
+    respawn->getComponent<Respawn>()->track(differentCube);
+    respawn->getComponent<Respawn>()->track(creep);
+
+    /* ~Respawn */
 
     GameObject* camera = new GameObject(glm::vec3(-25.f, 0.f, 0.f), glm::vec3(0.f, -90.f, 0.f));
     camera->addComponent<CameraController>();
