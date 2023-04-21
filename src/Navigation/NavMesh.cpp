@@ -77,11 +77,12 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
 
     path.push_back(total_path[0]);
 
-    for (size_t i = 0; i < total_path.size() - 1;) {
-        size_t next_index = i + 1;
-        for (size_t j = i + 1; j < path.size(); ++j) {
+    size_t next_index = 0;
+
+    while (next_index < total_path.size() - 1) { 
+        for (size_t j = next_index + 1; j < total_path.size(); ++j) {
             for (auto polygon : m_polygons) {
-                if (!polygon.intersects_with_line(total_path[i], total_path[j])) {
+                if (!polygon.intersects_with_line(total_path[next_index], total_path[j])) {
                     next_index = j;
                 }
                 else {
@@ -89,7 +90,6 @@ std::vector<TPPLPoint> NavMeshSurface::reconstruct_path(const std::unordered_map
                 }
             }
         }
-        i = next_index;
         path.push_back(total_path[next_index]);
     }
 

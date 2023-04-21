@@ -29,7 +29,7 @@ class JediAI : public AI
 
         void setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets, Observable** attackScript, Collider* visionCollider, Fraction fraction);
 };
-
+/*
 class SquadLeader : public AI
 {
     private:
@@ -38,7 +38,7 @@ class SquadLeader : public AI
         SquadLeader(GameObject* obj) : AI(obj) {}
 
         void setupStateMachine(NavMeshAgent* character, Collider* visionCollider, Fraction fraction);
-};/*
+};
 
 class SquadMember : public AI
 {

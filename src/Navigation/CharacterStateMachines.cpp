@@ -22,7 +22,7 @@ void JediAI::setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> w
     _stateMachine = new StateMachine(wanderingState);
 }
 
-
+/*
 void SquadLeader::setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingPoints, Collider* visionCollider, Fraction fraction) {
     State* patrollingS = new PatrollingState(character, wanderingPoints, {});
     FollowState* followingS = new FollowState(character, {});
@@ -41,7 +41,7 @@ void SquadLeader::setupStateMachine(NavMeshAgent* character, std::vector<glm::ve
     _stateMachine = new StateMachine(patrollingS);
 }
 
-/*
+
 void SquadMember::setupStateMachine(NavMeshAgent* character, GameObject* target) {
     State* LfollowingS = new FollowState(character, sq_leader, {});
     State* TfollowingS = new FollowState(character, target, {});

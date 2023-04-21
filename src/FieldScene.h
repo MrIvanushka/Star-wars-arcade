@@ -4,6 +4,7 @@
 #include "Engine/Scene.h"
 #include "Engine/AssimpLoader.h"
 #include"Navigation/NavMeshGenerator.h"
+#include"GameComponents/FractionMember.h"
 
 class FieldScene : public Scene
 {
