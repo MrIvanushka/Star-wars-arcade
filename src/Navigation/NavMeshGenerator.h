@@ -42,10 +42,6 @@ public:
             points[i] = mat4vec3mult(model, vertices[i].position);
         }
         std::vector<TPPLPoint> cornerPoints = findPolygon(checkingIndex, points, inds, checked);
-        std::cout << "CORNER " << cornerPoints.size() << std::endl;
-
-        for(int i = 0; i < cornerPoints.size(); i++)
-            std::cout << cornerPoints[i].x << " " << cornerPoints[i].y << " " << std::endl;
 
         NavMeshSurface* surface = new NavMeshSurface(cornerPoints);
         
@@ -54,12 +50,9 @@ public:
             if(checked[i] == false)
             {
                 cornerPoints = findPolygon(i, points, inds, checked);
-                 std::cout << "CORNER " << cornerPoints.size() << std::endl;
 
                 if(cornerPoints.size() > 2)
                 {
-                    for(int i = 0; i < cornerPoints.size(); i++)
-                        std::cout << cornerPoints[i].x << ";" << cornerPoints[i].y << ";" << std::endl;
                     surface->add_area(cornerPoints);
                 }
             }

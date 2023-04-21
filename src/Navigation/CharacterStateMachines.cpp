@@ -1,21 +1,23 @@
 #include "CharacterStateMachines.hpp"
+#include "../Utilities/BasicTransitions.h"
 
 /* Jedi */
 
-void JediAI::setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets) {
+void JediAI::setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets, Observable** attackScript, Collider* visionCollider) {
     State* wanderingState = new WanderingState(character, wanderingTargets, {});
-    //State* followingS = new FollowState(character, target, {});
-   // State* attackS = new AttackState();
+    FollowState* followingS = new FollowState(character, {});
+    AttackState* attackS = new AttackState();
+    *attackScript = attackS;
 
-    //Transition* seeTargetT = new SeeTargetTransition(followingS, character, target, Fraction::Jedi);
-    //Transition* durationT = new AttackDurationTransition(followingS);
-    //Transition* distanceT = new AttackDistanceTransition(attackS, character, target);
-    //Transition* killT = new KillTransition(wanderingS, target->getComponent<IDamageable>());
+    Transition* durationT = new ExitTimeTransition(followingS, 0.7f);
+    Transition* distanceT = new LowDistanceTransition(attackS, character, 5.f);
+    KillTransition* killT = new KillTransition(wanderingState);
+    Transition* seeTargetT = new SeeTargetTransition(followingS, visionCollider, Fraction::Sith, {killT, followingS});
 
-    //wanderingS->addTransition(seeTargetT);
-    //followingS->addTransition(distanceT);
-    //attackS->addTransition(durationT);
-    //attackS->addTransition(killT);
+    wanderingState->addTransition(seeTargetT);
+    followingS->addTransition(distanceT);
+    attackS->addTransition(durationT);
+    attackS->addTransition(killT);
 
     _stateMachine = new StateMachine(wanderingState);
 }

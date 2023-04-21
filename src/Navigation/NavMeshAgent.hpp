@@ -15,7 +15,7 @@ class NavMeshAgent : public Component
         size_t current_index;
         glm::vec3 current_destination;
         double passed_distance;
-        double stop_distance = 0.5;
+        double stop_distance;
 
         CharacterController* m_cctrl;
 
@@ -31,6 +31,8 @@ class NavMeshAgent : public Component
         void setStopDistance(double new_stop_distance);
 
         float getDistance();
+
+        float getStopDistance();
 
         glm::vec3 getPosition();
 

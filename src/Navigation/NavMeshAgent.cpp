@@ -16,6 +16,9 @@ void NavMeshAgent::addSurface(NavMeshSurface* surface)
 }
 
 void NavMeshAgent::setDestination(glm::vec3 point) {
+    if(glm::distance(point, gameObject->getPosition()) < stop_distance)
+        return;
+
     current_destination = point;
     m_path = m_surface->get_path({gameObject->getPosition().x, gameObject->getPosition().z}, {current_destination.x, current_destination.z});
 

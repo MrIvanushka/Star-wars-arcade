@@ -112,7 +112,6 @@ bool Face::collidesWithSphere(OrientedPoint* thisRB, BoundingRegion& br, glm::ve
 	if (br.type != BoundTypes::SPHERE) {
 		return false;
 	}
-
 	auto model = thisRB->getModelMatrix();
 	auto normalModel = thisRB->getNormalModelMatrix();
 
@@ -131,11 +130,11 @@ bool Face::collidesWithSphere(OrientedPoint* thisRB, BoundingRegion& br, glm::ve
 		glm::vec3 circCenter = br.center + distance * unitN;
 
 		retNorm = unitN;
-
 		return faceContainsPointRange(P2 - P1, P3 - P1, norm, circCenter - P1, br.radius);
 	}
 
 	return false;
+	
 }
 
 void MeshCollider::initialize(std::vector<Vertex> vertices, std::vector<unsigned int> indices)

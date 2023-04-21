@@ -1,6 +1,9 @@
 #include "StateMachine.h"
 #include<iostream>
-State::State(std::vector<Transition*> transitions) : _transitions(transitions) {}
+State::State(std::vector<Transition*> transitions) : _transitions(transitions) {
+    for(auto transition : transitions)
+            processNewTransition(transition);
+}
 
 void State::onEnable()
 {
@@ -23,6 +26,7 @@ void State::updateAll(float deltaTime)
 void State::addTransition(Transition* transition)
 {
     _transitions.push_back(transition);
+    processNewTransition(transition);
 }
 
 bool State::needTransit(Transition** completedTransition)

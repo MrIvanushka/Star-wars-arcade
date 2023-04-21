@@ -358,15 +358,15 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
                 else {
                     // br has a collision mesh, obj does not
                     // check all faces in br against the obj's sphere
+
                     for (unsigned int i = 0; i < noFacesBr; i++) {
-                        if (MeshObj->faces[i].collidesWithSphere(
+                        if (MeshBr->faces[i].collidesWithSphere(
                             br.instance,
                             obj,
                             norm
                         )) {
                             //throw an event!!
                             obj.collider->handleCollision(br, norm);
-                            
                             break;
                         }
                     }
@@ -384,7 +384,6 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
                             br,
                             norm
                         )) {
-                            
                             MeshObj->handleCollision(br, norm);
 
                             break;

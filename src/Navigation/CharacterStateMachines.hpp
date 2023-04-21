@@ -27,7 +27,7 @@ class JediAI : public AI
     public:
         JediAI(GameObject* obj) : AI(obj) {}
 
-        void setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets);
+        void setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets, Observable** attackScript, Collider* visionCollider);
 };
 /*
 class SquadLeader : public AI

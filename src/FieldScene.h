@@ -3,6 +3,7 @@
 
 #include "Engine/Scene.h"
 #include "Engine/AssimpLoader.h"
+#include"Navigation/NavMeshGenerator.h"
 
 class FieldScene : public Scene
 {
@@ -12,6 +13,7 @@ private:
     void initMaterials() override;
     void initObjects() override;
     GameObject* createCharacter(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos);
+    GameObject* createBot(std::vector<MeshPack> &cubeData, std::vector<MeshPack> &characterData, glm::vec3 pos, NavMeshSurface* surface);
 public:
     FieldScene(int GL_VERSION_MAJOR, int GL_VERSION_MINOR, int framebufferWidth, int framebufferHeight);
 };

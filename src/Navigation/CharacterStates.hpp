@@ -9,6 +9,7 @@
 #include "../Physics/Collider.h"
 #include "../BaseComponents/Animator.h"
 #include "../GameComponents/IDamageable.h"
+#include "../GameComponents/FractionMember.h"
 #include "NavMeshAgent.hpp"
 
 #include <iostream>
@@ -16,47 +17,85 @@
 static constexpr const int seed = 42;
 static constexpr const float MAX_POSITION = 1000, MIN_POSITION = 0; // Field size
 
-static constexpr const float ATTACK_DISTANCE = 10;
-static constexpr const float SEE_DISTANCE = 100;
-static constexpr const float ATTACK_DURATION = 1;
 
-static constexpr const float SHOOTING_DISTANCE = 100;
-static constexpr const float SHOOTING_DURATION = 1;
-
-enum Fraction {
-    None,
-    Jedi,
-    Sith,
+class ITargetHunter {
+public:
+    virtual void setTarget(GameObject* target) = 0;
 };
 
-class DistanceTransition : public Transition
+class TargetHuntState : public State, public ITargetHunter{
+public:
+    TargetHuntState() = default;
+    
+    TargetHuntState(std::vector<Transition*> transitions) : State(transitions) {}
+
+};
+
+class TargetHuntTransition : public Transition, public ITargetHunter{
+public:
+    TargetHuntTransition(State* nextState) : Transition(nextState) {}
+};
+
+class SeeTargetTransition : public Transition
+{
+private:
+    Collider* _visionCollider;
+    Fraction _selfFraction;
+    std::vector<ITargetHunter*> _hunters;
+public:
+    SeeTargetTransition(State* nextState, Collider* visionCollider, Fraction selfFraction, std::vector<ITargetHunter*> hunters) : 
+        Transition(nextState), _visionCollider(visionCollider), _selfFraction(selfFraction), _hunters(hunters)
+    {}
+
+    bool needTransit() override {
+        auto touchedColliders = _visionCollider->getTouchedColliders();
+
+        for(auto collider : touchedColliders)
+        {
+            FractionMember* fractionMember = collider->getComponent<FractionMember>();
+
+            if(fractionMember != nullptr){
+                if(fractionMember->getFraction() != _selfFraction){
+                    for(int i = 0; i < _hunters.size(); i++)
+                        _hunters[i]->setTarget(collider->getGameObject());
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }   
+};
+
+class LowDistanceTransition : public Transition
 {
 private:
     NavMeshAgent* m_character;
     float _requiredDistance;
 public:
-    DistanceTransition(State* nextState, NavMeshAgent* character, float requiredDistance) : 
+    LowDistanceTransition(State* nextState, NavMeshAgent* character, float requiredDistance) : 
         Transition(nextState), m_character(character), _requiredDistance(requiredDistance)
     {}
 
     bool needTransit() override {
-        return m_character->getDistance() < _requiredDistance;
+        return (m_character->getDistance() < _requiredDistance || !m_character->hasPath());
     }   
 };
 
-class KillTransition : public Transition
+class KillTransition : public TargetHuntTransition
 {
     private:
-        IDamageable* m_character;
+        IDamageable* m_target;
 
     public:
-        KillTransition(State* nextState, IDamageable* character = nullptr) :
-            Transition(nextState), m_character(character) {}
+        KillTransition(State* nextState) :
+            TargetHuntTransition(nextState) {}
 
-        void setCharacter(IDamageable* new_character) { m_character = new_character; }
+        void setTarget(GameObject* newTarget) { m_target = newTarget->getComponent<IDamageable>(); }
 
         bool needTransit() override {
-            return !m_character->isAlive();
+            return !m_target->isAlive();
         }
 };
 
@@ -114,7 +153,7 @@ class AttackState : public State, public Observable
         }
 };
 
-class FollowState : public State
+class FollowState : public TargetHuntState
 {
     private:
         NavMeshAgent* m_character;
@@ -122,12 +161,12 @@ class FollowState : public State
 
     public:
         FollowState(NavMeshAgent* character, const std::vector<Transition*>& transitions) :
-            State(transitions), m_character(character) {}
+            TargetHuntState(transitions), m_character(character) {}
 
-        void setTarget(OrientedPoint* new_target) { m_target = new_target; }
+        void setTarget(GameObject* newTarget) override { m_target = newTarget; }
         
         void update(float deltaTime) override {
-            m_character->setDestination(m_target->getPosition());
+                m_character->setDestination(m_target->getPosition());
         }
 };
 

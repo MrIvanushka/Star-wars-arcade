@@ -95,7 +95,8 @@ public:
     virtual void start() {}
     virtual void update(float deltaTime) {}
     virtual void render() {}
-    
+    GameObject* getGameObject() {return gameObject;}
+
     bool isEnabled()
     {
         return enabled && gameObject->activeSelf();
