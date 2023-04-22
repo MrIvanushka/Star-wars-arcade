@@ -4,8 +4,9 @@
 #include "../Engine/GameObject.h"
 #include "CharacterHealth.h"
 #include "IDamageable.h"
+#include "FractionMember.h"
 
-class HealthPresenter : public Component, public HealthAttribute
+class HealthPresenter : public Component, public HealthAttribute, public FractionMember
 {
 public:
     HealthPresenter(GameObject* object) : Component(object), HealthAttribute(new CharacterHealth(100)) {}
@@ -13,6 +14,10 @@ public:
     void update(float deltaTime) override{
         if(isAlive() == false)
             gameObject->setActive(false);
+    }
+
+    void setFraction(Fraction newFraction){
+        changeFraction(newFraction);
     }
 /*
     template<typename Attribute>

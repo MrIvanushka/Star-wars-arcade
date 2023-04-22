@@ -315,7 +315,7 @@ bool Octree::node::insert(BoundingRegion obj) {
 // check collisions with all objects in node
 void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
     for (BoundingRegion br : objects) {
-        if (br == obj || br.collider->isEnabled() == false || br.collider->isTrigger() == true) {
+        if (br == obj || br.collider->isEnabled() == false || obj.collider->isEnabled() == false || br.collider->isTrigger() == true) {
             // do not test collisions with the same instance
             continue;
         }
@@ -330,6 +330,7 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
             auto* MeshBr = dynamic_cast<MeshCollider*>(br.collider);
 
             glm::vec3 norm;
+            std::vector<glm::vec3> touchFace;
 
             if (MeshBr != nullptr) {
                 unsigned int noFacesBr = MeshBr->faces.size();
@@ -346,7 +347,7 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
                                 br.instance,
                                 MeshObj->faces[j],
                                 obj.instance,
-                                norm
+                                norm, touchFace
                             )) {
                                 //throw an event!!
                                 MeshObj->handleCollision(br, norm);
@@ -357,15 +358,15 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
                 else {
                     // br has a collision mesh, obj does not
                     // check all faces in br against the obj's sphere
+
                     for (unsigned int i = 0; i < noFacesBr; i++) {
-                        if (MeshObj->faces[i].collidesWithSphere(
+                        if (MeshBr->faces[i].collidesWithSphere(
                             br.instance,
                             obj,
                             norm
                         )) {
                             //throw an event!!
                             obj.collider->handleCollision(br, norm);
-                            
                             break;
                         }
                     }
@@ -383,7 +384,6 @@ void Octree::node::checkCollisionsSelf(BoundingRegion obj) {
                             br,
                             norm
                         )) {
-                            
                             MeshObj->handleCollision(br, norm);
 
                             break;
@@ -448,7 +448,7 @@ BoundingRegion* Octree::node::checkCollisionsRay(Ray r, float& tmin) {
                     // fine grain check with collision mesh
                     t_tmp = std::numeric_limits<float>::max();
                     if (r.intersectsMesh(MeshBr, br.instance, t_tmp)) {
-                        if (t_tmp < tmin) {
+                        if (t_tmp < tmin && t_tmp > 0) {
                             // found closer collision
                             tmin = t_tmp;
                             ret = &br;
@@ -457,7 +457,7 @@ BoundingRegion* Octree::node::checkCollisionsRay(Ray r, float& tmin) {
                 }
                 else {
                     // rely on coarse check
-                    if (tmin_tmp < tmin) {
+                    if (tmin_tmp < tmin && tmin_tmp > 0) {
                         tmin = tmin_tmp;
                         ret = &br;
                     }

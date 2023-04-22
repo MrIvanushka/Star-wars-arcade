@@ -22,13 +22,17 @@ class NavMeshAgent : public Component
     public:
         NavMeshAgent(GameObject* object);
 
-        void addSurface(NavMeshSurface* surface);  // to implement
+        void addSurface(NavMeshSurface* surface);
 
         void setDestination(glm::vec3 point);
 
         void removeDestination();
 
         void setStopDistance(double new_stop_distance);
+
+        float getDistance();
+
+        float getStopDistance();
 
         glm::vec3 getPosition();
 

@@ -4,17 +4,23 @@
 #include "../Engine/GameObject.h"
 #include "../Physics/Collider.h"
 #include "IDamageable.h"
+#include "FractionMember.h"
 
 class DamageDealArea : public Component, public Observer
 {
 private:
     Collider* _selfCollider;
+    Fraction _selfFraction;
     float _damage = 200;
 public:
     DamageDealArea(GameObject* object) : Component(object) {}
 
     void start() override{
         _selfCollider = gameObject->getComponent<Collider>();
+    }
+
+    void initialize(Fraction selfFraction){
+        _selfFraction = selfFraction;
     }
 
     void handle() override{
@@ -26,9 +32,11 @@ public:
         
         for(auto touchedCollider : touchedColliders){
             IDamageable* damageableObject = touchedCollider->getComponent<IDamageable>();
+            FractionMember* member = touchedCollider->getComponent<FractionMember>();
 
-            if(damageableObject != nullptr)
-                damageableObject->takeDamage(_damage);
+            if(damageableObject != nullptr && member != nullptr)
+                if(member->getFraction() != _selfFraction)
+                    damageableObject->takeDamage(_damage);
         }
     }
 };

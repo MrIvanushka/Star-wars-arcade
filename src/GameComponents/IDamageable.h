@@ -22,7 +22,7 @@ public:
     }
 
     void heal(float healValue) override{
-        _damageable->takeDamage(calculateHealValue(healValue));
+        _damageable->heal(calculateHealValue(healValue));
     }
 
     float getMaxHealth() override{

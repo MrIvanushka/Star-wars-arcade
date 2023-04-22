@@ -9,10 +9,6 @@ class State
 {
 private:
     std::vector<Transition*> _transitions;
-protected:
-    virtual void start() {}
-
-    virtual void update(float deltaTime) {}
 public:
     State(){}
     
@@ -25,6 +21,12 @@ public:
     void addTransition(Transition* transition);
 
     bool needTransit(Transition** completedTransition);
+private:
+    virtual void start() {}
+
+    virtual void update(float deltaTime) {}
+
+    virtual void processNewTransition(Transition* transition) {}
 };
 
 class Transition

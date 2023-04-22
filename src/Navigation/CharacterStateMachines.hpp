@@ -11,12 +11,8 @@ class AI : public Component
 {
     protected:
         StateMachine* _stateMachine;
-    
-    private:
-        //Vision* m_vision;
-
     public:
-        AI(GameObject* obj/*, Vision* vision*/) : Component(obj)/*, m_vision(vision)*/ {}
+        AI(GameObject* obj) : Component(obj) {}
 
         void update(float deltaTime) override {
             _stateMachine->update(deltaTime);
@@ -24,35 +20,33 @@ class AI : public Component
 
 };
 
-class Jedi : public AI
+class JediAI : public AI
 {
     private:
 
     public:
-        Jedi(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
+        JediAI(GameObject* obj) : AI(obj) {}
 
-        void setupStateMachine(NavMeshAgent* character, GameObject* target);
+        void setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingTargets, Observable** attackScript, Collider* visionCollider, Fraction fraction);
 };
 
-class SquadLeader : public AI
+class SquadLeaderAI : public AI
 {
-    private:
-
     public:
-        SquadLeader(GameObject* obj/*, Vision* vision*/) : AI(obj/*, vision*/) {}
+        SquadLeaderAI(GameObject* obj) : AI(obj) {}
 
-        void setupStateMachine(NavMeshAgent* character, GameObject* target/*, Weapon* weapon*/);
+        void setupStateMachine(NavMeshAgent* character, std::vector<glm::vec3> wanderingPoints, Collider* visionCollider, Blaster* blaster, Octree::node* collisionProcessor, Fraction fraction);
 };
-
+/*
 class SquadMember : public AI
 {
     private:
         GameObject* sq_leader;
 
     public:
-        SquadMember(GameObject* obj, GameObject* leader/*, Vision* vision*/) : AI(obj/*, vision*/), sq_leader(leader) {}
+        SquadMember(GameObject* obj, GameObject* leader) : AI(obj), sq_leader(leader) {}
 
-        void setupStateMachine(NavMeshAgent* character, GameObject* target/*, Weapon* weapon*/);
-};
+        void setupStateMachine(NavMeshAgent* character, GameObject* target);
+};*/
 
 #endif // CHARACTERSTATEMACHINES_H

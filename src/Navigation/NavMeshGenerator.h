@@ -11,7 +11,7 @@
 
 class NavMeshGenerator{
 public:
-    static NavMeshSurface generate(std::vector<Vertex> vertices, std::vector<unsigned int> indices, OrientedPoint* center){
+    static NavMeshSurface* generate(std::vector<Vertex> vertices, std::vector<unsigned int> indices, OrientedPoint* center){
         glm::mat4 model = center->getModelMatrix();
         std::vector<bool> checked(vertices.size());
         std::vector<glm::vec3> points(vertices.size());
@@ -42,25 +42,18 @@ public:
             points[i] = mat4vec3mult(model, vertices[i].position);
         }
         std::vector<TPPLPoint> cornerPoints = findPolygon(checkingIndex, points, inds, checked);
-        std::cout << "CORNER " << cornerPoints.size() << std::endl;
 
-        for(int i = 0; i < cornerPoints.size(); i++)
-            std::cout << cornerPoints[i].x << " " << cornerPoints[i].y << " " << std::endl;
-
-        NavMeshSurface surface(cornerPoints);
+        NavMeshSurface* surface = new NavMeshSurface(cornerPoints);
         
         for(int i = 0; i < vertices.size(); i++)
         {
             if(checked[i] == false)
             {
                 cornerPoints = findPolygon(i, points, inds, checked);
-                 std::cout << "CORNER " << cornerPoints.size() << std::endl;
 
                 if(cornerPoints.size() > 2)
                 {
-                    for(int i = 0; i < cornerPoints.size(); i++)
-                        std::cout << cornerPoints[i].x << ";" << cornerPoints[i].y << ";" << std::endl;
-                    surface.add_area(cornerPoints);
+                    surface->add_area(cornerPoints);
                 }
             }
         }

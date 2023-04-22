@@ -7,8 +7,11 @@
 #include "../Utilities/StateMachine.h"
 #include "../Utilities/Observer.h"
 #include "../Physics/Collider.h"
+#include "../Physics/octree.h"
 #include "../BaseComponents/Animator.h"
 #include "../GameComponents/IDamageable.h"
+#include "../GameComponents/FractionMember.h"
+#include "../GameComponents/Blaster.h"
 #include "NavMeshAgent.hpp"
 
 #include <iostream>
@@ -16,186 +19,88 @@
 static constexpr const int seed = 42;
 static constexpr const float MAX_POSITION = 1000, MIN_POSITION = 0; // Field size
 
-static constexpr const float ATTACK_DISTANCE = 10;
-static constexpr const float SEE_DISTANCE = 100;
-static constexpr const float ATTACK_DURATION = 1;
 
-static constexpr const float SHOOTING_DISTANCE = 100;
-static constexpr const float SHOOTING_DURATION = 1;
-
-enum Fraction {
-    None,
-    Jedi,
-    Sith,
+class ITargetHunter {
+public:
+    virtual void setTarget(GameObject* target) = 0;
 };
 
-class Vision;
+class TargetHuntState : public State, public ITargetHunter{
+public:
+    TargetHuntState() = default;
+    
+    TargetHuntState(std::vector<Transition*> transitions) : State(transitions) {}
 
-class Weapon;
+};
+
+class TargetHuntTransition : public Transition, public ITargetHunter{
+public:
+    TargetHuntTransition(State* nextState) : Transition(nextState) {}
+};
 
 class SeeTargetTransition : public Transition
 {
-    private:
-        //Vision* m_vision;
-        NavMeshAgent* m_character;
-        OrientedPoint* m_target;
-        Fraction fraction_member;
-    
-    public:
-        SeeTargetTransition(State* nextState, NavMeshAgent* character, OrientedPoint* target, /*Vision* vision,*/ Fraction fraction) :
-            Transition(nextState), m_character(character), m_target(target), /*m_vision(vision),*/ fraction_member(fraction) {}
-
-        //void setVision(Vision* new_vision) { m_vision = new_vision; }
-
-        void setFraction(Fraction fraction) { fraction_member = fraction; }
-        
-        void onEnable() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-        }
-
-        void update(float deltaTime) override {}
-
-        bool needTransit() override{
-            return (glm::distance(m_target->getPosition(), m_character->getPosition()) < SEE_DISTANCE);
-        }
-};
-
-class AttackDurationTransition : public Transition
-{
 private:
-    float _duration;
-    float _currentTime;
+    Collider* _visionCollider;
+    Fraction _selfFraction;
+    std::vector<ITargetHunter*> _hunters;
 public:
-    AttackDurationTransition(State* nextState) : Transition(nextState), _duration(ATTACK_DURATION)
+    SeeTargetTransition(State* nextState, Collider* visionCollider, Fraction selfFraction, std::vector<ITargetHunter*> hunters) : 
+        Transition(nextState), _visionCollider(visionCollider), _selfFraction(selfFraction), _hunters(hunters)
     {}
-
-    void onEnable() override
-    {
-        std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-        _currentTime = 0;
-    }
-
-    void update(float deltaTime) override
-    {
-        _currentTime += deltaTime;
-    }
-
-    bool needTransit() override
-    {
-        return _currentTime > _duration;
-    }  
-};
-
-
-class AttackDistanceTransition : public Transition
-{
-private:
-    NavMeshAgent* m_character;
-    OrientedPoint* m_target;
-
-public:
-    AttackDistanceTransition(State* nextState, NavMeshAgent* character, OrientedPoint* target) : 
-        Transition(nextState), m_character(character), m_target(target)
-    {}
-
-    void onEnable() override {
-        std::cout << __PRETTY_FUNCTION__ << std::endl;
-    }
-
 
     bool needTransit() override {
-        return (glm::distance(m_target->getPosition(), m_character->getPosition()) < ATTACK_DISTANCE);
+        auto touchedColliders = _visionCollider->getTouchedColliders();
+
+        for(auto collider : touchedColliders)
+        {
+            FractionMember* fractionMember = collider->getComponent<FractionMember>();
+
+            if(fractionMember != nullptr && collider->isEnabled()){
+                if(fractionMember->getFraction() != _selfFraction){
+                    for(int i = 0; i < _hunters.size(); i++)
+                        _hunters[i]->setTarget(collider->getGameObject());
+                    std::cout << "See target" << std::endl;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }   
 };
 
-class ShootingDurationTransition : public Transition
-{
-private:
-    float _duration;
-    float _currentTime;
-public:
-    ShootingDurationTransition(State* nextState) : Transition(nextState), _duration(SHOOTING_DURATION)
-    {}
-
-    void onEnable() override {
-        std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-        _currentTime = 0;
-    }
-
-    void update(float deltaTime) override {
-        _currentTime += deltaTime;
-    }
-
-    bool needTransit() override
-    {
-        return _currentTime > _duration;
-    }  
-};
-
-class ShootingDistanceTransition : public Transition
+class LowDistanceTransition : public Transition
 {
 private:
     NavMeshAgent* m_character;
-    OrientedPoint* m_target;
-
+    float _requiredDistance;
 public:
-    ShootingDistanceTransition(State* nextState, NavMeshAgent* character, OrientedPoint* target) : 
-        Transition(nextState), m_character(character), m_target(target)
+    LowDistanceTransition(State* nextState, NavMeshAgent* character, float requiredDistance) : 
+        Transition(nextState), m_character(character), _requiredDistance(requiredDistance)
     {}
 
-    void onEnable() override {
-        std::cout << __PRETTY_FUNCTION__ << std::endl;
-    }
-
-
     bool needTransit() override {
-        return (glm::distance(m_target->getPosition(), m_character->getPosition()) < SHOOTING_DISTANCE);
+        return (m_character->getDistance() < _requiredDistance || !m_character->hasPath());
     }   
 };
 
-class LeaderDiedTransition : public Transition
+class KillTransition : public TargetHuntTransition
 {
     private:
-        IDamageable* m_character;
+        IDamageable* m_target;
 
     public:
-        LeaderDiedTransition(State* nextState, IDamageable* character) :
-            Transition(nextState), m_character(character) {}
+        KillTransition(State* nextState) :
+            TargetHuntTransition(nextState) {}
 
-        void setCharacter(IDamageable* new_character) { m_character = new_character; }
-
-        void onEnable() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-        }
-
-        void update(float deltaTime) override {}
+        void setTarget(GameObject* newTarget) { m_target = newTarget->getComponent<IDamageable>(); }
 
         bool needTransit() override {
-            return !m_character->isAlive();
-        }
-};
+            if(!m_target->isAlive())
+                std::cout << "killed" << std::endl;
 
-class KillTransition : public Transition
-{
-    private:
-        IDamageable* m_character;
-
-    public:
-        KillTransition(State* nextState, IDamageable* character) :
-            Transition(nextState), m_character(character) {}
-
-        void setCharacter(IDamageable* new_character) { m_character = new_character; }
-
-        void onEnable() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-        }
-
-        void update(float deltaTime) override {}
-
-        bool needTransit() override {
-            return !m_character->isAlive();
+            return !m_target->isAlive();
         }
 };
 
@@ -203,25 +108,21 @@ class WanderingState : public State
 {
     private:
         NavMeshAgent* m_navMeshAgent;
+        std::vector<glm::vec3> _wanderingPoints;
 
         std::mt19937_64 eng;
         std::uniform_int_distribution<std::mt19937::result_type> dist6;
-    
     public:
-        WanderingState(NavMeshAgent* navMeshAgent, const std::vector<Transition*>& transitions) :
-            m_navMeshAgent(navMeshAgent), State(transitions), eng(seed), dist6(MIN_POSITION, MAX_POSITION) {}
+        WanderingState(NavMeshAgent* navMeshAgent, std::vector<glm::vec3> wanderingPoints, const std::vector<Transition*>& transitions) :
+            State(transitions), m_navMeshAgent(navMeshAgent), _wanderingPoints(wanderingPoints), eng(seed) {}
 
         void start() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-            while (!m_navMeshAgent->hasPath()) {
-                m_navMeshAgent->setDestination(glm::vec3(dist6(eng), dist6(eng), dist6(eng)));
-            }
+                m_navMeshAgent->setDestination(_wanderingPoints[dist6(eng) % _wanderingPoints.size()]);
         }
 
         void update(float deltaTime) override {
             while (!m_navMeshAgent->hasPath()) {
-                m_navMeshAgent->setDestination(glm::vec3(dist6(eng), dist6(eng), dist6(eng)));
+                m_navMeshAgent->setDestination(_wanderingPoints[dist6(eng) % _wanderingPoints.size()]);
             }
         }
 };
@@ -230,26 +131,17 @@ class PatrollingState : public State
 {
     private:
         NavMeshAgent* m_navMeshAgent;
+        std::vector<glm::vec3> _wanderingPoints;
 
         std::mt19937_64 eng;
         std::uniform_int_distribution<std::mt19937::result_type> dist6;
     
     public:
-        PatrollingState(NavMeshAgent* navMeshAgent, const std::vector<Transition*>& transitions) :
-            m_navMeshAgent(navMeshAgent), State(transitions), eng(seed), dist6(MIN_POSITION, MAX_POSITION) {}
+        PatrollingState(NavMeshAgent* navMeshAgent, std::vector<glm::vec3> wanderingPoints, const std::vector<Transition*>& transitions) :
+            State(transitions),  m_navMeshAgent(navMeshAgent), _wanderingPoints(wanderingPoints), eng(seed), dist6(MIN_POSITION, MAX_POSITION) {}
 
         void start() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-            while (!m_navMeshAgent->hasPath()) {
-                m_navMeshAgent->setDestination(glm::vec3(dist6(eng), dist6(eng), dist6(eng)));
-            }
-        }
-
-        void update(float deltaTime) override {
-            while (!m_navMeshAgent->hasPath()) {
-                m_navMeshAgent->setDestination(glm::vec3(dist6(eng), dist6(eng), dist6(eng)));
-            }
+            m_navMeshAgent->setDestination(_wanderingPoints[dist6(eng) % _wanderingPoints.size()]);
         }
 };
 
@@ -262,52 +154,74 @@ class AttackState : public State, public Observable
             State(transitions) {}
         
         void start() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-
             invoke();
         }
 };
 
-class FollowState : public State
+class FollowState : public TargetHuntState
 {
     private:
         NavMeshAgent* m_character;
         OrientedPoint* m_target;
 
     public:
-        FollowState(NavMeshAgent* character, OrientedPoint* target, const std::vector<Transition*>& transitions) :
-            m_target(target), m_character(character), State(transitions) {}
+        FollowState(NavMeshAgent* character, const std::vector<Transition*>& transitions) :
+            TargetHuntState(transitions), m_character(character) {}
 
-        void setTarget(OrientedPoint* new_target) { m_target = new_target; }
-        
-        void start() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
-        }
+        void setTarget(GameObject* newTarget) override { m_target = newTarget; }
         
         void update(float deltaTime) override {
-            m_character->setDestination(m_target->getPosition());
+                m_character->setDestination(m_target->getPosition());
         }
 };
 
-class ShootingState : public State
+class ShootingState : public TargetHuntState
 {
     private:
-        /*Weapon* m_weapon;*/
+        Blaster* _blaster;
+        OrientedPoint* m_target;
+    public:
+        ShootingState(Blaster* blaster, const std::vector<Transition*>& transitions) :
+            TargetHuntState(transitions), _blaster(blaster) {}
+
+        void setTarget(GameObject* newTarget) override { m_target = newTarget; }
+        
+        void start(){
+            _blaster->shoot(m_target->getPosition());
+        }
+};
+
+class RaycastTransition : public TargetHuntTransition {
+    private:
+        Octree::node* _collisionProcessor;
+        OrientedPoint* m_character;
+        OrientedPoint* m_target;
 
     public:
-        ShootingState(/*Weapon* weapon, */const std::vector<Transition*>& transitions) :
-            State(transitions) {}
-        
-        //void setWeapon(Weapon* weapon);
-        
-        void start() override {
-            std::cout << __PRETTY_FUNCTION__ << std::endl;
+        RaycastTransition(State* nextState, OrientedPoint* character, Octree::node* collisionProcessor) :
+            TargetHuntTransition(nextState), _collisionProcessor(collisionProcessor), m_character(character) {}
 
-            //m_weapon->shoot();
-        }
-        
-        void update(float deltaTime) override  {
-            //m_weapon->update(deltaTime);
+        void setTarget(GameObject* newTarget) { m_target = newTarget; }
+
+        bool needTransit() override {
+            auto delta = glm::normalize(m_target->getPosition() - m_character->getPosition());
+
+            Ray ray(m_character->getPosition(), delta);
+            float dist = 1000;
+
+            auto foundRegion = _collisionProcessor->checkCollisionsRay(ray, dist);
+
+            if(foundRegion != nullptr)
+            {
+                std::cout << "something found " << foundRegion->center.x << " " << foundRegion->center.y << " " << foundRegion->center.z << " dist " << dist << std::endl;
+                std::cout << "self pos " << m_character->getPosition().x << " " << m_character->getPosition().y << " " << m_character->getPosition().z << std::endl;
+                std::cout << "target pos " << m_target->getPosition().x << " " << m_target->getPosition().y << " " << m_target->getPosition().z << std::endl;
+
+                if(foundRegion->collider->getComponent<IDamageable>())
+                    return true;
+            }
+
+            return false;
         }
 };
 

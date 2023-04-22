@@ -29,6 +29,14 @@ void CharacterController::update(float deltaTime) {
         _isGrounded = false;
     }
 
+    if(_isGrounded)
+    {
+        auto pos = gameObject->getPosition();
+
+        if(pos.y < _groundPos.y + 6)
+            gameObject->moveAt(glm::vec3(pos.x, _groundPos.y + 6, pos.z));
+    }
+
     move(deltaTime);
 
     if(_isGrounded == false)
@@ -148,7 +156,7 @@ void CharacterController::fall(float deltaTime)
     gameObject->move(_gravityVelocity * deltaTime);
 }
 
-void CharacterController::processNorm(Collider* touchedCollider, glm::vec3 norm) {
+void CharacterController::processNorm(Collider* touchedCollider, glm::vec3 norm, glm::vec3 touchPos) {
     norm = glm::normalize(norm);
     float groundAngle = glm::degrees(acos(glm::dot(norm, glm::vec3(0,1,0))));
 
@@ -167,6 +175,7 @@ void CharacterController::processNorm(Collider* touchedCollider, glm::vec3 norm)
     }
     else if(groundAngle <= _maxGroundAngle)
     {
+        _groundPos = touchPos;
         _groundNormals.push_back(norm);
     }
 }
@@ -200,10 +209,17 @@ void CharacterController::processCollisions(){
             auto faces = _selfCollider->getFaces();
             for(auto& face : faces){
                 glm::vec3 gotNorm;
+                std::vector<glm::vec3> touchFace;
 
-                if(touchedFace.collidesWithFace(collider->getCenter(), face, gameObject, gotNorm)){
+                if(touchedFace.collidesWithFace(collider->getCenter(), face, gameObject, gotNorm, touchFace)){
                     foundCollision = true;
-                    processNorm(collider, gotNorm);
+
+                    glm::vec3 touchPos = touchFace[0];
+                    for(int i = 1; i < 3; i++)
+                        if(touchFace[i].y < touchPos.y)
+                            touchPos = touchFace[i];
+
+                    processNorm(collider, gotNorm, touchPos);
                     break;
                 }
             }

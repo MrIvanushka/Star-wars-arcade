@@ -18,6 +18,8 @@ src/Engine/AssimpLoader.cpp
 src/BaseComponents/Animator.cpp
 src/GameComponents/CharacterController.cpp
 src/GameComponents/CharacterHealth.cpp
+src/GameComponents/Blaster.cpp
+src/GameComponents/Bullet.cpp
 src/Physics/bounds.cpp 
 src/Physics/meshcollider.cpp  
 src/Physics/environment.cpp 

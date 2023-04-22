@@ -16,7 +16,7 @@ typedef struct Face {
 	glm::vec3 baseNormal;
 	glm::vec3 norm;
 
-	bool collidesWithFace(OrientedPoint* thisRB, struct Face& face, OrientedPoint* faceRB, glm::vec3& retNorm);
+	bool collidesWithFace(OrientedPoint* thisRB, struct Face& face, OrientedPoint* faceRB, glm::vec3& retNorm, std::vector<glm::vec3>& touchFace);
 	bool collidesWithSphere(OrientedPoint* thisRB, BoundingRegion& br, glm::vec3& retNorm);
 } Face;
 
