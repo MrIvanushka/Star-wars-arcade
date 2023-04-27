@@ -22,7 +22,7 @@ void CharacterHealth::takeDamage(float damage) {
 
 void CharacterHealth::heal(float healValue) {
     if (healValue <= 0) throw std::logic_error("Healing can't be negative");
-    if (_health <= 0) throw std::logic_error("Player is dead");
+    //if (_health <= 0) throw std::logic_error("Player is dead");
     _health += healValue;
     if (_health > _maxHealth) _health = _maxHealth;
 }

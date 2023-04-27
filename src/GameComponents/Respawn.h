@@ -10,43 +10,46 @@
 class Respawn : public Component
 {
     private:
-        std::vector<GameObject*> objects;
-        glm::vec3 JediResp;
-        glm::vec3 SithResp;
+        std::vector<HealthPresenter*> objects;
+        glm::vec3 Resp;
+        Fraction fraction;
 
     public:
-        Respawn(GameObject* obj) : Component(obj) {}
+        Respawn(GameObject* obj, Fraction _fraction) : Component(obj), fraction(_fraction) {}
 
-        void setRespawnPoints(glm::vec3 _jediResp, glm::vec3 _sithResp) {
-            JediResp = _jediResp;
-            SithResp = _sithResp;
+        void setRespawnPoint(glm::vec3 _Resp) {
+            Resp = _Resp;
         }
         
-        void track(GameObject* obj) {
-            objects.push_back(obj);
+        void track(HealthPresenter* obj) {
+            if (this->fraction == obj->getGameObject()->getComponent<FractionMember>()->getFraction()) {
+                objects.push_back(obj);
+                return;
+            }
+            throw std::invalid_argument("Object's fraction must correspond to the respawn's fraction");
         }
 
         void update(float deltaTime) override {
-            for (GameObject* obj : objects) {
-                if (!obj->getComponent<HealthPresenter>()->isAlive()) {
-                    switch (obj/*->getGameObject()*/->getComponent<FractionMember>()->getFraction())
-                    {
-                        case Fraction::Jedi:
-                            obj/*->getGameObject()*/->move(JediResp - obj/*->getGameObject()*/->getPosition());
-                            //obj->getComponent<HealthPresenter>()->heal(100);
-                            break;
-                        
-                        case Fraction::Sith:
-                            obj/*->getGameObject()*/->move(SithResp - obj/*->getGameObject()*/->getPosition());
-                            //obj->getComponent<HealthPresenter>()->heal(100);
-                            break;
-
-                        default:
-                            break;
-                    }
+            for (HealthPresenter* obj : objects) {
+                if (!obj->isAlive()) {
+                    obj->getGameObject()->moveAt(Resp);
+                    obj->getGameObject()->setActive(true);
+                    obj->heal(100);
                 }
             }
         }
+};
+
+class JediRespawn : public Respawn
+{
+    public:
+        JediRespawn(GameObject* obj) : Respawn(obj, Fraction::Jedi) {}
+};
+
+class SithRespawn : public Respawn
+{
+    public:
+        SithRespawn(GameObject* obj) : Respawn(obj, Fraction::Sith) {}
 };
 
 #endif //RESPAWM_H
