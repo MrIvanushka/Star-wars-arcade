@@ -9,6 +9,7 @@ public:
     virtual float getMaxHealth() = 0;
     virtual float getHealth() = 0;
     virtual bool isAlive() = 0;
+    virtual void respawn() = 0;
 };
 
 class HealthAttribute : public IDamageable
@@ -35,6 +36,10 @@ public:
 
     bool isAlive() override{
         return _damageable->isAlive();
+    }
+
+    void respawn() override{
+        _damageable->respawn();
     }
 protected:
     IDamageable* getNextAttribute(){

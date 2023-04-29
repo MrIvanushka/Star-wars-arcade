@@ -33,8 +33,7 @@ class Respawn : public Component
             for (HealthPresenter* obj : objects) {
                 if (!obj->isAlive()) {
                     obj->getGameObject()->moveAt(Resp);
-                    obj->getGameObject()->setActive(true);
-                    obj->heal(100);
+                    obj->respawn();
                 }
             }
         }

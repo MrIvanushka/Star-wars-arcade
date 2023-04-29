@@ -14,6 +14,7 @@ public:
     float getMaxHealth() override;
     float getHealth() override;
     bool isAlive() override;
+    void respawn() override;
 };
 
 #endif

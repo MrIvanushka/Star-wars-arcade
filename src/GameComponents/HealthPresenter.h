@@ -19,6 +19,11 @@ public:
     void setFraction(Fraction newFraction){
         changeFraction(newFraction);
     }
+
+    void respawn() override{
+        this->getNextAttribute()->respawn();
+        gameObject->setActive(true);
+    }
 /*
     template<typename Attribute>
     void boost(){
